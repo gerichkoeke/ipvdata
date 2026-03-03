@@ -38,6 +38,33 @@ class CustomerInfra extends Page
         }
     }
 
+    public function openCommissionModal(): void
+    {
+        $relations = ['vms.disks.diskType', 'vms.osDistribution', 'networkType', 'bandwidthOption', 'partner'];
+
+        $project = $this->customer->projects()
+            ->with($relations)
+            ->where('status', 'active')
+            ->first();
+
+        if (!$project) {
+            $project = $this->customer->projects()
+                ->with($relations)
+                ->first();
+        }
+
+        if (!$project) {
+            Notification::make()
+                ->warning()
+                ->title('Nenhum projeto encontrado')
+                ->body('Este cliente não possui projetos configurados.')
+                ->send();
+            return;
+        }
+
+        $this->viewProjectPricing($project->id);
+    }
+
     public function viewProjectPricing(int $projectId): void
     {
         $this->selectedProject = Project::with([
