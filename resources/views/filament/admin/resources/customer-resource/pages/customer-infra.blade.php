@@ -381,26 +381,26 @@
         $__p = $this->calcPricesVm();
         $__linhas = [];
         if ($__p['priceCpu'] > 0)
-            $__linhas[] = ['CPU', $form_cpu_cores . ' vCPUs', $__p['priceCpu'], 'text-blue-300', 'heroicon-m-cpu-chip'];
+            $__linhas[] = ['CPU', $form_cpu_cores . ' vCPUs', $__p['priceCpu'], 'text-blue-300'];
         if ($__p['priceRam'] > 0)
-            $__linhas[] = ['RAM', $form_ram_gb . ' GB', $__p['priceRam'], 'text-violet-300', 'heroicon-m-circle-stack'];
+            $__linhas[] = ['RAM', $form_ram_gb . ' GB', $__p['priceRam'], 'text-violet-300'];
         if ($__p['priceDiskOs'] > 0)
-            $__linhas[] = ['Disco SO (' . $form_disk_os_gb . ' GB)', $this->getDiskOsTypeName(), $__p['priceDiskOs'], 'text-amber-300', 'heroicon-m-server'];
+            $__linhas[] = ['Disco SO (' . $form_disk_os_gb . ' GB)', $this->getDiskOsTypeName(), $__p['priceDiskOs'], 'text-amber-300'];
         foreach (($form_additional_disks ?? []) as $__di => $__dd) {
             $__dPrice = isset($__dd['size_gb'], $__dd['disk_type_id']) ? (int)$__dd['size_gb'] * (float)(\App\Models\DiskType::find((int)$__dd['disk_type_id'])?->price_per_gb ?? 0) : 0;
             if ($__dPrice > 0)
-                $__linhas[] = ['+ Disco Extra (' . $__dd['size_gb'] . ' GB)', $this->getDiskTypeName($__dd['disk_type_id'] ?? null), $__dPrice, 'text-amber-200', 'heroicon-m-server'];
+                $__linhas[] = ['+ Disco Extra (' . $__dd['size_gb'] . ' GB)', $this->getDiskTypeName($__dd['disk_type_id'] ?? null), $__dPrice, 'text-amber-200'];
         }
         if ($__p['priceOsLicense'] > 0)
-            $__linhas[] = ['Licença SO', $this->getOsDistributionName(), $__p['priceOsLicense'], 'text-emerald-300', 'heroicon-m-key'];
+            $__linhas[] = ['Licença SO', $this->getOsDistributionName(), $__p['priceOsLicense'], 'text-emerald-300'];
         if ($__p['priceRds'] > 0)
-            $__linhas[] = ['Terminal Remoto', ($form_rds_license_qty ?? 0) . 'x ' . $this->getRdsTypeName(), $__p['priceRds'], 'text-primary-300', 'heroicon-m-computer-desktop'];
+            $__linhas[] = ['Terminal Remoto', ($form_rds_license_qty ?? 0) . 'x ' . $this->getRdsTypeName(), $__p['priceRds'], 'text-primary-300'];
         if ($__p['priceEndpoint'] > 0)
-            $__linhas[] = ['Endpoint Security', $this->getEndpointSecurityName(), $__p['priceEndpoint'], 'text-green-300', 'heroicon-m-shield-check'];
+            $__linhas[] = ['Endpoint Security', $this->getEndpointSecurityName(), $__p['priceEndpoint'], 'text-green-300'];
         if ($__p['priceBackupSw'] > 0)
-            $__linhas[] = ['Licença Backup', $this->getBackupSwName(), $__p['priceBackupSw'], 'text-yellow-300', 'heroicon-m-archive-box'];
+            $__linhas[] = ['Licença Backup', $this->getBackupSwName(), $__p['priceBackupSw'], 'text-yellow-300'];
         if ($__p['priceBackup'] > 0)
-            $__linhas[] = ['Armazenamento Backup', number_format($__p['backupStorageGb'], 0) . ' GB', $__p['priceBackup'], 'text-yellow-200', 'heroicon-m-circle-stack'];
+            $__linhas[] = ['Armazenamento Backup', number_format($__p['backupStorageGb'], 0) . ' GB', $__p['priceBackup'], 'text-yellow-200'];
     @endphp
 
     {{-- Header da revisão --}}
