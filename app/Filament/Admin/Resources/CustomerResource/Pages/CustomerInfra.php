@@ -108,6 +108,8 @@ class CustomerInfra extends Page
     public array   $form_bkp_machines_detail = [];
     public ?int    $form_bkp_software_id     = null;
 
+    public bool $showPriceBreakdown = false;
+
     public function getTitle(): string
     {
         return ($this->record->trade_name ?? $this->record->name) . ' — Infraestrutura';
@@ -761,6 +763,42 @@ class CustomerInfra extends Page
             'backupStorageGb',
             'total'
         );
+    }
+
+    public function getDiskOsTypeName(): string
+    {
+        if (!$this->form_disk_os_type_id) return '—';
+        return DiskType::find($this->form_disk_os_type_id)?->name ?? '—';
+    }
+
+    public function getDiskTypeName(?int $id): string
+    {
+        if (!$id) return '—';
+        return DiskType::find($id)?->name ?? '—';
+    }
+
+    public function getOsDistributionName(): string
+    {
+        if (!$this->form_os_distribution_id) return '—';
+        return OsDistribution::find($this->form_os_distribution_id)?->name ?? '—';
+    }
+
+    public function getRdsTypeName(): string
+    {
+        if (!$this->form_remote_desktop_type_id) return '';
+        return RemoteDesktopType::find($this->form_remote_desktop_type_id)?->name ?? '';
+    }
+
+    public function getEndpointSecurityName(): string
+    {
+        if (!$this->form_endpoint_security_id) return '—';
+        return EndpointSecurityOption::find($this->form_endpoint_security_id)?->name ?? '—';
+    }
+
+    public function getBackupSwName(): string
+    {
+        if (!$this->form_backup_software_id) return '—';
+        return BackupSoftwareOption::find($this->form_backup_software_id)?->name ?? '—';
     }
 
     private function persistirVm(?int $vmId, ?int $projectId): void
