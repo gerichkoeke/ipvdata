@@ -47,6 +47,18 @@ class AdminPanelProvider extends PanelProvider
                 in: app_path('Filament/Admin/Resources'),
                 for: 'App\\Filament\\Admin\\Resources'
             )
+            ->resources([
+                \App\Filament\Admin\Resources\Infrastructure\ResourcePricingResource::class,
+                \App\Filament\Admin\Resources\Infrastructure\DiskTypeResource::class,
+                \App\Filament\Admin\Resources\Infrastructure\NetworkTypeResource::class,
+                \App\Filament\Admin\Resources\Infrastructure\EndpointSecurityResource::class,
+                \App\Filament\Admin\Resources\Infrastructure\OsDistributionResource::class,
+                \App\Filament\Admin\Resources\Infrastructure\BandwidthOptionResource::class,
+                \App\Filament\Admin\Resources\Infrastructure\BackupSoftwareResource::class,
+                \App\Filament\Admin\Resources\Infrastructure\BackupRetentionResource::class,
+                \App\Filament\Admin\Resources\Infrastructure\FirewallOptionResource::class,
+                \App\Filament\Admin\Resources\Infrastructure\RdsLicenseModeResource::class,
+            ])
             ->discoverWidgets(
                 in: app_path('Filament/Admin/Widgets'),
                 for: 'App\\Filament\\Admin\\Widgets'
@@ -61,6 +73,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                \App\Http\Middleware\SetLocale::class,
             ])
             ->authMiddleware([Authenticate::class]);
     }

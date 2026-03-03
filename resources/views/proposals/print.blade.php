@@ -273,6 +273,9 @@
                     <p style="margin-bottom:8px;">{{ $proposal->notes }}</p>
                 @endif
                 <p>• Os valores apresentados são mensais e em {{ $pricingData['summary']['currency'] }}.</p>
+                @if(($proposal->currency ?? 'BRL') !== 'BRL')
+                <p>• Taxa de câmbio utilizada: 1 {{ $proposal->currency }} = {{ number_format($proposal->exchange_rate ?? 1, 4, ',', '.') }} BRL.</p>
+                @endif
                 <p>• Proposta válida por
                     @if(!empty($proposal->valid_until))
                         até {{ \Carbon\Carbon::parse($proposal->valid_until)->format('d/m/Y') }}.

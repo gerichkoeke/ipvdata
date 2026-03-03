@@ -48,7 +48,13 @@ Route::get('/imprimir/proposta/{id}', function ($id) {
     $pricingData = [
         'items'   => $items,
         'summary' => [
-            'currency'                   => 'R$',
+            'currency'                   => match($proposal->currency ?? 'BRL') {
+                'USD' => 'US$',
+                'EUR' => '€',
+                'PYG' => '₲',
+                'ARS' => '$',
+                default => 'R$',
+            },
             'subtotal'                   => $subtotal,
             'item_discounts'             => $itemDiscounts,
             'total_before_global_discount' => $totalBeforeGD,

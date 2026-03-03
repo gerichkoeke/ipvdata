@@ -61,6 +61,8 @@ class CustomerInfra extends Page
     public string $proposta_validade     = '';
     public string $proposta_notas        = '';
     public float  $proposta_desconto     = 0;
+    public string $proposta_currency      = 'BRL';
+    public float  $proposta_exchange_rate = 1.0;
 
     // ── IDs ativos ───────────────────────────────────────────────
     public ?int $activeVmId      = null;
@@ -899,6 +901,8 @@ class CustomerInfra extends Page
         $this->proposta_validade = now()->addDays(30)->format('Y-m-d');
         $this->proposta_notas    = '';
         $this->proposta_desconto = 0;
+        $this->proposta_currency      = 'BRL';
+        $this->proposta_exchange_rate = 1.0;
 
         $this->modalProposta = true;
     }
@@ -928,20 +932,26 @@ class CustomerInfra extends Page
             ? round($subtotal * (min(100, max(0, $this->proposta_desconto)) / 100), 2)
             : 0;
 
+        $exchangeRate = $this->proposta_currency !== 'BRL' ? max(0.01, $this->proposta_exchange_rate) : 1.0;
+        $subtotalConverted = round($subtotal / $exchangeRate, 2);
+        $discountConverted = round($discount / $exchangeRate, 2);
+
         $partner = $this->record->partner;
 
         $proposal = Proposal::create([
-            'number'      => 'PROP-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -5)),
-            'partner_id'  => $partner?->id,
-            'customer_id' => $this->record->id,
-            'created_by'  => auth()->id(),
-            'title'       => $this->proposta_titulo ?: 'Proposta Cloud',
-            'status'      => 'draft',
-            'subtotal'    => $subtotal,
-            'discount'    => $discount,
-            'total'       => $subtotal - $discount,
-            'valid_until' => $this->proposta_validade ?: null,
-            'notes'       => $this->proposta_notas ?: null,
+            'number'        => 'PROP-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -5)),
+            'partner_id'    => $partner?->id,
+            'customer_id'   => $this->record->id,
+            'created_by'    => auth()->id(),
+            'title'         => $this->proposta_titulo ?: 'Proposta Cloud',
+            'status'        => 'draft',
+            'currency'      => $this->proposta_currency,
+            'exchange_rate' => $exchangeRate,
+            'subtotal'      => $subtotalConverted,
+            'discount'      => $discountConverted,
+            'total'         => $subtotalConverted - $discountConverted,
+            'valid_until'   => $this->proposta_validade ?: null,
+            'notes'         => $this->proposta_notas ?: null,
         ]);
 
         $sort = 1;
