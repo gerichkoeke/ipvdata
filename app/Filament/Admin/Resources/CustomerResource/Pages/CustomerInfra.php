@@ -757,6 +757,7 @@ class CustomerInfra extends Page
             'priceEndpoint',
             'priceBackupSw',
             'priceBackup',
+            'priceAdditionalDisks',
             'backupStorageGb',
             'total'
         );
