@@ -444,14 +444,16 @@
 
 
 {{-- Botão Ver Preços por projeto --}}
-@foreach($data['projects'] as $proj)
-<div class="mt-3 flex justify-end">
-    <button type="button" wire:click="viewProjectPricing({{ $proj->id }})"
-        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-primary-500/40 bg-primary-500/10 text-primary-400 hover:bg-primary-500/20 transition-colors">
-        <x-heroicon-o-currency-dollar class="w-4 h-4"/> 💰 Ver Preços e Aplicar Descontos
+@php $mainProject = $data['projects']->where('network_configured', true)->first(); @endphp
+@if($mainProject)
+<div style="position:fixed;bottom:24px;right:24px;z-index:50;">
+    <button type="button" wire:click="viewProjectPricing({{ $mainProject->id }})"
+        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg
+               bg-primary-600 text-white hover:bg-primary-700 transition-all">
+        💰 Ver Preços e Aplicar Descontos
     </button>
 </div>
-@endforeach
+@endif
 
 {{-- Incluir o modal de pricing --}}
 @include('filament.partner.resources.customer-resource.pages.customer-infra-pricing-modal')

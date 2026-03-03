@@ -34,7 +34,7 @@ Route::get('/imprimir/proposta/{id}', function ($id) {
             'name'        => $item->name,
             'description' => $item->description ?? '',
             'subtotal'    => (float) $item->unit_price,
-            'discount'    => (float) ($item->discount_amount ?? 0),
+            'discount'    => (float) ($item->discount ?? 0),
             'total'       => (float) $item->total,
         ];
     })->values()->toArray();
