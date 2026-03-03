@@ -24,6 +24,8 @@ class Proposal extends Model
         'commission_value',
         'valid_until',
         'notes',
+        'currency',
+        'exchange_rate',
         'sent_at',
         'approved_at',
         'approved_by',
@@ -33,10 +35,11 @@ class Proposal extends Model
         'valid_until'  => 'date',
         'sent_at'      => 'datetime',
         'approved_at'  => 'datetime',
-        'subtotal'     => 'decimal:2',
-        'discount'     => 'decimal:2',
-        'total'        => 'decimal:2',
+        'subtotal'         => 'decimal:2',
+        'discount'         => 'decimal:2',
+        'total'            => 'decimal:2',
         'commission_value' => 'decimal:2',
+        'exchange_rate'    => 'decimal:6',
     ];
 
     public function partner()

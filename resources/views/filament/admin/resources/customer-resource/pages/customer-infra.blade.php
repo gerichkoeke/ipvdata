@@ -574,6 +574,26 @@
             </button>
         </div>
         <div class="px-6 py-4 space-y-5">
+            {{-- Seletor de moeda --}}
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Moeda da Proposta</label>
+                    <select wire:model.live="proposta_currency" style="color-scheme:dark;background-color:#1f2937;" class="w-full rounded-lg bg-gray-800 border border-gray-700 text-sm text-white px-3 py-2 focus:ring-1 focus:ring-emerald-500 outline-none">
+                        <option value="BRL">🇧🇷 Real (R$)</option>
+                        <option value="USD">🇺🇸 Dólar (US$)</option>
+                        <option value="EUR">🇪🇺 Euro (€)</option>
+                        <option value="PYG">🇵🇾 Guarani (₲)</option>
+                        <option value="ARS">🇦🇷 Peso Arg. ($)</option>
+                    </select>
+                </div>
+                @if($proposta_currency !== 'BRL')
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Taxa de Câmbio (1 {{ $proposta_currency }} = ? BRL)</label>
+                    <input type="number" wire:model.live="proposta_exchange_rate" step="0.01" min="0.01"
+                        class="w-full rounded-lg bg-gray-800 border border-gray-700 text-sm text-white px-3 py-2 focus:ring-1 focus:ring-emerald-500 outline-none" placeholder="Ex: 5.85">
+                </div>
+                @endif
+            </div>
             <div class="grid grid-cols-2 gap-3">
                 <div class="col-span-2">
                     <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Título da Proposta</label>

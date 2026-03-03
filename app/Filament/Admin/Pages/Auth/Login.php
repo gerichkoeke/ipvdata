@@ -8,6 +8,22 @@ use Illuminate\Validation\ValidationException;
 
 class Login extends BaseLogin
 {
+    protected static string $view = 'filament.admin.pages.auth.login';
+
+    public string $locale = 'pt_BR';
+
+    public function mount(): void
+    {
+        parent::mount();
+        $this->locale = session('locale', config('app.locale', 'pt_BR'));
+    }
+
+    public function updatedLocale(): void
+    {
+        session(['locale' => $this->locale]);
+        app()->setLocale($this->locale);
+    }
+
     public function authenticate(): ?LoginResponse
     {
         $data = $this->form->getState();
