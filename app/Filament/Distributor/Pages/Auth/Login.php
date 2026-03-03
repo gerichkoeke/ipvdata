@@ -45,11 +45,14 @@ class Login extends BaseLogin
             ]);
         }
 
+        // Save locale BEFORE regenerate wipes it
+        $chosenLocale = session('locale', $this->locale ?? 'pt_BR');
+
         auth()->login($user, $data['remember'] ?? false);
         session()->regenerate();
 
-        $chosenLocale = session('locale', 'pt_BR');
-        if (session()->has('locale') && $chosenLocale !== $user->locale) {
+        session(['locale' => $chosenLocale]);
+        if ($chosenLocale !== $user->locale) {
             $user->update(['locale' => $chosenLocale]);
         }
         app()->setLocale($chosenLocale);

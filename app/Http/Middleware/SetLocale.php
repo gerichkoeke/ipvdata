@@ -12,7 +12,7 @@ class SetLocale
     public function handle(Request $request, Closure $next)
     {
         try {
-            $validLocales = ['pt_BR', 'en_US', 'en', 'es', 'pt'];
+            $validLocales = ['pt_BR', 'en', 'es', 'pt'];
             $locale       = null;
 
             // Prioridade 1: sessão — escolha explícita do usuário
@@ -38,6 +38,10 @@ class SetLocale
             // Validar e aplicar
             if ($locale && in_array($locale, $validLocales)) {
                 App::setLocale($locale);
+                // Re-persist to session so it survives future regenerations
+                if (!Session::has('locale')) {
+                    Session::put('locale', $locale);
+                }
             } else {
                 App::setLocale(config('app.locale', 'pt_BR'));
             }

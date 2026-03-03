@@ -45,6 +45,9 @@ class Login extends BaseLogin
             ]);
         }
 
+        // Save locale BEFORE regenerate wipes it
+        $chosenLocale = session('locale', $this->locale ?? 'pt_BR');
+
         // MFA habilitado → challenge
         if ($user->mfa_enabled && $user->mfa_confirmed_at) {
             session([
@@ -52,6 +55,7 @@ class Login extends BaseLogin
                 'mfa_remember'   => $data['remember'] ?? false,
                 'mfa_panel'      => 'partner',
                 'mfa_panel_path' => 'partner-panel',
+                'locale'         => $chosenLocale,
             ]);
             $this->redirect(url('/partner-panel/mfa-challenge'), navigate: false);
             return null;
@@ -60,8 +64,8 @@ class Login extends BaseLogin
         auth()->login($user, $data['remember'] ?? false);
         session()->regenerate();
 
-        $chosenLocale = session('locale', 'pt_BR');
-        if (session()->has('locale') && $chosenLocale !== $user->locale) {
+        session(['locale' => $chosenLocale]);
+        if ($chosenLocale !== $user->locale) {
             $user->update(['locale' => $chosenLocale]);
         }
         app()->setLocale($chosenLocale);
