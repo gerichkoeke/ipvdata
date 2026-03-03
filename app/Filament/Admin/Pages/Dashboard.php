@@ -31,8 +31,7 @@ class Dashboard extends Page
         for ($i = 5; $i >= 0; $i--) {
             $month = now()->subMonths($i);
             $value = Project::where('status', 'active')
-                ->whereYear('created_at', '<=', $month->year)
-                ->whereMonth('created_at', '<=', $month->month)
+                ->where('created_at', '<=', $month->copy()->endOfMonth())
                 ->sum('monthly_value');
             $mrrChart[] = ['label' => $month->format('M/y'), 'value' => round((float)$value, 2)];
         }

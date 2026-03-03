@@ -40,8 +40,7 @@ class Dashboard extends Page
             $month = now()->subMonths($i);
             $count = Customer::whereIn('partner_id', $partnerIds)
                 ->where('is_active', true)
-                ->whereYear('created_at', '<=', $month->year)
-                ->whereMonth('created_at', '<=', $month->month)
+                ->where('created_at', '<=', $month->copy()->endOfMonth())
                 ->count();
             $clientChart[] = ['label' => $month->format('M/y'), 'value' => $count];
         }
