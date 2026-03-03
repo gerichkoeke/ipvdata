@@ -314,48 +314,58 @@
 @if($modalProposta)
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
     <div class="absolute inset-0" style="background-color:rgba(0,0,0,0.65);backdrop-filter:blur(4px);" wire:click="$set('modalProposta',false)"></div>
-    <div class="relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl w-full max-w-lg shadow-2xl overflow-y-auto" style="max-height:90vh;">
-        <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between z-10">
+    <div class="relative bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-lg shadow-2xl overflow-y-auto" style="max-height:90vh;">
+        <div class="sticky top-0 bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between z-10">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center">
-                    <x-heroicon-m-document-text class="w-5 h-5 text-emerald-600 dark:text-emerald-400"/>
+                <div class="w-9 h-9 rounded-xl bg-emerald-900/40 border border-emerald-800 flex items-center justify-center">
+                    <x-heroicon-m-document-text class="w-5 h-5 text-emerald-400"/>
                 </div>
-                <h2 class="text-base font-bold text-gray-900 dark:text-white">Gerar Proposta</h2>
+                <h2 class="text-base font-bold text-white">Gerar Proposta</h2>
             </div>
-            <button wire:click="$set('modalProposta',false)" class="text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors">
+            <button wire:click="$set('modalProposta',false)" class="text-gray-400 hover:text-white transition-colors">
                 <x-heroicon-m-x-mark class="w-5 h-5"/>
             </button>
         </div>
         <div class="px-6 py-4 space-y-5">
             <div class="grid grid-cols-2 gap-3">
                 <div class="col-span-2">
-                    <label class="block text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Título da Proposta</label>
-                    <input type="text" wire:model="proposta_titulo" class="w-full rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-sm text-gray-900 dark:text-white px-3 py-2 focus:ring-1 focus:ring-emerald-500 outline-none"/>
+                    <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Título da Proposta</label>
+                    <input type="text" wire:model="proposta_titulo" class="w-full rounded-lg bg-gray-800 border border-gray-700 text-sm text-white px-3 py-2 focus:ring-1 focus:ring-emerald-500 outline-none"/>
                 </div>
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Válida até</label>
-                    <input type="date" wire:model="proposta_validade" class="w-full rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-sm text-gray-900 dark:text-white px-3 py-2 focus:ring-1 focus:ring-emerald-500 outline-none"/>
+                    <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Válida até</label>
+                    <input type="date" wire:model="proposta_validade" class="w-full rounded-lg bg-gray-800 border border-gray-700 text-sm text-white px-3 py-2 focus:ring-1 focus:ring-emerald-500 outline-none"/>
                 </div>
             </div>
             @if($data['rede'])
-            <div class="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 p-3">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2"><x-heroicon-m-signal class="w-4 h-4 text-primary-500 dark:text-primary-400"/><span class="text-sm font-semibold text-gray-900 dark:text-white">Rede</span><span class="text-[10px] text-gray-500 dark:text-gray-400">{{ $data['rede']->networkType?->name }}</span></div>
-                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" wire:model="proposta_incluir_rede" class="rounded border-gray-400 dark:border-gray-600 text-emerald-500"/><span class="text-[11px] text-gray-600 dark:text-gray-400">Incluir na proposta</span></label>
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <x-heroicon-m-signal class="w-4 h-4 text-primary-400"/>
+                    <span class="text-[11px] font-semibold text-primary-400 uppercase tracking-wide">Serviços de Rede</span>
                 </div>
+                <div class="rounded-lg border border-gray-700 bg-gray-800/40 p-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2"><span class="text-sm font-semibold text-white">Rede</span><span class="text-[10px] text-gray-400">{{ $data['rede']->networkType?->name }}</span></div>
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" wire:model="proposta_incluir_rede" class="rounded border-gray-600 text-emerald-500"/><span class="text-[11px] text-gray-400">Incluir na proposta</span></label>
+                    </div>
+                </div>
+                <div class="border-t border-gray-700 mt-4"></div>
             </div>
             @endif
             @if($data['allVms']->isNotEmpty())
             <div>
-                <div class="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Máquinas Virtuais</div>
+                <div class="flex items-center gap-2 mb-2">
+                    <x-heroicon-m-server-stack class="w-4 h-4 text-primary-400"/>
+                    <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wide">Máquinas Virtuais</span>
+                </div>
                 <div class="space-y-2">
                     @foreach($data['allVms'] as $vm)
-                    <label class="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 px-3 py-2.5 cursor-pointer hover:border-emerald-300 dark:hover:border-gray-600 hover:bg-emerald-50 dark:hover:bg-gray-800/60 transition-colors">
+                    <label class="flex items-center justify-between rounded-lg border border-gray-700 bg-gray-800/40 px-3 py-2.5 cursor-pointer hover:border-gray-600 hover:bg-gray-800/60 transition-colors">
                         <div class="flex items-center gap-2.5">
-                            <input type="checkbox" wire:model="proposta_vm_ids" value="{{ $vm->id }}" class="rounded border-gray-400 dark:border-gray-600 text-emerald-500"/>
-                            <div><p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $vm->name }}</p><p class="text-[10px] text-gray-500 dark:text-gray-400">{{ $vm->osDistribution?->name }} · {{ $vm->cpu_cores }} vCPUs · {{ $vm->ram_gb }}GB RAM</p></div>
+                            <input type="checkbox" wire:model="proposta_vm_ids" value="{{ $vm->id }}" class="rounded border-gray-600 text-emerald-500"/>
+                            <div><p class="text-sm font-semibold text-white">{{ $vm->name }}</p><p class="text-[10px] text-gray-400">{{ $vm->osDistribution?->name }} · {{ $vm->cpu_cores }} vCPUs · {{ $vm->ram_gb }}GB RAM</p></div>
                         </div>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400 shrink-0 ml-3">R$ {{ number_format($vm->price_total_monthly,2,',','.') }}</span>
+                        <span class="text-sm font-bold text-emerald-400 shrink-0 ml-3">R$ {{ number_format($vm->price_total_monthly,2,',','.') }}</span>
                     </label>
                     @endforeach
                 </div>
@@ -363,15 +373,15 @@
             @endif
             @if($data['s3_contracts']->isNotEmpty())
             <div>
-                <div class="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Object Storage (S3)</div>
+                <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Object Storage (S3)</div>
                 <div class="space-y-2">
                     @foreach($data['s3_contracts'] as $s3)
-                    <label class="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 px-3 py-2.5 cursor-pointer hover:border-emerald-300 dark:hover:border-gray-600 transition-colors">
+                    <label class="flex items-center justify-between rounded-lg border border-gray-700 bg-gray-800/40 px-3 py-2.5 cursor-pointer hover:border-gray-600 transition-colors">
                         <div class="flex items-center gap-2.5">
-                            <input type="checkbox" wire:model="proposta_s3_ids" value="{{ $s3->id }}" class="rounded border-gray-400 dark:border-gray-600 text-emerald-500"/>
-                            <div><p class="text-sm font-semibold text-gray-900 dark:text-white">S3 · {{ $s3->size_gb }} GB</p><p class="text-[10px] text-gray-500 dark:text-gray-400">R$ {{ number_format($s3->price_per_gb,4,',','.') }}/GB</p></div>
+                            <input type="checkbox" wire:model="proposta_s3_ids" value="{{ $s3->id }}" class="rounded border-gray-600 text-emerald-500"/>
+                            <div><p class="text-sm font-semibold text-white">S3 · {{ $s3->size_gb }} GB</p><p class="text-[10px] text-gray-400">R$ {{ number_format($s3->price_per_gb,4,',','.') }}/GB</p></div>
                         </div>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400 shrink-0 ml-3">R$ {{ number_format($s3->size_gb*$s3->price_per_gb,2,',','.') }}</span>
+                        <span class="text-sm font-bold text-emerald-400 shrink-0 ml-3">R$ {{ number_format($s3->size_gb*$s3->price_per_gb,2,',','.') }}</span>
                     </label>
                     @endforeach
                 </div>
@@ -379,26 +389,108 @@
             @endif
             @if($data['backup_contracts']->isNotEmpty())
             <div>
-                <div class="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Contratos de Backup</div>
+                <div class="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Contratos de Backup</div>
                 <div class="space-y-2">
                     @foreach($data['backup_contracts'] as $bkp)
-                    <label class="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 px-3 py-2.5 cursor-pointer hover:border-emerald-300 dark:hover:border-gray-600 transition-colors">
+                    <label class="flex items-center justify-between rounded-lg border border-gray-700 bg-gray-800/40 px-3 py-2.5 cursor-pointer hover:border-gray-600 transition-colors">
                         <div class="flex items-center gap-2.5">
-                            <input type="checkbox" wire:model="proposta_backup_ids" value="{{ $bkp->id }}" class="rounded border-gray-400 dark:border-gray-600 text-emerald-500"/>
-                            <div><p class="text-sm font-semibold text-gray-900 dark:text-white">Backup Gerenciado</p><p class="text-[10px] text-gray-500 dark:text-gray-400">{{ $bkp->machine_count ?? 1 }} máquina(s) · {{ $bkp->total_disk_gb ?? 0 }}GB</p></div>
+                            <input type="checkbox" wire:model="proposta_backup_ids" value="{{ $bkp->id }}" class="rounded border-gray-600 text-emerald-500"/>
+                            <div><p class="text-sm font-semibold text-white">Backup Gerenciado</p><p class="text-[10px] text-gray-400">{{ $bkp->machine_count ?? 1 }} máquina(s) · {{ $bkp->total_disk_gb ?? 0 }}GB</p></div>
                         </div>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400 shrink-0 ml-3">R$ {{ number_format($bkp->monthly_value,2,',','.') }}</span>
+                        <span class="text-sm font-bold text-emerald-400 shrink-0 ml-3">R$ {{ number_format($bkp->monthly_value,2,',','.') }}</span>
                     </label>
                     @endforeach
                 </div>
             </div>
             @endif
+            @php
+                $__calcTotal = 0;
+                $__calcItens = [];
+                if($proposta_incluir_rede && $data['rede']) {
+                    $__r = $data['rede'];
+                    $__isLan = $__r->networkType?->slug === 'lan-to-lan';
+                    $__netCost = $__isLan ? (float)($__r->networkType?->price ?? 0) : ((float)($__r->extra_ip_price ?? 0) + (float)($__r->bandwidthOption?->price ?? 0));
+                    $__calcItens[] = ['item' => 'Rede', 'detalhes' => $__r->networkType?->name ?? '', 'valor' => $__netCost];
+                    $__calcTotal += $__netCost;
+                }
+                foreach($data['allVms']->whereIn('id', $proposta_vm_ids) as $__v) {
+                    $__calcItens[] = ['item' => $__v->name, 'detalhes' => $__v->cpu_cores.' vCPUs · '.$__v->ram_gb.'GB RAM', 'valor' => $__v->price_total_monthly];
+                    $__calcTotal += $__v->price_total_monthly;
+                }
+                foreach($data['s3_contracts']->whereIn('id', $proposta_s3_ids) as $__s) {
+                    $__sv = $__s->size_gb * $__s->price_per_gb;
+                    $__calcItens[] = ['item' => 'S3 · '.$__s->size_gb.' GB', 'detalhes' => 'R$ '.number_format($__s->price_per_gb,4,',','.').'/GB', 'valor' => $__sv];
+                    $__calcTotal += $__sv;
+                }
+                foreach($data['backup_contracts']->whereIn('id', $proposta_backup_ids) as $__b) {
+                    $__calcItens[] = ['item' => 'Backup Gerenciado', 'detalhes' => ($__b->machine_count ?? 1).' máquina(s) · '.($__b->total_disk_gb ?? 0).'GB', 'valor' => $__b->monthly_value];
+                    $__calcTotal += $__b->monthly_value;
+                }
+                $__pct = max(0, min(100, (float)$proposta_desconto));
+                $__descontoValor = $__pct > 0 ? round($__calcTotal * ($__pct / 100), 2) : 0;
+                $__totalFinal = $__calcTotal - $__descontoValor;
+            @endphp
+            {{-- Campo de Desconto --}}
+            <div class="bg-orange-900/20 border border-orange-700/50 rounded-lg p-3">
+                <div class="flex items-center gap-3">
+                    <div class="flex-1">
+                        <label class="block text-[11px] font-semibold text-orange-400 uppercase tracking-wide mb-1">Desconto (%)</label>
+                        <input type="number" wire:model="proposta_desconto" min="0" max="100" step="0.5"
+                            class="w-full rounded-lg bg-gray-800 border border-gray-700 text-sm text-white px-3 py-2 focus:ring-1 focus:ring-orange-500 outline-none"/>
+                    </div>
+                    @if($__pct > 0)
+                    <div class="text-right shrink-0">
+                        <span class="text-[10px] text-orange-400 font-semibold">Economia</span>
+                        <p class="text-sm font-bold text-orange-300">R$ {{ number_format($__descontoValor,2,',','.') }}/mês</p>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            {{-- Grid de Resumo --}}
+            @if(count($__calcItens) > 0)
+            <div class="rounded-lg border border-gray-700 overflow-hidden">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-800 border-b border-gray-700">
+                            <th class="text-left px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-wide">Item</th>
+                            <th class="text-left px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-wide">Detalhes</th>
+                            <th class="text-right px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-wide">Valor/mês</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($__calcItens as $__item)
+                        <tr class="border-b border-gray-700/50 hover:bg-gray-800/30">
+                            <td class="px-3 py-2 text-white font-semibold">{{ $__item['item'] }}</td>
+                            <td class="px-3 py-2 text-gray-400 text-xs">{{ $__item['detalhes'] }}</td>
+                            <td class="px-3 py-2 text-emerald-400 font-bold text-right">R$ {{ number_format($__item['valor'],2,',','.') }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr class="bg-emerald-900/20 border-t border-gray-700">
+                            <td colspan="2" class="px-3 py-2 text-white font-bold">Total Geral</td>
+                            <td class="px-3 py-2 text-emerald-400 font-bold text-right text-base">R$ {{ number_format($__calcTotal,2,',','.') }}</td>
+                        </tr>
+                        @if($__pct > 0)
+                        <tr class="bg-red-900/20 border-t border-gray-700/50">
+                            <td colspan="2" class="px-3 py-2 text-orange-400 font-semibold">Desconto ({{ $__pct }}%)</td>
+                            <td class="px-3 py-2 text-orange-400 font-bold text-right">- R$ {{ number_format($__descontoValor,2,',','.') }}</td>
+                        </tr>
+                        <tr class="bg-emerald-900/30 border-t border-gray-700">
+                            <td colspan="2" class="px-3 py-2 text-white font-bold">Total com Desconto</td>
+                            <td class="px-3 py-2 text-emerald-300 font-bold text-right text-base">R$ {{ number_format($__totalFinal,2,',','.') }}</td>
+                        </tr>
+                        @endif
+                    </tfoot>
+                </table>
+            </div>
+            @endif
             <div>
-                <label class="block text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Observações (opcional)</label>
-                <textarea wire:model="proposta_notas" rows="3" class="w-full rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-sm text-gray-900 dark:text-white px-3 py-2 focus:ring-1 focus:ring-emerald-500 outline-none resize-none placeholder-gray-400 dark:placeholder-gray-500" placeholder="Condições especiais, prazo, observações..."></textarea>
+                <label class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Observações (opcional)</label>
+                <textarea wire:model="proposta_notas" rows="3" class="w-full rounded-lg bg-gray-800 border border-gray-700 text-sm text-white px-3 py-2 focus:ring-1 focus:ring-emerald-500 outline-none resize-none placeholder-gray-500" placeholder="Condições especiais, prazo, observações..."></textarea>
             </div>
         </div>
-        <div class="sticky bottom-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 px-6 py-4 flex gap-3 justify-end">
+        <div class="sticky bottom-0 bg-gray-900 border-t border-gray-800 px-6 py-4 flex gap-3 justify-end">
             <button type="button" wire:click="$set('modalProposta',false)" class="{{ $bg }}">Cancelar</button>
             <button type="button" wire:click="gerarProposta" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors">
                 <x-heroicon-m-document-text class="w-4 h-4"/>Gerar e Abrir Proposta

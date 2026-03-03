@@ -48,6 +48,7 @@ class CustomerInfra extends Page
     public string $proposta_titulo       = '';
     public string $proposta_validade     = '';
     public string $proposta_notas        = '';
+    public float  $proposta_desconto     = 0;
 
     // ── IDs ativos ───────────────────────────────────────────────
     public ?int $activeVmId      = null;

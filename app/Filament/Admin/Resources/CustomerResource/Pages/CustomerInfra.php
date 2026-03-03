@@ -60,6 +60,7 @@ class CustomerInfra extends Page
     public string $proposta_titulo       = '';
     public string $proposta_validade     = '';
     public string $proposta_notas        = '';
+    public float  $proposta_desconto     = 0;
 
     // ── IDs ativos ───────────────────────────────────────────────
     public ?int $activeVmId      = null;
@@ -858,6 +859,7 @@ class CustomerInfra extends Page
         $this->proposta_titulo   = 'Proposta Cloud — ' . ($this->record->trade_name ?? $this->record->name);
         $this->proposta_validade = now()->addDays(30)->format('Y-m-d');
         $this->proposta_notas    = '';
+        $this->proposta_desconto = 0;
 
         $this->modalProposta = true;
     }
@@ -883,6 +885,10 @@ class CustomerInfra extends Page
             + $backups->sum('monthly_value')
             + $netCost;
 
+        $discount = $this->proposta_desconto > 0
+            ? round($subtotal * (min(100, max(0, $this->proposta_desconto)) / 100), 2)
+            : 0;
+
         $partner = $this->record->partner;
 
         $proposal = Proposal::create([
@@ -893,7 +899,8 @@ class CustomerInfra extends Page
             'title'       => $this->proposta_titulo ?: 'Proposta Cloud',
             'status'      => 'draft',
             'subtotal'    => $subtotal,
-            'total'       => $subtotal,
+            'discount'    => $discount,
+            'total'       => $subtotal - $discount,
             'valid_until' => $this->proposta_validade ?: null,
             'notes'       => $this->proposta_notas ?: null,
         ]);
