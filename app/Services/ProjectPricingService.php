@@ -42,7 +42,7 @@ class ProjectPricingService
                 'discount' => $vm->discount_amount ?? 0,
                 'total' => $vm->getTotalMonthlyCostWithDiscount(),
                 'details' => [
-                    'vcpu' => $vm->vcpu,
+                    'cpu_cores' => $vm->cpu_cores,
                     'ram_gb' => $vm->ram_gb,
                     'os' => $vm->osDistribution?->name,
                     'disks' => $vm->disks->count(),
@@ -120,7 +120,7 @@ class ProjectPricingService
     private function getVmDescription($vm): string
     {
         $parts = [
-            $vm->vcpu . ' vCPU',
+            $vm->cpu_cores . ' vCPUs',
             $vm->ram_gb . 'GB RAM',
         ];
         
