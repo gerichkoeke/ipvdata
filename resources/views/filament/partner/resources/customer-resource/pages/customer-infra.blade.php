@@ -10,6 +10,8 @@
     $selects = $this->getSelects();
     $osDistribuicoes = $this->getOsDistribuicoes();
     $rdsModes        = $this->getRdsModes();
+    $proposta_currency      = $this->proposta_currency;
+    $proposta_exchange_rate = $this->proposta_exchange_rate;
     $ic = 'w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500'; $icStyle = 'color-scheme:dark;background-color:#1f2937;color:white;border:1px solid #4b5563;';
     $sc = 'w-full bg-gray-800 border border-gray-600 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500';
     $lc = 'block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-widest';

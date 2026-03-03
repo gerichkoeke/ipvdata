@@ -12,41 +12,34 @@ class SetLocale
     public function handle(Request $request, Closure $next)
     {
         try {
-            if (auth()->check()) {
-                $user   = auth()->user();
-                $locale = null;
+            $validLocales = ['pt_BR', 'en_US', 'en', 'es', 'pt'];
+            $locale       = null;
 
-                // Prioridade 1: locale do parceiro
-                if ($user->partner_id) {
+            // Prioridade 1: sessão — escolha explícita do usuário
+            if ($sessionLocale = Session::get('locale')) {
+                $locale = $sessionLocale;
+            } elseif (auth()->check()) {
+                $user = auth()->user();
+
+                // Prioridade 2: locale do próprio usuário
+                $locale = $user->locale ?? null;
+
+                // Prioridade 3: locale do parceiro
+                if (!$locale && $user->partner_id) {
                     $locale = optional($user->partner)->locale;
                 }
 
-                // Prioridade 2: locale do distribuidor
+                // Prioridade 4: locale do distribuidor
                 if (!$locale && $user->distributor_id) {
                     $locale = optional($user->distributor)->locale;
                 }
+            }
 
-                // Prioridade 3: locale do próprio usuário
-                if (!$locale) {
-                    $locale = $user->locale ?? null;
-                }
-
-                // Prioridade 4: sessão
-                if (!$locale) {
-                    $locale = Session::get('locale');
-                }
-
-                // Validar e aplicar
-                $validLocales = ['pt_BR', 'en_US', 'en', 'es', 'pt'];
-                if ($locale && in_array($locale, $validLocales)) {
-                    App::setLocale($locale);
-                } else {
-                    App::setLocale(config('app.locale', 'pt_BR'));
-                }
-            } else {
-                // Não autenticado — usar sessão ou padrão
-                $locale = Session::get('locale', config('app.locale', 'pt_BR'));
+            // Validar e aplicar
+            if ($locale && in_array($locale, $validLocales)) {
                 App::setLocale($locale);
+            } else {
+                App::setLocale(config('app.locale', 'pt_BR'));
             }
         } catch (\Throwable $e) {
             App::setLocale(config('app.locale', 'pt_BR'));

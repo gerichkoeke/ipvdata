@@ -48,6 +48,12 @@ class Login extends BaseLogin
         auth()->login($user, $data['remember'] ?? false);
         session()->regenerate();
 
+        $chosenLocale = session('locale', 'pt_BR');
+        if (session()->has('locale') && $chosenLocale !== $user->locale) {
+            $user->update(['locale' => $chosenLocale]);
+        }
+        app()->setLocale($chosenLocale);
+
         return app(LoginResponse::class);
     }
 }
