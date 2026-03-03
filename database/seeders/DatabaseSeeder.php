@@ -34,5 +34,7 @@ class DatabaseSeeder extends Seeder
         $this->command->info('   Senha  : Admin@123456');
         $this->command->info('   URL    : https://admin.ipvdata.com.br/admin');
         $this->command->info('');
+
+        $this->call(ResourcePricingSeeder::class);
     }
 }
