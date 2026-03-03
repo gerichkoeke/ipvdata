@@ -239,7 +239,53 @@
             @if($wizardStep===4)<div class="space-y-4"><label class="flex items-center gap-3 cursor-pointer p-3 rounded-lg border border-gray-700 hover:border-gray-600 transition-colors"><input type="checkbox" wire:model.live="form_has_additional_disks" class="w-4 h-4 rounded border-gray-600 bg-gray-800 text-primary-500"/><div><p class="text-sm font-semibold text-gray-300">Adicionar discos extras</p><p class="text-[11px] text-gray-500">Além do disco do SO</p></div></label>@if($form_has_additional_disks)<div class="space-y-2">@foreach($form_additional_disks as $idx=>$disk)<div class="flex items-end gap-3 p-3 bg-gray-800 rounded-lg border border-gray-700"><div class="flex-1"><label class="{{ $lc }}">Tipo</label><select wire:model="form_additional_disks.{{ $idx }}.disk_type_id" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Tipo...</option>@foreach($selects['disk_types'] as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach</select></div><div class="w-28"><label class="{{ $lc }}">GB</label><input type="number" wire:model="form_additional_disks.{{ $idx }}.size_gb" min="10" class="{{ $ic }}"/></div><button type="button" wire:click="removerDisco({{ $idx }})" class="p-2 text-red-400 hover:bg-red-900/20 rounded-lg mb-0.5 transition-colors"><x-heroicon-m-trash class="w-4 h-4"/></button></div>@endforeach<button type="button" wire:click="adicionarDisco" class="w-full py-2.5 border-2 border-dashed border-gray-700 hover:border-primary-500 rounded-lg text-xs font-semibold text-gray-500 hover:text-primary-400 transition-colors">+ Adicionar Disco</button></div>@endif</div>@endif
             @if($wizardStep===5)<div class="space-y-4"><label class="flex items-center gap-3 cursor-pointer p-3 rounded-lg border border-gray-700 hover:border-gray-600 transition-colors"><input type="checkbox" wire:model.live="form_has_remote_desktop" class="w-4 h-4 rounded border-gray-600 bg-gray-800 text-primary-500"/><div><p class="text-sm font-semibold text-gray-300">Licenças de Terminal Remoto</p><p class="text-[11px] text-gray-500">RDS ou TsPlus para acesso remoto</p></div></label>@if($form_has_remote_desktop)<div class="space-y-3 pl-4 border-l-2 border-primary-800"><div><label class="{{ $lc }}">Tipo (RDS ou TsPlus)</label><select wire:model.live="form_remote_desktop_type_id" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Selecione...</option>@foreach($selects['remote_types'] as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach</select></div>@if(!empty($rdsModes))<div><label class="{{ $lc }}">Modo de Licença</label><select wire:model.live="form_rds_license_mode_id" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Selecione...</option>@foreach($rdsModes as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach</select></div>@endif<div><label class="{{ $lc }}">Quantidade</label><input type="number" wire:model="form_rds_license_qty" min="1" class="{{ $ic }}" style="max-width:120px"/></div></div>@endif</div>@endif
             @if($wizardStep===6)<div class="space-y-4"><label class="flex items-center gap-3 cursor-pointer p-3 rounded-lg border border-gray-700 hover:border-gray-600 transition-colors"><input type="checkbox" wire:model.live="form_has_endpoint" class="w-4 h-4 rounded border-gray-600 bg-gray-800 text-primary-500"/><div><p class="text-sm font-semibold text-gray-300">Endpoint Security</p><p class="text-[11px] text-gray-500">Proteção antivírus e antimalware</p></div></label>@if($form_has_endpoint)<div class="pl-4 border-l-2 border-green-800"><label class="{{ $lc }}">Solução de Endpoint</label><select wire:model="form_endpoint_security_id" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Selecione...</option>@foreach($selects['endpoint_options'] as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach</select></div>@endif</div>@endif
-            @if($wizardStep===7)<div class="space-y-4"><label class="flex items-center gap-3 cursor-pointer p-3 rounded-lg border border-gray-700 hover:border-gray-600 transition-colors"><input type="checkbox" wire:model.live="form_has_backup_vm" class="w-4 h-4 rounded border-gray-600 bg-gray-800 text-primary-500"/><div><p class="text-sm font-semibold text-gray-300">Backup desta VM</p><p class="text-[11px] text-gray-500">Retenção e software configuráveis</p></div></label>@if($form_has_backup_vm)<div class="grid grid-cols-2 gap-4 pl-4 border-l-2 border-yellow-800"><div><label class="{{ $lc }}">Retenção</label><select wire:model="form_backup_retention_id" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Selecione...</option>@foreach($selects['retention_options'] as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach</select></div><div><label class="{{ $lc }}">Software de Backup</label><select wire:model="form_backup_software_id" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Selecione...</option>@foreach($selects['backup_sw_options'] as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach</select></div></div>@endif</div>@endif
+            @if($wizardStep===7)<div class="space-y-4"><label class="flex items-center gap-3 cursor-pointer p-3 rounded-lg border border-gray-700 hover:border-gray-600 transition-colors"><input type="checkbox" wire:model.live="form_has_backup_vm" class="w-4 h-4 rounded border-gray-600 bg-gray-800 text-primary-500"/><div><p class="text-sm font-semibold text-gray-300">Backup desta VM</p><p class="text-[11px] text-gray-500">Retenção e software configuráveis</p></div></label>@if($form_has_backup_vm)<div class="grid grid-cols-2 gap-4 pl-4 border-l-2 border-yellow-800"><div><label class="{{ $lc }}">Retenção</label><select wire:model="form_backup_retention_id" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Selecione...</option>@foreach($selects['retention_options'] as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach</select></div><div><label class="{{ $lc }}">Software de Backup</label><select wire:model="form_backup_software_id" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Selecione...</option>@foreach($selects['backup_sw_options'] as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach</select></div></div>@endif@php
+    $__p = $this->calcPricesVm();
+    $__linhas = [];
+    if ($__p['priceCpu'] > 0)
+        $__linhas[] = ['🔵 CPU', $form_cpu_cores . ' vCPUs', $__p['priceCpu']];
+    if ($__p['priceRam'] > 0)
+        $__linhas[] = ['🟣 RAM', $form_ram_gb . ' GB', $__p['priceRam']];
+    if ($__p['priceDiskOs'] > 0)
+        $__linhas[] = ['🟠 Disco SO', $form_disk_os_gb . ' GB', $__p['priceDiskOs']];
+    if ($__p['priceAdditionalDisks'] > 0)
+        $__linhas[] = ['🟠 Discos Extras', '', $__p['priceAdditionalDisks']];
+    if ($__p['priceOsLicense'] > 0)
+        $__linhas[] = ['🔑 Licença SO', '', $__p['priceOsLicense']];
+    if ($__p['priceRds'] > 0)
+        $__linhas[] = ['🖥️ Terminal RDS', ($form_rds_license_qty ?? 0) . 'x', $__p['priceRds']];
+    if ($__p['priceEndpoint'] > 0)
+        $__linhas[] = ['🛡️ Endpoint Security', '', $__p['priceEndpoint']];
+    if ($__p['priceBackupSw'] > 0)
+        $__linhas[] = ['💾 Software Backup', '', $__p['priceBackupSw']];
+    if ($__p['priceBackup'] > 0)
+        $__linhas[] = ['🗄️ Backup Storage', number_format($__p['backupStorageGb'], 0) . ' GB', $__p['priceBackup']];
+@endphp
+@if(count($__linhas) > 0)
+<div class="mt-4 rounded-lg border border-gray-700 overflow-hidden">
+    <div class="px-3 py-2 bg-gray-800/60 border-b border-gray-700 flex items-center gap-2">
+        <x-heroicon-m-calculator class="w-3.5 h-3.5 text-primary-400"/>
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Resumo de Preços</span>
+    </div>
+    <table class="w-full text-xs">
+        <tbody>
+            @foreach($__linhas as $__l)
+            <tr class="border-b border-gray-700/50 hover:bg-gray-800/30">
+                <td class="px-3 py-2 text-gray-300 font-medium">{{ $__l[0] }}</td>
+                <td class="px-3 py-2 text-gray-500">{{ $__l[1] }}</td>
+                <td class="px-3 py-2 text-emerald-400 font-bold text-right">R$ {{ number_format($__l[2], 2, ',', '.') }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+        <tfoot>
+            <tr class="bg-primary-900/20 border-t border-primary-800/50">
+                <td colspan="2" class="px-3 py-2.5 text-white font-bold text-sm">Total / mês</td>
+                <td class="px-3 py-2.5 text-primary-400 font-bold text-right text-sm">R$ {{ number_format($__p['total'], 2, ',', '.') }}</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+@endif</div>@endif
         </div>
         <div class="px-6 py-4 border-t border-gray-800 flex items-center justify-between shrink-0">
             <button type="button" wire:click="wizardPrev" class="{{ $wizardStep>1?$bg:'invisible' }}">← Anterior</button>

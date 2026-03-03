@@ -883,7 +883,8 @@ class CustomerInfra extends Page
                + $priceEndpoint + $priceBackupSw + $priceBackup + $priceAdditionalDisks;
 
         return compact('priceCpu', 'priceRam', 'priceDiskOs', 'priceOsLicense', 'priceRds',
-                       'priceEndpoint', 'priceBackupSw', 'priceBackup', 'backupStorageGb', 'total');
+                       'priceEndpoint', 'priceBackupSw', 'priceBackup', 'priceAdditionalDisks',
+                       'backupStorageGb', 'total');
     }
 
     private function persistirVm(?int $vmId, ?int $projectId): void
