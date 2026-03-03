@@ -269,6 +269,8 @@ class CustomerInfra extends Page
     public string $proposta_notas              = '';
     public float  $proposta_desconto           = 0;
 
+    public bool $showPriceBreakdown = false;
+
     // ─── Dados Infra ──────────────────────────────────────────────
     public function getInfraData(): array
     {
@@ -885,6 +887,42 @@ class CustomerInfra extends Page
         return compact('priceCpu', 'priceRam', 'priceDiskOs', 'priceOsLicense', 'priceRds',
                        'priceEndpoint', 'priceBackupSw', 'priceBackup', 'priceAdditionalDisks',
                        'backupStorageGb', 'total');
+    }
+
+    public function getDiskOsTypeName(): string
+    {
+        if (!$this->form_disk_os_type_id) return '—';
+        return \App\Models\DiskType::find($this->form_disk_os_type_id)?->name ?? '—';
+    }
+
+    public function getDiskTypeName(?int $id): string
+    {
+        if (!$id) return '—';
+        return \App\Models\DiskType::find($id)?->name ?? '—';
+    }
+
+    public function getOsDistributionName(): string
+    {
+        if (!$this->form_os_distribution_id) return '—';
+        return \App\Models\OsDistribution::find($this->form_os_distribution_id)?->name ?? '—';
+    }
+
+    public function getRdsTypeName(): string
+    {
+        if (!$this->form_remote_desktop_type_id) return '';
+        return \App\Models\RemoteDesktopType::find($this->form_remote_desktop_type_id)?->name ?? '';
+    }
+
+    public function getEndpointSecurityName(): string
+    {
+        if (!$this->form_endpoint_security_id) return '—';
+        return \App\Models\EndpointSecurityOption::find($this->form_endpoint_security_id)?->name ?? '—';
+    }
+
+    public function getBackupSwName(): string
+    {
+        if (!$this->form_backup_software_id) return '—';
+        return \App\Models\BackupSoftwareOption::find($this->form_backup_software_id)?->name ?? '—';
     }
 
     private function persistirVm(?int $vmId, ?int $projectId): void
