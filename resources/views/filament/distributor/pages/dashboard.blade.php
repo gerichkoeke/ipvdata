@@ -33,11 +33,15 @@ $symbol = match($d['currency']) { 'USD' => 'US$', 'PYG' => '₲', default => 'R$
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
     <div class="rounded-xl border border-gray-700 bg-gray-900 p-5">
         <h3 class="text-sm font-bold text-white mb-4">Top 5 Parceiros por MRR</h3>
-        <canvas id="distPartnersChart" height="200"></canvas>
+        <div style="position:relative;height:260px;">
+            <canvas id="distPartnersChart"></canvas>
+        </div>
     </div>
     <div class="rounded-xl border border-gray-700 bg-gray-900 p-5">
         <h3 class="text-sm font-bold text-white mb-4">Evolução de Clientes — últimos 6 meses</h3>
-        <canvas id="distClientsChart" height="200"></canvas>
+        <div style="position:relative;height:260px;">
+            <canvas id="distClientsChart"></canvas>
+        </div>
     </div>
 </div>
 
@@ -101,6 +105,7 @@ $symbol = match($d['currency']) { 'USD' => 'US$', 'PYG' => '₲', default => 'R$
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
                     x: { grid: { color: gridColor }, ticks: { color: tickColor } },
@@ -128,6 +133,7 @@ $symbol = match($d['currency']) { 'USD' => 'US$', 'PYG' => '₲', default => 'R$
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
                     x: { grid: { color: gridColor }, ticks: { color: tickColor } },

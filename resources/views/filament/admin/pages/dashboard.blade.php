@@ -30,11 +30,15 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
     <div class="rounded-xl border border-gray-700 bg-gray-900 p-5">
         <h3 class="text-sm font-bold text-white mb-4">Evolução MRR — últimos 6 meses</h3>
-        <canvas id="adminMrrChart" height="200"></canvas>
+        <div style="position:relative;height:260px;">
+            <canvas id="adminMrrChart"></canvas>
+        </div>
     </div>
     <div class="rounded-xl border border-gray-700 bg-gray-900 p-5">
         <h3 class="text-sm font-bold text-white mb-4">Distribuição de Receita</h3>
-        <canvas id="adminRevenueChart" height="200"></canvas>
+        <div style="position:relative;height:280px;">
+            <canvas id="adminRevenueChart"></canvas>
+        </div>
     </div>
 </div>
 
@@ -163,6 +167,7 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
                     x: { grid: { color: gridColor }, ticks: { color: tickColor } },
@@ -188,6 +193,7 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: { legend: { labels: { color: tickColor } } }
             }
         });
