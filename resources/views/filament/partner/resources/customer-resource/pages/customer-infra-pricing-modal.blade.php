@@ -1,0 +1,206 @@
+<x-filament::modal
+    id="pricing-modal"
+    :heading="'Detalhamento de Preços - ' . ($selectedProject?->name ?? '')"
+    width="7xl"
+    :visible="$showPricingModal"
+>
+    @if($pricingData && $selectedProject)
+        <div class="space-y-6">
+            
+            {{-- Seção de Comissão Variável --}}
+            @if($selectedProject->hasVariableCommission())
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <h3 class="text-lg font-semibold mb-3 text-blue-900 dark:text-blue-100">
+                        💼 Comissão do Parceiro
+                    </h3>
+                    <div class="flex items-end gap-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium mb-1">
+                                Porcentagem de Comissão (%)
+                            </label>
+                            <input 
+                                type="number" 
+                                wire:model="partnerCommission"
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700"
+                                placeholder="Ex: 15.00"
+                            />
+                        </div>
+                        <x-filament::button
+                            wire:click="applyCommission"
+                            color="primary"
+                        >
+                            Aplicar Comissão
+                        </x-filament::button>
+                    </div>
+                </div>
+            @endif
+
+            {{-- Seção de Desconto Global --}}
+            <div class="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
+                <h3 class="text-lg font-semibold mb-3 text-amber-900 dark:text-amber-100">
+                    🏷️ Desconto Global no Projeto
+                </h3>
+                <div class="flex items-end gap-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium mb-1">
+                            Valor do Desconto ({{ $pricingData['summary']['currency'] }})
+                        </label>
+                        <input 
+                            type="number" 
+                            wire:model="globalDiscount"
+                            step="0.01"
+                            min="0"
+                            class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700"
+                            placeholder="Ex: 500.00"
+                        />
+                    </div>
+                    <x-filament::button
+                        wire:click="applyGlobalDiscount"
+                        color="warning"
+                    >
+                        Aplicar Desconto Global
+                    </x-filament::button>
+                </div>
+            </div>
+
+            {{-- Grid de Itens --}}
+            <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-semibold">📋 Itens do Projeto</h3>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 dark:bg-gray-900">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Tipo
+                                </th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Nome / Descrição
+                                </th>
+                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Subtotal
+                                </th>
+                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Desconto
+                                </th>
+                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Total
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @foreach($pricingData['items'] as $item)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                            @if($item['type'] === 'network') bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200
+                                            @elseif($item['type'] === 'vm') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                                            @elseif($item['type'] === 's3') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                            @else bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200
+                                            @endif">
+                                            {{ strtoupper($item['type']) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <div>
+                                            <div class="font-medium text-gray-900 dark:text-gray-100">
+                                                {{ $item['name'] }}
+                                            </div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400">
+                                                {{ $item['description'] }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 text-right font-medium">
+                                        {{ number_format($item['subtotal'], 2, ',', '.') }}
+                                    </td>
+                                    <td class="px-4 py-3 text-right">
+                                        <input 
+                                            type="number" 
+                                            wire:model="discounts.{{ $item['type'] }}_{{ $item['id'] }}"
+                                            step="0.01"
+                                            min="0"
+                                            max="{{ $item['subtotal'] }}"
+                                            class="w-28 text-right rounded border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-sm"
+                                            placeholder="0,00"
+                                        />
+                                    </td>
+                                    <td class="px-4 py-3 text-right font-bold text-green-600 dark:text-green-400">
+                                        {{ number_format($item['total'], 2, ',', '.') }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot class="bg-gray-50 dark:bg-gray-900 font-bold">
+                            <tr>
+                                <td colspan="2" class="px-4 py-3 text-right">
+                                    Subtotal Geral:
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    {{ number_format($pricingData['summary']['subtotal'], 2, ',', '.') }}
+                                </td>
+                                <td class="px-4 py-3 text-right text-red-600 dark:text-red-400">
+                                    -{{ number_format($pricingData['summary']['item_discounts'], 2, ',', '.') }}
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    {{ number_format($pricingData['summary']['total_before_global_discount'], 2, ',', '.') }}
+                                </td>
+                            </tr>
+                            @if($pricingData['summary']['global_discount'] > 0)
+                                <tr class="text-amber-600 dark:text-amber-400">
+                                    <td colspan="4" class="px-4 py-3 text-right">
+                                        Desconto Global:
+                                    </td>
+                                    <td class="px-4 py-3 text-right">
+                                        -{{ number_format($pricingData['summary']['global_discount'], 2, ',', '.') }}
+                                    </td>
+                                </tr>
+                            @endif
+                            <tr class="text-lg bg-green-50 dark:bg-green-900/20">
+                                <td colspan="4" class="px-4 py-4 text-right text-green-900 dark:text-green-100">
+                                    💰 TOTAL MENSAL:
+                                </td>
+                                <td class="px-4 py-4 text-right text-green-600 dark:text-green-400">
+                                    {{ $pricingData['summary']['currency'] }} {{ number_format($pricingData['summary']['total'], 2, ',', '.') }}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            {{-- Botões de Ação --}}
+            <div class="flex justify-between items-center pt-4">
+                <x-filament::button
+                    wire:click="applyItemDiscounts"
+                    color="success"
+                    size="lg"
+                >
+                    ✅ Aplicar Descontos nos Itens
+                </x-filament::button>
+
+                <div class="flex gap-3">
+                    <x-filament::button
+                        wire:click="generatePdf"
+                        color="info"
+                        icon="heroicon-o-document-text"
+                    >
+                        📄 Gerar PDF
+                    </x-filament::button>
+
+                    <x-filament::button
+                        wire:click="closePricingModal"
+                        color="gray"
+                    >
+                        Fechar
+                    </x-filament::button>
+                </div>
+            </div>
+        </div>
+    @endif
+</x-filament::modal>

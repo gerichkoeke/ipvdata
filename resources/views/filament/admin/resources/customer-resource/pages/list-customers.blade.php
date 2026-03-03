@@ -1,0 +1,38 @@
+<x-filament-panels::page>
+
+{{-- Seletor de Parceiro --}}
+<div class="mb-5 rounded-xl border border-gray-700 bg-gray-900 p-4">
+    <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 shrink-0">
+            <x-heroicon-o-briefcase class="w-4 h-4 text-primary-400"/>
+            <span class="text-sm font-semibold text-white">Parceiro:</span>
+        </div>
+        <div class="flex-1 max-w-xs relative">
+            <select
+                wire:model.live="selectedPartnerId"
+                style="color-scheme: dark; background-color: #1f2937; color: white; border-color: #4b5563;"
+                class="w-full rounded-lg px-3 py-2 text-sm focus:outline-none appearance-none cursor-pointer border"
+            >
+                <option value="" style="background:#1f2937;color:#9ca3af;">Selecione um parceiro...</option>
+                @foreach($this->getPartners() as $partner)
+                    <option value="{{ $partner->id }}" style="background:#1f2937;color:white;" @selected($this->selectedPartnerId == $partner->id)>
+                        {{ $partner->trade_name ?? $partner->company_name }}
+                    </option>
+                @endforeach
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-2 flex items-center">
+                <x-heroicon-m-chevron-down class="w-4 h-4 text-gray-400"/>
+            </div>
+        </div>
+        @if($this->selectedPartnerId)
+            <button wire:click="$set('selectedPartnerId', null)" class="text-xs text-gray-500 hover:text-white transition-colors">
+                Limpar
+            </button>
+        @endif
+    </div>
+</div>
+
+{{ $this->table }}
+
+<x-filament-actions::modals />
+</x-filament-panels::page>
