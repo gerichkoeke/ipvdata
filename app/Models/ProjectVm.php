@@ -43,13 +43,22 @@ class ProjectVm extends Model
     ];
 
     protected $casts = [
-        'cpu_cores'        => 'integer',
-        'ram_gb'           => 'integer',
-        'disk_os_gb'       => 'integer',
-        'rds_license_qty'  => 'integer',
-        'backup_storage_gb'=> 'integer',
-        'has_backup'       => 'boolean',
-        'discount_amount'  => 'decimal:2',
+        'cpu_cores'             => 'integer',
+        'ram_gb'                => 'integer',
+        'disk_os_gb'            => 'integer',
+        'rds_license_qty'       => 'integer',
+        'backup_storage_gb'     => 'integer',
+        'has_backup'            => 'boolean',
+        'discount_amount'       => 'decimal:2',
+        'price_cpu'             => 'decimal:2',
+        'price_ram'             => 'decimal:2',
+        'price_disk_os'         => 'decimal:2',
+        'price_os_license'      => 'decimal:2',
+        'price_rds'             => 'decimal:2',
+        'price_endpoint'        => 'decimal:2',
+        'price_backup'          => 'decimal:2',
+        'price_backup_software' => 'decimal:2',
+        'price_total_monthly'   => 'decimal:2',
     ];
 
     // ── Relacionamentos ──────────────────────────────────────────
