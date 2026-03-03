@@ -33,6 +33,18 @@
         </span>
     </div>
     <div class="flex items-center gap-2">
+        {{-- Botão de Comissão Variável - só aparece para parceiros com comissão variável --}}
+        @php $__partner = auth()->user()?->partner; @endphp
+        @if($__partner?->commission_model === 'variable')
+        <button type="button" wire:click="openCommissionModal"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-blue-500/40 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors">
+            <x-heroicon-m-banknotes class="w-4 h-4"/>
+            Definir Comissão
+            @if($__partner->commission_min || $__partner->commission_max)
+            <span class="text-[10px] text-blue-300/70">({{ $__partner->commission_min }}%-{{ $__partner->commission_max }}%)</span>
+            @endif
+        </button>
+        @endif
         <button type="button" wire:click="abrirProposta"
             class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors">
             <x-heroicon-m-document-text class="w-4 h-4"/>Gerar Proposta
@@ -93,14 +105,14 @@
             <div class="py-2.5 flex flex-col items-center gap-0.5"><x-heroicon-m-server class="w-3 h-3 text-amber-400 mb-0.5"/><span class="text-sm font-bold text-white leading-none">{{ $vm->disk_os_gb+$vm->additionalDisks->sum('size_gb') }}GB</span><span class="text-[9px] text-gray-400">Armazenamento</span><span class="text-[9px] text-amber-300 font-medium leading-none mt-0.5">R$ {{ number_format($vm->price_disk_os,2,',','.') }}</span></div>
         </div>
         <div class="px-3 py-2 space-y-1.5 flex-1">
-            @if($vm->diskOsType)<div class="flex items-center justify-between text-[10px]"><span class="text-gray-500">Tipo Disco SO</span><span class="text-gray-300">{{ $vm->diskOsType->name }}</span></div>@endif
-            @foreach($vm->additionalDisks as $d)<div class="flex items-center justify-between text-[10px]"><span class="text-gray-500">+ Disco Extra ({{ $d->size_gb }}GB · {{ $d->diskType?->name }})</span><span class="text-amber-300">R$ {{ number_format((float)$d->size_gb * (float)($d->diskType?->price_per_gb ?? 0), 2, ',', '.') }}</span></div>@endforeach
-            @if($vm->price_os_license>0)<div class="flex items-center justify-between text-[10px]"><span class="text-gray-500">Lic. Windows</span><span class="text-emerald-400">R$ {{ number_format($vm->price_os_license,2,',','.') }}</span></div>@endif
-            @if($vm->price_rds>0)<div class="flex items-center justify-between text-[10px]"><span class="text-gray-500">Terminal ({{ $vm->rds_license_qty }}x)</span><span class="text-emerald-400">R$ {{ number_format($vm->price_rds,2,',','.') }}</span></div>@endif
-            @if($vm->endpointSecurity)<div class="flex items-center justify-between text-[10px]"><span class="text-gray-500">Endpoint Security</span><span class="text-emerald-400">R$ {{ number_format($vm->price_endpoint,2,',','.') }}</span></div>@endif
+            @if($vm->diskOsType)<div class="flex items-center justify-between gap-2 text-[10px]"><span class="text-gray-500 min-w-0 truncate">Tipo Disco SO</span><span class="text-gray-300 shrink-0 whitespace-nowrap">{{ $vm->diskOsType->name }}</span></div>@endif
+            @foreach($vm->additionalDisks as $d)<div class="flex items-center justify-between gap-2 text-[10px]"><span class="text-gray-500 min-w-0 truncate">+ Disco Extra ({{ $d->size_gb }}GB · {{ $d->diskType?->name }})</span><span class="text-amber-300 shrink-0 whitespace-nowrap">R$ {{ number_format((float)$d->size_gb * (float)($d->diskType?->price_per_gb ?? 0), 2, ',', '.') }}</span></div>@endforeach
+            @if($vm->price_os_license>0)<div class="flex items-center justify-between gap-2 text-[10px]"><span class="text-gray-500 min-w-0 truncate">Lic. Windows</span><span class="text-emerald-400 shrink-0 whitespace-nowrap">R$ {{ number_format($vm->price_os_license,2,',','.') }}</span></div>@endif
+            @if($vm->price_rds>0)<div class="flex items-center justify-between gap-2 text-[10px]"><span class="text-gray-500 min-w-0 truncate">Terminal ({{ $vm->rds_license_qty }}x)</span><span class="text-emerald-400 shrink-0 whitespace-nowrap">R$ {{ number_format($vm->price_rds,2,',','.') }}</span></div>@endif
+            @if($vm->endpointSecurity)<div class="flex items-center justify-between gap-2 text-[10px]"><span class="text-gray-500 min-w-0 truncate">Endpoint Security</span><span class="text-emerald-400 shrink-0 whitespace-nowrap">R$ {{ number_format($vm->price_endpoint,2,',','.') }}</span></div>@endif
             @if($vm->has_backup)
-                @if($vm->price_backup_software > 0)<div class="flex items-center justify-between text-[10px]"><span class="text-gray-500">Lic. Backup ({{ $vm->backupSoftware?->name ?? 'Veeam' }})</span><span class="text-yellow-300">R$ {{ number_format($vm->price_backup_software, 2, ',', '.') }}</span></div>@endif
-                @if($vm->price_backup > 0)<div class="flex items-center justify-between text-[10px]"><span class="text-gray-500">Storage Backup ({{ number_format($vm->disk_os_gb * 0.5 + $vm->additionalDisks->sum('size_gb') * 0.5, 0) }} GB)</span><span class="text-yellow-200">R$ {{ number_format($vm->price_backup, 2, ',', '.') }}</span></div>@endif
+                @if($vm->price_backup_software > 0)<div class="flex items-center justify-between gap-2 text-[10px]"><span class="text-gray-500 min-w-0 truncate">Lic. Backup ({{ $vm->backupSoftware?->name ?? 'Veeam' }})</span><span class="text-yellow-300 shrink-0 whitespace-nowrap">R$ {{ number_format($vm->price_backup_software, 2, ',', '.') }}</span></div>@endif
+                @if($vm->price_backup > 0)<div class="flex items-center justify-between gap-2 text-[10px]"><span class="text-gray-500 min-w-0 truncate">Storage Backup ({{ number_format($vm->disk_os_gb * 0.5 + $vm->additionalDisks->sum('size_gb') * 0.5, 0) }} GB)</span><span class="text-yellow-200 shrink-0 whitespace-nowrap">R$ {{ number_format($vm->price_backup, 2, ',', '.') }}</span></div>@endif
             @endif
         </div>
         <div class="mt-auto px-4 py-2.5 border-t border-gray-800 bg-gray-800/40 flex items-center justify-between"><span class="text-[10px] text-gray-500">Total/mês</span><span class="text-sm font-bold text-primary-400">R$ {{ number_format($vm->price_total_monthly,2,',','.') }}</span></div>
@@ -246,10 +258,27 @@
                     <td colspan="2" class="px-4 py-3 text-white font-bold">Subtotal</td>
                     <td class="px-4 py-3 text-white font-bold text-right">R$ {{ number_format($__subtotal, 2, ',', '.') }}</td>
                 </tr>
+                @php
+                    $__globalDiscount = (float)($data['rede']?->global_discount_amount
+                        ?? $data['allVms']->first()?->project?->global_discount_amount
+                        ?? 0);
+                    $__totalComDesconto = max(0, $__subtotal - $__globalDiscount);
+                @endphp
+                @if($__globalDiscount > 0)
+                <tr class="bg-orange-900/20 border-t border-gray-700/50">
+                    <td colspan="2" class="px-4 py-3 text-orange-400 font-semibold">Desconto Global</td>
+                    <td class="px-4 py-3 text-orange-400 font-bold text-right">- R$ {{ number_format($__globalDiscount, 2, ',', '.') }}</td>
+                </tr>
+                <tr class="bg-emerald-900/30 border-t border-gray-700">
+                    <td colspan="2" class="px-4 py-3 text-emerald-300 font-bold text-sm">Total Geral / mês (com desconto)</td>
+                    <td class="px-4 py-3 text-emerald-300 font-bold text-right text-base">R$ {{ number_format($__totalComDesconto, 2, ',', '.') }}</td>
+                </tr>
+                @else
                 <tr class="bg-emerald-900/20 border-t border-gray-700">
                     <td colspan="2" class="px-4 py-3 text-emerald-400 font-bold text-sm">Total Geral / mês</td>
-                    <td class="px-4 py-3 text-emerald-400 font-bold text-right text-base">R$ {{ number_format($data['mrr_total'], 2, ',', '.') }}</td>
+                    <td class="px-4 py-3 text-emerald-400 font-bold text-right text-base">R$ {{ number_format($__subtotal, 2, ',', '.') }}</td>
                 </tr>
+                @endif
             </tfoot>
         </table>
     </div>
