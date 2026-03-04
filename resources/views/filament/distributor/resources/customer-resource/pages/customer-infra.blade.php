@@ -9,6 +9,10 @@
 @php
     $data = $this->getInfraData();
     $bp   = 'inline-flex items-center gap-1.5 px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-lg';
+    $rate = ($sim_currency !== 'BRL') ? max(0.01, $sim_exchange_rate) : 1.0;
+    $sym  = match($sim_currency) {
+        'USD' => 'US$', 'EUR' => '€', 'PYG' => '₲', 'ARS' => '$', default => 'R$'
+    };
 @endphp
 
 {{-- Sub-navbar --}}
@@ -24,9 +28,31 @@
         </span>
     </div>
     {{-- Distribuidor: somente leitura, sem botões de ação --}}
-    <span class="text-xs text-gray-500 italic flex items-center gap-1">
-        <x-heroicon-m-eye class="w-4 h-4"/> Visualização somente leitura
-    </span>
+    <div class="flex items-center gap-3">
+        <span class="text-xs text-gray-500 italic flex items-center gap-1">
+            <x-heroicon-m-eye class="w-4 h-4"/> Visualização somente leitura
+        </span>
+        {{-- Simulação de Moeda --}}
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-700 bg-gray-800/60">
+            <x-heroicon-m-currency-dollar class="w-3.5 h-3.5 text-gray-400 shrink-0"/>
+            <span class="text-[10px] text-gray-400 uppercase tracking-wide">Moeda</span>
+            <select wire:model.live="sim_currency"
+                class="bg-gray-900 border border-gray-700 text-white text-xs rounded px-1.5 py-0.5 focus:outline-none">
+                <option value="BRL">BRL (R$)</option>
+                <option value="USD">USD (US$)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="PYG">PYG (₲)</option>
+                <option value="ARS">ARS ($)</option>
+            </select>
+            @if($sim_currency !== 'BRL')
+            <span class="text-[10px] text-gray-400">1 {{ $sim_currency }} =</span>
+            <input type="number" wire:model.live="sim_exchange_rate" min="0.01" step="0.01"
+                class="w-20 bg-gray-900 border border-gray-700 text-white text-xs rounded px-1.5 py-0.5 focus:outline-none"
+                placeholder="Taxa"/>
+            <span class="text-[10px] text-gray-400">BRL</span>
+            @endif
+        </div>
+    </div>
 </div>
 
 {{-- Stats --}}
@@ -35,7 +61,7 @@
         ['VMs Ativas',   $data['vms_ativas'],                                              'heroicon-o-server-stack', 'text-primary-400'],
         ['vCPUs',        $data['vcpu_total'],                                              'heroicon-o-cpu-chip',     'text-gray-300'],
         ['RAM Total',    $data['ram_total'].' GB',                                         'heroicon-o-circle-stack', 'text-gray-300'],
-        ['Receita/Mês',  'R$ '.number_format($data['mrr_total'],2,',','.'),               'heroicon-o-currency-dollar','text-success-400'],
+        ['Receita/Mês',  $sym.' '.number_format($data['mrr_total'] / $rate, 2, ',', '.'),  'heroicon-o-currency-dollar','text-success-400'],
     ] as $s)
     <div class="rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 flex items-center gap-3">
         <div class="w-9 h-9 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center shrink-0">
@@ -86,7 +112,7 @@
         </div>
         <div class="flex-1 py-4 flex flex-col items-center gap-1">
             <x-heroicon-m-currency-dollar class="w-5 h-5 text-success-400 mb-0.5"/>
-            <span class="text-sm font-bold text-success-400">R$ {{ number_format($netCost, 2, ',', '.') }}</span>
+            <span class="text-sm font-bold text-success-400">{{ $sym }} {{ number_format($netCost / $rate, 2, ',', '.') }}</span>
             <span class="text-[10px] text-gray-500">Custo/Mês</span>
         </div>
     </div>
@@ -145,7 +171,7 @@
         <div class="mt-auto px-4 py-2.5 border-t border-gray-800 bg-gray-800/40 flex items-center justify-between">
             <span class="text-[10px] text-gray-500">Total/mês</span>
             <span class="text-sm font-bold text-primary-400">
-                R$ {{ number_format($vm->price_total_monthly, 2, ',', '.') }}
+                {{ $sym }} {{ number_format($vm->price_total_monthly / $rate, 2, ',', '.') }}
             </span>
         </div>
     </div>
@@ -186,7 +212,7 @@
         </div>
         <div class="px-4 py-2.5 border-t border-gray-800 bg-gray-800/40 flex items-center justify-end">
             <span class="text-sm font-bold text-yellow-400">
-                R$ {{ number_format($s3->size_gb * $s3->price_per_gb, 2, ',', '.') }}/mês
+                {{ $sym }} {{ number_format(($s3->size_gb * $s3->price_per_gb) / $rate, 2, ',', '.') }}/mês
             </span>
         </div>
     </div>
@@ -216,7 +242,7 @@
         </div>
         <div class="mt-auto px-4 py-2.5 border-t border-gray-800 bg-gray-800/40 flex items-center justify-end">
             <span class="text-sm font-bold text-green-400">
-                R$ {{ number_format($bkp->monthly_value, 2, ',', '.') }}/mês
+                {{ $sym }} {{ number_format($bkp->monthly_value / $rate, 2, ',', '.') }}/mês
             </span>
         </div>
     </div>

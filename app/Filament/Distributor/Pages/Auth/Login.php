@@ -18,10 +18,15 @@ class Login extends BaseLogin
         $this->locale = session('locale', config('app.locale', 'pt_BR'));
     }
 
-    public function updatedLocale(): void
+    public function setLocale(string $locale): void
     {
-        session(['locale' => $this->locale]);
-        app()->setLocale($this->locale);
+        if (!in_array($locale, ['pt_BR', 'en', 'es'])) {
+            return;
+        }
+        $this->locale = $locale;
+        session(['locale' => $locale]);
+        app()->setLocale($locale);
+        $this->dispatch('$refresh');
     }
 
     public function authenticate(): ?LoginResponse
@@ -45,8 +50,7 @@ class Login extends BaseLogin
             ]);
         }
 
-        // Save locale BEFORE regenerate wipes it
-        $chosenLocale = session('locale', $this->locale ?? 'pt_BR');
+        $chosenLocale = in_array($this->locale, ['pt_BR', 'en', 'es']) ? $this->locale : 'pt_BR';
 
         auth()->login($user, $data['remember'] ?? false);
         session()->regenerate();
