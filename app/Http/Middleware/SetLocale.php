@@ -18,6 +18,13 @@ class SetLocale
             // Prioridade 1: sessão — escolha explícita do usuário
             if ($sessionLocale = Session::get('locale')) {
                 $locale = $sessionLocale;
+                // Sync user DB if authenticated and differs
+                if (auth()->check()) {
+                    $user = auth()->user();
+                    if ($user->locale !== $sessionLocale) {
+                        $user->update(['locale' => $sessionLocale]);
+                    }
+                }
             } elseif (auth()->check()) {
                 $user = auth()->user();
 
@@ -38,10 +45,7 @@ class SetLocale
             // Validar e aplicar
             if ($locale && in_array($locale, $validLocales)) {
                 App::setLocale($locale);
-                // Re-persist to session so it survives future regenerations
-                if (!Session::has('locale')) {
-                    Session::put('locale', $locale);
-                }
+                Session::put('locale', $locale);
             } else {
                 App::setLocale(config('app.locale', 'pt_BR'));
             }

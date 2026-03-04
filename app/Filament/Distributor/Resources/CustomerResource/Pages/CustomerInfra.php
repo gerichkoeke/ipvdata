@@ -16,6 +16,24 @@ class CustomerInfra extends Page
 
     public Customer $record;
 
+    // ── Currency Simulator ───────────────────────────────────────
+    public string $sim_currency      = 'BRL';
+    public float  $sim_exchange_rate = 1.0;
+
+    public function updatedSimCurrency(): void
+    {
+        if ($this->sim_currency === 'BRL') {
+            $this->sim_exchange_rate = 1.0;
+        }
+    }
+
+    public function updatedSimExchangeRate(): void
+    {
+        if ($this->sim_exchange_rate < 0.01) {
+            $this->sim_exchange_rate = 0.01;
+        }
+    }
+
     // ── Modais ───────────────────────────────────────────────────
     public bool $modalEscolha        = false;
     public bool $modalRede           = false;
