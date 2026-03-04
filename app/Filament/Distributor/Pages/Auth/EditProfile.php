@@ -51,7 +51,7 @@ class EditProfile extends BaseEditProfile
                                 ->label('Idioma Padrão')
                                 ->options([
                                     'pt_BR' => '🇧🇷 Português (BR)',
-                                    'en_US' => '🇺🇸 English (US)',
+                                    'en'    => '🇺🇸 English',
                                     'es'    => '🇪🇸 Español',
                                 ])
                                 ->native(false)

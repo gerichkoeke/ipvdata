@@ -51,7 +51,7 @@ class DistributorResource extends Resource
                         ->default('BRL')->native(false)->required(),
                     Forms\Components\Select::make('locale')
                         ->label('Idioma')
-                        ->options(['pt_BR' => 'Português (BR)', 'en_US' => 'English (US)', 'es' => 'Español'])
+                        ->options(['pt_BR' => 'Português (BR)', 'en' => 'English', 'es' => 'Español'])
                         ->default('pt_BR')->native(false)->required(),
                 ]),
                 Forms\Components\Toggle::make('is_active')->label('Ativo')->default(true),

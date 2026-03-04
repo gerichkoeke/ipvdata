@@ -287,7 +287,7 @@ class PartnerResource extends Resource
                             ->label('Idioma')
                             ->options([
                                 'pt_BR' => '🇧🇷 Português (BR)',
-                                'en_US' => '🇺🇸 English (US)',
+                                'en'    => '🇺🇸 English',
                                 'es'    => '🇪🇸 Español',
                             ])
                             ->default('pt_BR')
