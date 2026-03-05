@@ -1,11 +1,4 @@
 <x-filament-panels::page>
-<style>
-.infra-dark input:not([type=checkbox]):not([type=radio]),.infra-dark textarea{
-    background-color:#1f2937!important;color:white!important;
-    border-color:#4b5563!important;color-scheme:dark;
-}
-</style>
-<div class="infra-dark">
 @php
     $data = $this->getInfraData();
     $bp   = 'inline-flex items-center gap-1.5 px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-lg';
@@ -37,7 +30,7 @@
             <x-heroicon-m-currency-dollar class="w-3.5 h-3.5 text-gray-400 shrink-0"/>
             <span class="text-[10px] text-gray-400 uppercase tracking-wide">Moeda</span>
             <select wire:model.live="sim_currency"
-                class="bg-gray-900 border border-gray-700 text-white text-xs rounded px-1.5 py-0.5 focus:outline-none">
+                class="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white text-xs rounded px-1.5 py-0.5 focus:outline-none">
                 <option value="BRL">BRL (R$)</option>
                 <option value="USD">USD (US$)</option>
                 <option value="EUR">EUR (€)</option>
@@ -47,7 +40,7 @@
             @if($sim_currency !== 'BRL')
             <span class="text-[10px] text-gray-400">1 {{ $sim_currency }} =</span>
             <input type="number" wire:model.live="sim_exchange_rate" min="0.01" step="0.01"
-                class="w-20 bg-gray-900 border border-gray-700 text-white text-xs rounded px-1.5 py-0.5 focus:outline-none"
+                class="w-20 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white text-xs rounded px-1.5 py-0.5 focus:outline-none"
                 placeholder="Taxa"/>
             <span class="text-[10px] text-gray-400">BRL</span>
             @endif
