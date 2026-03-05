@@ -1,11 +1,4 @@
 <x-filament-panels::page>
-<style>
-.infra-dark input:not([type=checkbox]):not([type=radio]),.infra-dark textarea{
-    background-color:#1f2937!important;color:white!important;
-    border-color:#4b5563!important;color-scheme:dark;
-}
-</style>
-<div class="infra-dark">
 @php
     $data = $this->getInfraData();
     $bp   = 'inline-flex items-center gap-1.5 px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-lg';
@@ -250,5 +243,4 @@
 </div>
 @endif
 
-</div>
 </x-filament-panels::page>

@@ -1,9 +1,4 @@
 <x-filament-panels::page>
-<style>.infra-dark input:not([type=checkbox]):not([type=radio]),.infra-dark textarea{background-color:#1f2937!important;color:white!important;border-color:#4b5563!important;color-scheme:dark;}</style>
-<style>
-.infra-dark input:not([type=checkbox]):not([type=radio]),.infra-dark textarea{background-color:#1f2937!important;color:white!important;border-color:#4b5563!important;color-scheme:dark;}
-</style>
-<div class="infra-dark">
 @php
     $record  = $record ?? $this->customer;
     $data    = $this->getInfraData();
@@ -12,8 +7,8 @@
     $rdsModes        = $this->getRdsModes();
     $proposta_currency      = $this->proposta_currency;
     $proposta_exchange_rate = $this->proposta_exchange_rate;
-    $ic = 'w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500'; $icStyle = 'color-scheme:dark;background-color:#1f2937;color:white;border:1px solid #4b5563;';
-    $sc = 'w-full bg-gray-800 border border-gray-600 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500';
+    $ic = 'w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500'; $icStyle = '';
+    $sc = 'w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-500';
     $lc = 'block text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-widest';
     $bp = 'inline-flex items-center gap-1.5 px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white text-sm font-semibold rounded-lg transition-colors';
     $bd = 'inline-flex items-center gap-1.5 px-4 py-2 bg-red-700 hover:bg-red-600 text-white text-sm font-semibold rounded-lg transition-colors';

@@ -6,12 +6,12 @@ $symbol = match($d['currency']) { 'USD' => 'US$', 'PYG' => '₲', default => 'R$
 
 {{-- KPI Cards --}}
 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-    <div class="col-span-2 rounded-xl border border-gray-700 bg-gray-900 p-4">
+    <div class="col-span-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
         <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">MRR da Rede</p>
         <p class="text-2xl font-bold text-emerald-400">{{ $symbol }} {{ number_format($d['mrr_total'],2,',','.') }}</p>
         <p class="text-[10px] text-gray-500 mt-1">Soma dos projetos ativos dos parceiros</p>
     </div>
-    <div class="rounded-xl border border-gray-700 bg-gray-900 p-4">
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
         <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Comissão Estimada</p>
         <p class="text-2xl font-bold text-yellow-400">{{ $symbol }} {{ number_format($d['comissao'],2,',','.') }}</p>
         <p class="text-[10px] text-gray-500 mt-1">{{ $d['distributor']?->commission_pct ?? 0 }}% do MRR</p>
@@ -21,7 +21,7 @@ $symbol = match($d['currency']) { 'USD' => 'US$', 'PYG' => '₲', default => 'R$
         ['Clientes na Rede', '', $d['clientes_total'], 'text-indigo-400'],
         ['VMs Ativas', '', $d['vms_ativas'], 'text-primary-400'],
     ] as [$label, $sub, $value, $color])
-    <div class="rounded-xl border border-gray-700 bg-gray-900 p-4">
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
         <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">{{ $label }}</p>
         <p class="text-2xl font-bold {{ $color }}">{{ $value }}</p>
         @if($sub)<p class="text-[10px] text-gray-500 mt-1">{{ $sub }}</p>@endif
@@ -31,14 +31,14 @@ $symbol = match($d['currency']) { 'USD' => 'US$', 'PYG' => '₲', default => 'R$
 
 {{-- Gráficos --}}
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-    <div class="rounded-xl border border-gray-700 bg-gray-900 p-5">
-        <h3 class="text-sm font-bold text-white mb-4">Top 5 Parceiros por MRR</h3>
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
+        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4">Top 5 Parceiros por MRR</h3>
         <div style="position:relative;height:260px;">
             <canvas id="distPartnersChart"></canvas>
         </div>
     </div>
-    <div class="rounded-xl border border-gray-700 bg-gray-900 p-5">
-        <h3 class="text-sm font-bold text-white mb-4">Evolução de Clientes — últimos 6 meses</h3>
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
+        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4">Evolução de Clientes — últimos 6 meses</h3>
         <div style="position:relative;height:260px;">
             <canvas id="distClientsChart"></canvas>
         </div>
@@ -46,26 +46,26 @@ $symbol = match($d['currency']) { 'USD' => 'US$', 'PYG' => '₲', default => 'R$
 </div>
 
 {{-- Tabela de Parceiros --}}
-<div class="rounded-xl border border-gray-700 bg-gray-900 overflow-hidden">
-    <div class="px-4 py-3 border-b border-gray-700">
-        <h3 class="text-sm font-bold text-white">Parceiros da Rede</h3>
+<div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden">
+    <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+        <h3 class="text-sm font-bold text-gray-900 dark:text-white">Parceiros da Rede</h3>
     </div>
     <table class="w-full text-sm">
         <thead>
-            <tr class="bg-gray-800 border-b border-gray-700">
-                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">Parceiro</th>
-                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">Clientes</th>
-                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">MRR</th>
-                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">Comissão</th>
-                <th class="text-center px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">Status</th>
+            <tr class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Parceiro</th>
+                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Clientes</th>
+                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">MRR</th>
+                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Comissão</th>
+                <th class="text-center px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Status</th>
             </tr>
         </thead>
         <tbody>
             @forelse($d['top_partners'] as $p)
             @php $commP = round(($p->mrr ?? 0) * (($d['distributor']?->commission_pct ?? 0) / 100), 2); @endphp
-            <tr class="border-b border-gray-700/50 hover:bg-gray-800/30">
-                <td class="px-4 py-2 text-white font-medium">{{ $p->trade_name ?? $p->company_name }}</td>
-                <td class="px-4 py-2 text-gray-400 text-right">{{ $p->customers_count }}</td>
+            <tr class="border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
+                <td class="px-4 py-2 text-gray-900 dark:text-white font-medium">{{ $p->trade_name ?? $p->company_name }}</td>
+                <td class="px-4 py-2 text-gray-500 dark:text-gray-400 text-right">{{ $p->customers_count }}</td>
                 <td class="px-4 py-2 text-emerald-400 font-bold text-right">{{ $symbol }} {{ number_format($p->mrr ?? 0,2,',','.') }}</td>
                 <td class="px-4 py-2 text-yellow-400 font-bold text-right">{{ $symbol }} {{ number_format($commP,2,',','.') }}</td>
                 <td class="px-4 py-2 text-center">
