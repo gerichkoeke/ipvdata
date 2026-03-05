@@ -7,6 +7,7 @@ use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -33,9 +34,11 @@ class Profile extends Page
     {
         $user = auth()->user();
         $this->profileData = [
-            'name'  => $user->name,
-            'email' => $user->email,
-            'phone' => $user->phone,
+            'name'     => $user->name,
+            'email'    => $user->email,
+            'phone'    => $user->phone,
+            'locale'   => $user->locale   ?? 'pt_BR',
+            'currency' => $user->currency ?? 'BRL',
         ];
     }
 
@@ -65,6 +68,35 @@ class Profile extends Page
                                 ->minLength(8),
                             TextInput::make('new_password_confirmation')
                                 ->label('Confirmar nova senha')->password()->revealable(),
+                        ]),
+                    ]),
+
+                Section::make('Moeda e Idioma')
+                    ->icon('heroicon-o-currency-dollar')
+                    ->description('Define o idioma da interface e a moeda padrão para exibição de valores')
+                    ->schema([
+                        Grid::make(2)->schema([
+                            Select::make('locale')
+                                ->label(__('app.profile.language'))
+                                ->options([
+                                    'pt_BR' => '🇧🇷 Português (BR)',
+                                    'en'    => '🇺🇸 English',
+                                    'es'    => '🇪🇸 Español',
+                                ])
+                                ->native(false)
+                                ->required(),
+
+                            Select::make('currency')
+                                ->label(__('app.profile.currency'))
+                                ->options([
+                                    'BRL' => '🇧🇷 Real (R$)',
+                                    'USD' => '🇺🇸 Dólar (US$)',
+                                    'EUR' => '🇪🇺 Euro (€)',
+                                    'PYG' => '🇵🇾 Guarani (₲)',
+                                    'ARS' => '🇦🇷 Peso Argentino ($)',
+                                ])
+                                ->native(false)
+                                ->required(),
                         ]),
                     ]),
             ])
@@ -135,6 +167,8 @@ class Profile extends Page
         $user->name  = $data['name'];
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? null;
+        $user->locale   = $data['locale']   ?? 'pt_BR';
+        $user->currency = $data['currency'] ?? 'BRL';
 
         if (!empty($data['current_password']) && !empty($data['new_password'])) {
             if (!\Illuminate\Support\Facades\Hash::check($data['current_password'], $user->password)) {
@@ -145,6 +179,9 @@ class Profile extends Page
         }
 
         $user->save();
+
+        session(['locale' => $user->locale]);
+        app()->setLocale($user->locale);
 
         Notification::make()->title('Perfil atualizado!')->success()->send();
     }

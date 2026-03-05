@@ -23,6 +23,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'phone',
         'panel',
         'locale',
+        'currency',
         'partner_id',
         'distributor_id',
         'is_active',
@@ -85,12 +86,12 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function getActiveCurrencyAttribute(): string
     {
         if ($this->partner_id && $this->partner) {
-            return $this->partner->currency ?? 'BRL';
+            return $this->partner->currency ?? $this->currency ?? 'BRL';
         }
         if ($this->distributor_id && $this->distributor) {
-            return $this->distributor->currency ?? 'BRL';
+            return $this->distributor->currency ?? $this->currency ?? 'BRL';
         }
-        return 'BRL';
+        return $this->currency ?? 'BRL';
     }
 
     public function getCurrencySymbolAttribute(): string
