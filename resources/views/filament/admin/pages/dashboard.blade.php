@@ -3,7 +3,7 @@
 
 {{-- KPI Cards --}}
 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-    <div class="col-span-2 rounded-xl border border-gray-700 bg-gray-900 p-4">
+    <div class="col-span-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
         <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">MRR Total</p>
         <p class="text-2xl font-bold text-emerald-400">R$ {{ number_format($d['mrr_total'],2,',','.') }}</p>
         <div class="flex gap-3 mt-2 text-[10px] text-gray-500">
@@ -19,7 +19,7 @@
         ['Distribuidores', $d['distribuidores_ativos'], 'text-purple-400'],
         ['Propostas Aprovadas', $d['propostas_aprovadas'], 'text-emerald-400'],
     ] as [$label, $value, $color])
-    <div class="rounded-xl border border-gray-700 bg-gray-900 p-4">
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
         <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">{{ $label }}</p>
         <p class="text-2xl font-bold {{ $color }}">{{ $value }}</p>
     </div>
@@ -28,14 +28,14 @@
 
 {{-- Gráficos --}}
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-    <div class="rounded-xl border border-gray-700 bg-gray-900 p-5">
-        <h3 class="text-sm font-bold text-white mb-4">Evolução MRR — últimos 6 meses</h3>
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
+        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4">Evolução MRR — últimos 6 meses</h3>
         <div style="position:relative;height:260px;">
             <canvas id="adminMrrChart"></canvas>
         </div>
     </div>
-    <div class="rounded-xl border border-gray-700 bg-gray-900 p-5">
-        <h3 class="text-sm font-bold text-white mb-4">Distribuição de Receita</h3>
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
+        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4">Distribuição de Receita</h3>
         <div style="position:relative;height:280px;">
             <canvas id="adminRevenueChart"></canvas>
         </div>
@@ -45,23 +45,23 @@
 {{-- Tabelas --}}
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
     {{-- Top Parceiros --}}
-    <div class="rounded-xl border border-gray-700 bg-gray-900 overflow-hidden">
-        <div class="px-4 py-3 border-b border-gray-700">
-            <h3 class="text-sm font-bold text-white">Top 5 Parceiros por MRR</h3>
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden">
+        <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-sm font-bold text-gray-900 dark:text-white">Top 5 Parceiros por MRR</h3>
         </div>
         <table class="w-full text-sm">
             <thead>
-                <tr class="bg-gray-800 border-b border-gray-700">
-                    <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">Parceiro</th>
-                    <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">Clientes</th>
-                    <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">MRR</th>
+                <tr class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                    <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Parceiro</th>
+                    <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Clientes</th>
+                    <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">MRR</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($d['top_partners'] as $p)
-                <tr class="border-b border-gray-700/50 hover:bg-gray-800/30">
-                    <td class="px-4 py-2 text-white font-medium">{{ $p->trade_name ?? $p->company_name }}</td>
-                    <td class="px-4 py-2 text-gray-400 text-right">{{ $p->customers_count }}</td>
+                <tr class="border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
+                    <td class="px-4 py-2 text-gray-900 dark:text-white font-medium">{{ $p->trade_name ?? $p->company_name }}</td>
+                    <td class="px-4 py-2 text-gray-500 dark:text-gray-400 text-right">{{ $p->customers_count }}</td>
                     <td class="px-4 py-2 text-emerald-400 font-bold text-right">R$ {{ number_format($p->mrr ?? 0,2,',','.') }}</td>
                 </tr>
                 @empty
@@ -72,17 +72,17 @@
     </div>
 
     {{-- Últimas Propostas --}}
-    <div class="rounded-xl border border-gray-700 bg-gray-900 overflow-hidden">
-        <div class="px-4 py-3 border-b border-gray-700">
-            <h3 class="text-sm font-bold text-white">Últimas 5 Propostas</h3>
+    <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden">
+        <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-sm font-bold text-gray-900 dark:text-white">Últimas 5 Propostas</h3>
         </div>
         <table class="w-full text-sm">
             <thead>
-                <tr class="bg-gray-800 border-b border-gray-700">
-                    <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">Número</th>
-                    <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">Cliente</th>
-                    <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">Total</th>
-                    <th class="text-center px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">Status</th>
+                <tr class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                    <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Número</th>
+                    <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Cliente</th>
+                    <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Total</th>
+                    <th class="text-center px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -95,9 +95,9 @@
                     default => 'text-gray-400'
                 };
                 @endphp
-                <tr class="border-b border-gray-700/50 hover:bg-gray-800/30">
-                    <td class="px-4 py-2 text-gray-300 font-mono text-xs">{{ $prop->number }}</td>
-                    <td class="px-4 py-2 text-white text-xs">{{ $prop->customer?->trade_name ?? $prop->customer?->name }}</td>
+                <tr class="border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
+                    <td class="px-4 py-2 text-gray-600 dark:text-gray-300 font-mono text-xs">{{ $prop->number }}</td>
+                    <td class="px-4 py-2 text-gray-900 dark:text-white text-xs">{{ $prop->customer?->trade_name ?? $prop->customer?->name }}</td>
                     <td class="px-4 py-2 text-emerald-400 font-bold text-right text-xs">R$ {{ number_format($prop->total,2,',','.') }}</td>
                     <td class="px-4 py-2 text-center"><span class="text-xs {{ $statusColor }}">{{ ucfirst($prop->status) }}</span></td>
                 </tr>
@@ -110,27 +110,27 @@
 </div>
 
 {{-- VMs Recentes --}}
-<div class="rounded-xl border border-gray-700 bg-gray-900 overflow-hidden mb-6">
-    <div class="px-4 py-3 border-b border-gray-700">
-        <h3 class="text-sm font-bold text-white">VMs Recentes (últimas 5)</h3>
+<div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden mb-6">
+    <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+        <h3 class="text-sm font-bold text-gray-900 dark:text-white">VMs Recentes (últimas 5)</h3>
     </div>
     <table class="w-full text-sm">
         <thead>
-            <tr class="bg-gray-800 border-b border-gray-700">
-                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">VM</th>
-                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">OS</th>
-                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">Cliente</th>
-                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">Parceiro</th>
-                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">Valor/mês</th>
+            <tr class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">VM</th>
+                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">OS</th>
+                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Cliente</th>
+                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Parceiro</th>
+                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Valor/mês</th>
             </tr>
         </thead>
         <tbody>
             @forelse($d['ultimas_vms'] as $vm)
-            <tr class="border-b border-gray-700/50 hover:bg-gray-800/30">
-                <td class="px-4 py-2 text-white font-medium">{{ $vm->name }}</td>
-                <td class="px-4 py-2 text-gray-400 text-xs">{{ $vm->osDistribution?->name ?? '-' }}</td>
-                <td class="px-4 py-2 text-gray-300 text-xs">{{ $vm->project?->customer?->trade_name ?? $vm->project?->customer?->name ?? '-' }}</td>
-                <td class="px-4 py-2 text-gray-300 text-xs">{{ $vm->project?->partner?->trade_name ?? $vm->project?->partner?->company_name ?? '-' }}</td>
+            <tr class="border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-800/30">
+                <td class="px-4 py-2 text-gray-900 dark:text-white font-medium">{{ $vm->name }}</td>
+                <td class="px-4 py-2 text-gray-500 dark:text-gray-400 text-xs">{{ $vm->osDistribution?->name ?? '-' }}</td>
+                <td class="px-4 py-2 text-gray-600 dark:text-gray-300 text-xs">{{ $vm->project?->customer?->trade_name ?? $vm->project?->customer?->name ?? '-' }}</td>
+                <td class="px-4 py-2 text-gray-600 dark:text-gray-300 text-xs">{{ $vm->project?->partner?->trade_name ?? $vm->project?->partner?->company_name ?? '-' }}</td>
                 <td class="px-4 py-2 text-emerald-400 font-bold text-right text-xs">R$ {{ number_format($vm->price_total_monthly ?? 0,2,',','.') }}</td>
             </tr>
             @empty
