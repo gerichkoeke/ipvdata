@@ -18,6 +18,8 @@ class CustomerInfra extends Page
 {
     protected static string $resource = CustomerResource::class;
     protected static string $view = 'filament.partner.resources.customer-resource.pages.customer-infra';
+
+    public const MAX_DISCOUNT_PERCENT = 15;
     
     public Customer $customer;
     public ?Project $selectedProject = null;
@@ -142,6 +144,20 @@ class CustomerInfra extends Page
             'globalDiscount' => 'required|numeric|min:0',
         ]);
 
+        $subtotal = $this->pricingData['summary']['subtotal'];
+        $maxDiscount = $subtotal * (self::MAX_DISCOUNT_PERCENT / 100);
+        $currentItemDiscounts = $this->pricingData['summary']['item_discounts'];
+        $allowedGlobal = max(0, $maxDiscount - $currentItemDiscounts);
+
+        if ($this->globalDiscount > $allowedGlobal) {
+            Notification::make()
+                ->danger()
+                ->title('Desconto excede o limite máximo')
+                ->body("O desconto máximo permitido é de " . self::MAX_DISCOUNT_PERCENT . "% do projeto (" . number_format($maxDiscount, 2, ',', '.') . " " . $this->pricingData['summary']['currency'] . "). Você já aplicou " . number_format($currentItemDiscounts, 2, ',', '.') . " em descontos de itens. O valor máximo para desconto global é " . number_format($allowedGlobal, 2, ',', '.') . ".")
+                ->send();
+            return;
+        }
+
         $this->selectedProject->update([
             'global_discount_amount' => $this->globalDiscount,
             'global_discount_currency' => $this->selectedProject->currency,
@@ -158,6 +174,22 @@ class CustomerInfra extends Page
 
     public function applyItemDiscounts(): void
     {
+        $subtotal = $this->pricingData['summary']['subtotal'];
+        $maxDiscount = $subtotal * (self::MAX_DISCOUNT_PERCENT / 100);
+        $totalItemDiscounts = array_sum(array_map('floatval', $this->discounts));
+        $currentGlobalDiscount = (float)($this->selectedProject->global_discount_amount ?? 0);
+        $totalAllDiscounts = $totalItemDiscounts + $currentGlobalDiscount;
+
+        if ($totalAllDiscounts > $maxDiscount) {
+            $allowedItemTotal = max(0, $maxDiscount - $currentGlobalDiscount);
+            Notification::make()
+                ->danger()
+                ->title('Descontos excedem o limite máximo')
+                ->body("O desconto máximo permitido é de " . self::MAX_DISCOUNT_PERCENT . "% do projeto (" . number_format($maxDiscount, 2, ',', '.') . " " . $this->pricingData['summary']['currency'] . "). Você já tem " . number_format($currentGlobalDiscount, 2, ',', '.') . " de desconto global. O total máximo de descontos nos itens é " . number_format($allowedItemTotal, 2, ',', '.') . ".")
+                ->send();
+            return;
+        }
+
         // Aplicar desconto na rede
         if (isset($this->discounts['network'])) {
             $this->selectedProject->update([
