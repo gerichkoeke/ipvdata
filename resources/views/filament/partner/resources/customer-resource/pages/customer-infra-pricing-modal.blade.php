@@ -53,6 +53,27 @@
                         <h3 class="text-lg font-semibold mb-3 text-amber-900 dark:text-amber-100">
                             🏷️ Desconto Global no Projeto
                         </h3>
+                        {{-- Informação sobre limite máximo de desconto --}}
+                        @php
+                            $__subtotalPricing = $pricingData['summary']['subtotal'];
+                            $__maxDiscountPct = \App\Filament\Partner\Resources\CustomerResource\Pages\CustomerInfra::MAX_DISCOUNT_PERCENT / 100;
+                            $__maxDiscount = $__subtotalPricing * $__maxDiscountPct;
+                            $__currentItemDiscounts = $pricingData['summary']['item_discounts'];
+                            $__allowedGlobal = max(0, $__maxDiscount - $__currentItemDiscounts);
+                        @endphp
+                        <div class="mb-3 p-3 rounded-lg bg-amber-100 dark:bg-amber-900/30 border border-amber-300 dark:border-amber-700 text-sm">
+                            <div class="flex items-center gap-2 text-amber-800 dark:text-amber-200 font-semibold mb-1">
+                                <span>⚠️ Limite máximo de desconto: {{ \App\Filament\Partner\Resources\CustomerResource\Pages\CustomerInfra::MAX_DISCOUNT_PERCENT }}% do projeto</span>
+                            </div>
+                            <div class="text-amber-700 dark:text-amber-300 space-y-0.5">
+                                <div>Valor total do projeto: <strong>{{ $pricingData['summary']['currency'] }} {{ number_format($__subtotalPricing, 2, ',', '.') }}</strong></div>
+                                <div>Desconto máximo permitido ({{ \App\Filament\Partner\Resources\CustomerResource\Pages\CustomerInfra::MAX_DISCOUNT_PERCENT }}%): <strong>{{ $pricingData['summary']['currency'] }} {{ number_format($__maxDiscount, 2, ',', '.') }}</strong></div>
+                                @if($__currentItemDiscounts > 0)
+                                <div>Descontos de itens aplicados: <strong class="text-red-600 dark:text-red-400">- {{ $pricingData['summary']['currency'] }} {{ number_format($__currentItemDiscounts, 2, ',', '.') }}</strong></div>
+                                @endif
+                                <div>Disponível para desconto global: <strong class="text-green-700 dark:text-green-400">{{ $pricingData['summary']['currency'] }} {{ number_format($__allowedGlobal, 2, ',', '.') }}</strong></div>
+                            </div>
+                        </div>
                         <div class="flex items-end gap-4">
                             <div class="flex-1">
                                 <label class="block text-sm font-medium mb-1">
@@ -63,6 +84,7 @@
                                     wire:model="globalDiscount"
                                     step="0.01"
                                     min="0"
+                                    max="{{ number_format($__allowedGlobal, 2, '.', '') }}"
                                     class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700"
                                     placeholder="Ex: 500.00"
                                 />
@@ -77,6 +99,12 @@
                     </div>
 
                     {{-- Grid de Itens --}}
+                    @php
+                        $__maxDiscountPctItems = \App\Filament\Partner\Resources\CustomerResource\Pages\CustomerInfra::MAX_DISCOUNT_PERCENT / 100;
+                        $__maxDiscountGlobal = $pricingData['summary']['subtotal'] * $__maxDiscountPctItems;
+                        $__globalDiscountAmt = $pricingData['summary']['global_discount'];
+                        $__maxForItems = max(0, $__maxDiscountGlobal - $__globalDiscountAmt);
+                    @endphp
                     <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                         <div class="p-4 border-b border-gray-200 dark:border-gray-700">
                             <h3 class="text-lg font-semibold">📋 Itens do Projeto</h3>
@@ -181,6 +209,11 @@
                                     </tr>
                                 </tfoot>
                             </table>
+                            {{-- Nota sobre limite de desconto por itens --}}
+                            <div class="px-4 py-2 text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/10 border-t border-amber-200 dark:border-amber-800">
+                                ⚠️ A soma de todos os descontos (itens + global) não pode ultrapassar {{ \App\Filament\Partner\Resources\CustomerResource\Pages\CustomerInfra::MAX_DISCOUNT_PERCENT }}% do projeto
+                                (<strong>{{ $pricingData['summary']['currency'] }} {{ number_format($pricingData['summary']['subtotal'] * (\App\Filament\Partner\Resources\CustomerResource\Pages\CustomerInfra::MAX_DISCOUNT_PERCENT / 100), 2, ',', '.') }}</strong>).
+                            </div>
                         </div>
                     </div>
 
