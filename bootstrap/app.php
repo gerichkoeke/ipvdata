@@ -19,12 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Http\Request::HEADER_X_FORWARDED_PORT   |
             \Illuminate\Http\Request::HEADER_X_FORWARDED_PROTO
         );
-
         // DEVE ser o primeiro middleware — define o nome do cookie de sessão por subdomínio
         $middleware->prepend(\App\Http\Middleware\SetSessionCookieBySubdomain::class);
-
-        // Locale baseado no usuário autenticado
-        $middleware->append(\App\Http\Middleware\SetLocale::class);
+        // Locale baseado no usuário autenticado / sessão
+        $middleware->web(append: [\App\Http\Middleware\SetLocale::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

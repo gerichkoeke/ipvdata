@@ -1,58 +1,37 @@
 <?php
-
 namespace App\Http\Middleware;
-
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 class SetLocale
 {
-    public function handle(Request $request, Closure $next)
+    protected array $supported = ['pt_BR', 'en', 'es'];
+    public function handle(Request $request, Closure $next): Response
     {
-        try {
-            $validLocales = ['pt_BR', 'en', 'es', 'pt'];
-            $locale       = null;
-
-            // Prioridade 1: sessão — escolha explícita do usuário
-            if ($sessionLocale = Session::get('locale')) {
-                $locale = $sessionLocale;
-                // Sync user DB if authenticated and differs
-                if (auth()->check()) {
-                    $user = auth()->user();
-                    if ($user->locale !== $sessionLocale) {
-                        $user->update(['locale' => $sessionLocale]);
-                    }
-                }
-            } elseif (auth()->check()) {
-                $user = auth()->user();
-
-                // Prioridade 2: locale do próprio usuário
-                $locale = $user->locale ?? null;
-
-                // Prioridade 3: locale do parceiro
-                if (!$locale && $user->partner_id) {
-                    $locale = optional($user->partner)->locale;
-                }
-
-                // Prioridade 4: locale do distribuidor
-                if (!$locale && $user->distributor_id) {
-                    $locale = optional($user->distributor)->locale;
-                }
-            }
-
-            // Validar e aplicar
-            if ($locale && in_array($locale, $validLocales)) {
-                App::setLocale($locale);
-                Session::put('locale', $locale);
-            } else {
-                App::setLocale(config('app.locale', 'pt_BR'));
-            }
-        } catch (\Throwable $e) {
-            App::setLocale(config('app.locale', 'pt_BR'));
-        }
-
+        App::setLocale($this->resolveLocale($request));
         return $next($request);
+    }
+    protected function resolveLocale(Request $request): string
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $locale = $user->active_locale ?? $user->locale ?? config('app.locale');
+            return $this->normalize($locale);
+        }
+        if ($request->session()->has('locale')) {
+            return $this->normalize($request->session()->get('locale'));
+        }
+        return config('app.locale', 'pt_BR');
+    }
+    protected function normalize(string $locale): string
+    {
+        if (in_array($locale, $this->supported, true)) return $locale;
+        $prefix = strtok($locale, '_-');
+        foreach ($this->supported as $supported) {
+            if (str_starts_with($supported, $prefix)) return $supported;
+        }
+        return config('app.locale', 'pt_BR');
     }
 }
