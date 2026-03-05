@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProposalController;
-
+use App\Http\Controllers\LocaleController;
 
 // Página principal
 Route::get('/', function () {
@@ -19,15 +19,18 @@ Route::get('/portal', function () {
     return redirect('/portal/login');
 });
 
+// Troca de idioma (antes e depois do login)
+Route::post('locale/switch', [LocaleController::class, 'switch'])->name('locale.switch');
+
 // Impressão de proposta
 Route::get('/imprimir/proposta/{id}', function ($id) {
     $proposal = \App\Models\Proposal::with([
         'items', 'partner', 'customer', 'createdBy',
     ])->findOrFail($id);
+
     $customer = $proposal->customer;
     $partner  = $proposal->partner;
 
-    // Construir $pricingData a partir dos itens da proposta
     $items = $proposal->items->map(function ($item) {
         return [
             'type'        => $item->type ?? 'item',
@@ -48,25 +51,24 @@ Route::get('/imprimir/proposta/{id}', function ($id) {
     $pricingData = [
         'items'   => $items,
         'summary' => [
-            'currency'                   => match($proposal->currency ?? 'BRL') {
-                'USD' => 'US$',
-                'EUR' => '€',
-                'PYG' => '₲',
-                'ARS' => '$',
+            'currency' => match($proposal->currency ?? 'BRL') {
+                'USD'   => 'US$',
+                'EUR'   => '€',
+                'PYG'   => '₲',
+                'ARS'   => '$',
                 default => 'R$',
             },
-            'subtotal'                   => $subtotal,
-            'item_discounts'             => $itemDiscounts,
+            'subtotal'                     => $subtotal,
+            'item_discounts'               => $itemDiscounts,
             'total_before_global_discount' => $totalBeforeGD,
-            'global_discount'            => $globalDiscount,
-            'total'                      => $total,
-            'partner_commission'         => $proposal->partner_commission_percentage ?? null,
+            'global_discount'              => $globalDiscount,
+            'total'                        => $total,
+            'partner_commission'           => $proposal->partner_commission_percentage ?? null,
         ],
     ];
 
     return view('proposals.print', compact('proposal', 'customer', 'partner', 'pricingData'));
 })->name('proposta.imprimir');
-
 
 Route::get('/proposals/{project}/print', [ProposalController::class, 'print'])
     ->name('proposals.print')
