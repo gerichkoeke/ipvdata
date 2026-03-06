@@ -5,7 +5,8 @@ namespace App\Filament\Distributor\Pages\Auth;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Pages\Auth\EditProfile as BaseEditProfile;
-use Illuminate\Database\Eloquent\Model;
+use Filament\Notifications\Notification;
+use App\Models\Distributor;
 
 class EditProfile extends BaseEditProfile
 {
@@ -13,24 +14,24 @@ class EditProfile extends BaseEditProfile
     {
         return $form
             ->schema([
-                Forms\Components\Section::make(__('app.profile.personal_info'))
+                Forms\Components\Section::make('Informações Pessoais')
                     ->icon('heroicon-o-user')
                     ->schema([
                         $this->getNameFormComponent(),
                         $this->getEmailFormComponent(),
                         Forms\Components\TextInput::make('phone')
-                            ->label(__('app.profile.phone'))
+                            ->label('Telefone')
                             ->tel()
                             ->maxLength(20),
                     ]),
 
-                Forms\Components\Section::make(__('app.profile.currency') . ' & ' . __('app.profile.language'))
+                Forms\Components\Section::make('Moeda e Idioma')
                     ->description('Afeta a exibição de valores em toda a plataforma para seus parceiros')
                     ->icon('heroicon-o-currency-dollar')
                     ->schema([
                         Forms\Components\Grid::make(2)->schema([
                             Forms\Components\Select::make('distributor.currency')
-                                ->label(__('app.profile.currency'))
+                                ->label('Moeda Padrão')
                                 ->options([
                                     'BRL' => '🇧🇷 Real (R$)',
                                     'USD' => '🇺🇸 Dólar (US$)',
@@ -43,10 +44,11 @@ class EditProfile extends BaseEditProfile
                                     $dist = auth()->user()->distributor;
                                     if ($dist) $set('distributor.currency', $dist->currency);
                                 })
+                                ->dehydrated(false)
                                 ->live(),
 
                             Forms\Components\Select::make('distributor.locale')
-                                ->label(__('app.profile.language'))
+                                ->label('Idioma Padrão')
                                 ->options([
                                     'pt_BR' => '🇧🇷 Português (BR)',
                                     'en'    => '🇺🇸 English',
@@ -58,11 +60,12 @@ class EditProfile extends BaseEditProfile
                                     $dist = auth()->user()->distributor;
                                     if ($dist) $set('distributor.locale', $dist->locale);
                                 })
+                                ->dehydrated(false)
                                 ->live(),
                         ]),
                     ]),
 
-                Forms\Components\Section::make(__('app.profile.change_password'))
+                Forms\Components\Section::make('Segurança')
                     ->icon('heroicon-o-lock-closed')
                     ->schema([
                         $this->getPasswordFormComponent(),
@@ -71,24 +74,17 @@ class EditProfile extends BaseEditProfile
             ]);
     }
 
-    protected function handleRecordUpdate(Model $record, array $data): Model
+    protected function handleRecordUpdate(\Illuminate\Database\Eloquent\Model $record, array $data): \Illuminate\Database\Eloquent\Model
     {
+        // Salvar moeda/locale no distribuidor
         $dist = $record->distributor;
-
         if ($dist) {
-            $currency = $data['distributor']['currency'] ?? null;
-            $locale = $data['distributor']['locale'] ?? null;
-
+            $formState = $this->form->getRawState();
+            $currency  = $formState['distributor']['currency'] ?? null;
+            $locale    = $formState['distributor']['locale']   ?? null;
             if ($currency) $dist->currency = $currency;
-            if ($locale) $dist->locale = $locale;
-
+            if ($locale)   $dist->locale   = $locale;
             $dist->save();
-
-            if ($locale && $record->locale !== $locale) {
-                $record->locale = $locale;
-                session(['locale' => $locale]);
-                app()->setLocale($locale);
-            }
         }
 
         $record->fill($data)->save();
