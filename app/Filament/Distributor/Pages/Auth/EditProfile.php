@@ -5,8 +5,7 @@ namespace App\Filament\Distributor\Pages\Auth;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Pages\Auth\EditProfile as BaseEditProfile;
-use Filament\Notifications\Notification;
-use App\Models\Distributor;
+use Illuminate\Database\Eloquent\Model;
 
 class EditProfile extends BaseEditProfile
 {
@@ -72,19 +71,24 @@ class EditProfile extends BaseEditProfile
             ]);
     }
 
-    protected function handleRecordUpdate(\Illuminate\Database\Eloquent\Model $record, array $data): \Illuminate\Database\Eloquent\Model
+    protected function handleRecordUpdate(Model $record, array $data): Model
     {
         // Salvar moeda/locale no distribuidor
         $dist = $record->distributor;
         if ($dist) {
             $currency = $data['distributor']['currency'] ?? null;
             $locale   = $data['distributor']['locale'] ?? null;
+
             if ($currency) $dist->currency = $currency;
             if ($locale)   $dist->locale = $locale;
+
             $dist->save();
 
             if ($locale && $record->locale !== $locale) {
                 $record->locale = $locale;
+            }
+
+            if ($locale) {
                 session(['locale' => $locale]);
                 app()->setLocale($locale);
             }
