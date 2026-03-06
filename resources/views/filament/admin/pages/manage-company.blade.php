@@ -6,7 +6,7 @@
     @if($company?->logo)
     <div class="flex items-center gap-4 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-2">
         <img
-            src="{{ Storage::url($company->logo) }}"
+            src="{{ $company->logo_url }}"
             alt="{{ $company->trade_name ?? $company->name }}"
             class="h-16 object-contain"
         />

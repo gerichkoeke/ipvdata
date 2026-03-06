@@ -14,24 +14,24 @@ class EditProfile extends BaseEditProfile
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Informações Pessoais')
+                Forms\Components\Section::make(__('app.profile.personal_info'))
                     ->icon('heroicon-o-user')
                     ->schema([
                         $this->getNameFormComponent(),
                         $this->getEmailFormComponent(),
                         Forms\Components\TextInput::make('phone')
-                            ->label('Telefone')
+                            ->label(__('app.profile.phone'))
                             ->tel()
                             ->maxLength(20),
                     ]),
 
-                Forms\Components\Section::make('Moeda e Idioma')
+                Forms\Components\Section::make(__('app.profile.currency') . ' & ' . __('app.profile.language'))
                     ->description('Afeta a exibição de valores em toda a plataforma para seus parceiros')
                     ->icon('heroicon-o-currency-dollar')
                     ->schema([
                         Forms\Components\Grid::make(2)->schema([
                             Forms\Components\Select::make('distributor.currency')
-                                ->label('Moeda Padrão')
+                                ->label(__('app.profile.currency'))
                                 ->options([
                                     'BRL' => '🇧🇷 Real (R$)',
                                     'USD' => '🇺🇸 Dólar (US$)',
@@ -44,11 +44,10 @@ class EditProfile extends BaseEditProfile
                                     $dist = auth()->user()->distributor;
                                     if ($dist) $set('distributor.currency', $dist->currency);
                                 })
-                                ->dehydrated(false)
                                 ->live(),
 
                             Forms\Components\Select::make('distributor.locale')
-                                ->label('Idioma Padrão')
+                                ->label(__('app.profile.language'))
                                 ->options([
                                     'pt_BR' => '🇧🇷 Português (BR)',
                                     'en'    => '🇺🇸 English',
@@ -60,12 +59,11 @@ class EditProfile extends BaseEditProfile
                                     $dist = auth()->user()->distributor;
                                     if ($dist) $set('distributor.locale', $dist->locale);
                                 })
-                                ->dehydrated(false)
                                 ->live(),
                         ]),
                     ]),
 
-                Forms\Components\Section::make('Segurança')
+                Forms\Components\Section::make(__('app.profile.change_password'))
                     ->icon('heroicon-o-lock-closed')
                     ->schema([
                         $this->getPasswordFormComponent(),
@@ -79,12 +77,17 @@ class EditProfile extends BaseEditProfile
         // Salvar moeda/locale no distribuidor
         $dist = $record->distributor;
         if ($dist) {
-            $formState = $this->form->getRawState();
-            $currency  = $formState['distributor']['currency'] ?? null;
-            $locale    = $formState['distributor']['locale']   ?? null;
+            $currency = $data['distributor']['currency'] ?? null;
+            $locale   = $data['distributor']['locale'] ?? null;
             if ($currency) $dist->currency = $currency;
-            if ($locale)   $dist->locale   = $locale;
+            if ($locale)   $dist->locale = $locale;
             $dist->save();
+
+            if ($locale && $record->locale !== $locale) {
+                $record->locale = $locale;
+                session(['locale' => $locale]);
+                app()->setLocale($locale);
+            }
         }
 
         $record->fill($data)->save();
