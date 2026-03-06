@@ -25,13 +25,7 @@ class ManageCompany extends Page
     public function mount(): void
     {
         $company = Company::first();
-        $initialData = $company?->toArray() ?? [];
-
-        if (!empty($initialData['logo']) && !Storage::disk('public')->exists($initialData['logo'])) {
-            $initialData['logo'] = null;
-        }
-
-        $this->form->fill($initialData);
+        $this->form->fill($company?->toArray() ?? []);
     }
 
     public function form(Form $form): Form
@@ -46,8 +40,7 @@ class ManageCompany extends Page
                         Forms\Components\FileUpload::make('logo')
                             ->label('Logo da empresa')
                             ->image()
-                            ->disk('public')
-                            ->visibility('public')
+                            ->imageEditor()
                             ->directory('company/logo')
                             ->maxSize(4096)
                             ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/svg+xml', 'image/webp'])
