@@ -103,6 +103,26 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         };
     }
 
+
+    public function syncLocaleToProfile(string $locale): void
+    {
+        if (!in_array($locale, ['pt_BR', 'en', 'es'], true)) {
+            $locale = 'pt_BR';
+        }
+
+        if ($this->locale !== $locale) {
+            $this->forceFill(['locale' => $locale])->save();
+        }
+
+        if ($this->partner_id && $this->partner && $this->partner->locale !== $locale) {
+            $this->partner->forceFill(['locale' => $locale])->save();
+        }
+
+        if ($this->distributor_id && $this->distributor && $this->distributor->locale !== $locale) {
+            $this->distributor->forceFill(['locale' => $locale])->save();
+        }
+    }
+
     public function getActiveLocaleAttribute(): string
     {
         if ($this->partner_id && $this->partner) {

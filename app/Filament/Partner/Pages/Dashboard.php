@@ -13,10 +13,18 @@ use Filament\Pages\Page;
 class Dashboard extends Page
 {
     protected static ?string $navigationIcon  = 'heroicon-o-home';
-    protected static ?string $navigationLabel = 'Dashboard';
-    protected static ?string $title           = 'Dashboard';
     protected static ?int    $navigationSort  = 1;
     protected static string  $view            = 'filament.partner.pages.dashboard';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('app.dashboard.title');
+    }
+
+    public function getTitle(): string
+    {
+        return __('app.dashboard.title');
+    }
 
     public function getDashboardData(): array
     {
