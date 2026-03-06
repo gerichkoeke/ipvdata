@@ -182,6 +182,8 @@ return [
         'mfa_setup_button' => '🔐 Setup MFA',
         'mfa_enabled' => 'Two-factor authentication enabled',
         'mfa_disabled' => 'Two-factor authentication disabled',
+        'preferences_description' => 'Affects how values are displayed across the platform for your partners.',
+        'currency_helper' => 'Default currency for new partners created by you.',
     ],
     'languages' => ['pt_BR' => 'Português (Brasil)', 'en' => 'English', 'es' => 'Español'],
     'currencies' => [

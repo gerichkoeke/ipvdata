@@ -46,7 +46,7 @@ class Login extends BaseLogin
 
         if (!$user || !$user->canAccessPanel(filament()->getCurrentPanel())) {
             throw ValidationException::withMessages([
-                'data.email' => 'Acesso não autorizado.',
+                'data.email' => __('app.errors.unauthorized'),
             ]);
         }
 

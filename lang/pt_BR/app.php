@@ -182,6 +182,8 @@ return [
         'mfa_setup_button' => '🔐 Configurar MFA',
         'mfa_enabled' => 'Autenticação em dois fatores ativa',
         'mfa_disabled' => 'Autenticação em dois fatores inativa',
+        'preferences_description' => 'Afeta a exibição de valores em toda a plataforma para seus parceiros.',
+        'currency_helper' => 'Moeda padrão para novos parceiros cadastrados por você.',
     ],
     'languages' => ['pt_BR' => 'Português (Brasil)', 'en' => 'English', 'es' => 'Español'],
     'currencies' => [
