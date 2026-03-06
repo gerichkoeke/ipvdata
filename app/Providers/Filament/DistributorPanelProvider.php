@@ -24,7 +24,7 @@ class DistributorPanelProvider extends PanelProvider
             ->id('distributor')
             ->path('distributor')
             ->login(\App\Filament\Distributor\Pages\Auth\Login::class)
-            ->profile(\App\Filament\Distributor\Pages\Auth\EditProfile::class, isSimple: false)
+            ->profile(\Filament\Pages\Auth\EditProfile::class, isSimple: false)
             ->colors(['primary' => Color::Blue])
             ->brandName('Portal do Distribuidor')
             ->topNavigation()
