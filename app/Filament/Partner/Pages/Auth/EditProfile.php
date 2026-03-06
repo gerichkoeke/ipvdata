@@ -7,6 +7,7 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Auth\EditProfile as BaseEditProfile;
@@ -31,9 +32,11 @@ class EditProfile extends BaseEditProfile
 
         if ($user) {
             $this->form->fill([
-                'name'  => $user->name,
-                'email' => $user->email,
-                'phone' => $user->phone ?? '',
+                'name'     => $user->name,
+                'email'    => $user->email,
+                'phone'    => $user->phone ?? '',
+                'locale'   => $user->active_locale ?? $user->locale ?? 'pt_BR',
+                'currency' => $user->active_currency ?? $user->currency ?? 'BRL',
             ]);
         }
 
@@ -56,11 +59,26 @@ class EditProfile extends BaseEditProfile
             return;
         }
 
+        $locale   = $data['locale'] ?? ($user->active_locale ?? $user->locale ?? 'pt_BR');
+        $currency = $data['currency'] ?? ($user->active_currency ?? $user->currency ?? 'BRL');
+
         $user->update(array_filter([
-            'name'  => $data['name']  ?? null,
-            'email' => $data['email'] ?? null,
-            'phone' => $data['phone'] ?? null,
+            'name'     => $data['name']  ?? null,
+            'email'    => $data['email'] ?? null,
+            'phone'    => $data['phone'] ?? null,
+            'locale'   => $locale,
+            'currency' => $currency,
         ], fn ($v) => $v !== null));
+
+        if ($user->partner) {
+            $user->partner->forceFill([
+                'locale'   => $locale,
+                'currency' => $currency,
+            ])->save();
+        }
+
+        session(['locale' => $locale]);
+        app()->setLocale($locale);
 
         // Atualizar senha se fornecida
         if (!empty($data['password'])) {
@@ -84,9 +102,11 @@ class EditProfile extends BaseEditProfile
         // Usar $data que já vem de getUser()->attributesToArray()
         // chamado pelo parent::mount() via fillForm()
         return [
-            'name'  => $data['name']  ?? '',
-            'email' => $data['email'] ?? '',
-            'phone' => $data['phone'] ?? '',
+            'name'     => $data['name']  ?? '',
+            'email'    => $data['email'] ?? '',
+            'phone'    => $data['phone'] ?? '',
+            'locale'   => $data['active_locale'] ?? $data['locale'] ?? 'pt_BR',
+            'currency' => $data['active_currency'] ?? $data['currency'] ?? 'BRL',
         ];
     }
 
@@ -94,9 +114,11 @@ class EditProfile extends BaseEditProfile
     protected function mutateFormDataBeforeSave(array $data): array
     {
         return array_filter([
-            'name'  => $data['name']  ?? null,
-            'email' => $data['email'] ?? null,
-            'phone' => $data['phone'] ?? null,
+            'name'     => $data['name']  ?? null,
+            'email'    => $data['email'] ?? null,
+            'phone'    => $data['phone'] ?? null,
+            'locale'   => $data['locale'] ?? null,
+            'currency' => $data['currency'] ?? null,
         ], fn ($v) => $v !== null);
     }
 
@@ -127,6 +149,35 @@ class EditProfile extends BaseEditProfile
                             ->tel()
                             ->maxLength(20)
                             ->placeholder('(00) 00000-0000'),
+                    ]),
+
+
+                Section::make(__('app.profile.language') . ' & ' . __('app.profile.currency'))
+                    ->icon('heroicon-o-language')
+                    ->schema([
+                        Grid::make(2)->schema([
+                            Select::make('locale')
+                                ->label(__('app.profile.language'))
+                                ->options([
+                                    'pt_BR' => '🇧🇷 Português (BR)',
+                                    'en'    => '🇺🇸 English',
+                                    'es'    => '🇪🇸 Español',
+                                ])
+                                ->native(false)
+                                ->required(),
+
+                            Select::make('currency')
+                                ->label(__('app.profile.currency'))
+                                ->options([
+                                    'BRL' => '🇧🇷 Real (R$)',
+                                    'USD' => '🇺🇸 Dólar (US$)',
+                                    'EUR' => '🇪🇺 Euro (€)',
+                                    'ARS' => '🇦🇷 Peso Argentino ($)',
+                                    'PYG' => '🇵🇾 Guarani (₲)',
+                                ])
+                                ->native(false)
+                                ->required(),
+                        ]),
                     ]),
 
                 Section::make(__('app.profile.change_password'))
