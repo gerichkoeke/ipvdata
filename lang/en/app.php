@@ -95,6 +95,7 @@ return [
     ],
 
     'customer_infra' => [
+        'environment' => 'Environment',
         'virtual_datacenter' => 'Virtual Datacenter',
         'read_only' => 'Read-only view',
         'rate' => 'Rate',
@@ -109,6 +110,7 @@ return [
         'public_ips' => 'Public IP(s)',
         'monthly_cost' => 'Monthly Cost',
         'virtual_machines' => 'Virtual Machines',
+        'generate_proposal' => 'Generate Proposal',
         'latest_proposals' => 'Latest Proposals',
         'status_approved' => 'Approved',
         'status_sent' => 'Sent',

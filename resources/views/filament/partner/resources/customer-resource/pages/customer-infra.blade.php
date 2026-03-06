@@ -22,11 +22,11 @@
     <div class="flex items-center gap-3">
         <a href="{{ \App\Filament\Partner\Resources\CustomerResource\Pages\CustomerDashboard::getUrl(['record'=>$record]) }}"
            class="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors">
-            <x-heroicon-m-chevron-left class="w-4 h-4"/>Dashboard
+            <x-heroicon-m-chevron-left class="w-4 h-4"/>{{ __('app.nav.dashboard') }}
         </a>
         <span class="text-gray-700">/</span>
         <span class="text-sm font-bold text-white flex items-center gap-2">
-            <x-heroicon-o-server-stack class="w-4 h-4 text-primary-400"/>Centro de Dados Virtual
+            <x-heroicon-o-server-stack class="w-4 h-4 text-primary-400"/>{{ __('app.customer_infra.virtual_datacenter') }}
         </span>
     </div>
     <div class="flex items-center gap-2">
@@ -44,17 +44,17 @@
         @endif
         <button type="button" wire:click="abrirProposta"
             class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors">
-            <x-heroicon-m-document-text class="w-4 h-4"/>Gerar Proposta
+            <x-heroicon-m-document-text class="w-4 h-4"/>{{ __('app.customer_infra.generate_proposal') }}
         </button>
         <button type="button" wire:click="abrirEscolha" class="{{ $bp }}">
-            <x-heroicon-m-plus class="w-4 h-4"/>Adicionar
+            <x-heroicon-m-plus class="w-4 h-4"/>{{ __('app.add') }}
         </button>
     </div>
 </div>
 
 {{-- Stats --}}
 <div style="display:flex; gap:0.75rem;" class="mb-5">
-    @foreach([['VMs Ativas',$data['vms_ativas'],'heroicon-o-server-stack','text-primary-400'],['vCPUs',$data['vcpu_total'],'heroicon-o-cpu-chip','text-gray-300'],['RAM Total',$data['ram_total'].' GB','heroicon-o-circle-stack','text-gray-300'],['Storage Total',$data['disk_total'].' GB','heroicon-o-server-stack','text-amber-400'],['Receita/Mês','R$ '.number_format($data['mrr_total'],2,',','.'),'heroicon-o-currency-dollar','text-success-400']] as $s)
+    @foreach([[__('app.customer_infra.active_vms'),$data['vms_ativas'],'heroicon-o-server-stack','text-primary-400'],['vCPUs',$data['vcpu_total'],'heroicon-o-cpu-chip','text-gray-300'],[__('app.customer_infra.total_ram'),$data['ram_total'].' GB','heroicon-o-circle-stack','text-gray-300'],[__('app.customer_infra.storage_total'),$data['disk_total'].' GB','heroicon-o-server-stack','text-amber-400'],[__('app.customer_infra.monthly_revenue'),'R$ '.number_format($data['mrr_total'],2,',','.'),'heroicon-o-currency-dollar','text-success-400']] as $s)
     <div class="rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 flex items-center gap-3">
         <div class="w-9 h-9 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center shrink-0"><x-dynamic-component :component="$s[2]" class="w-4 h-4 {{ $s[3] }}"/></div>
         <div><p class="text-[10px] text-gray-500 uppercase tracking-wide">{{ $s[0] }}</p><p class="text-sm font-bold {{ $s[3] }}">{{ $s[1] }}</p></div>
@@ -67,31 +67,31 @@
 @php $rede=$data['rede']; $isLan=$rede->networkType?->slug==='lan-to-lan'; $netCost=$isLan?($rede->networkType?->price??0):(($rede->extra_ip_price??0)+($rede->bandwidthOption?->price??0)); @endphp
 <div class="rounded-xl border border-gray-700 bg-gray-900 overflow-hidden mb-5">
     <div class="px-5 py-3 border-b border-gray-700 bg-gray-800/60 flex items-center justify-between">
-        <div class="flex items-center gap-2"><x-heroicon-m-signal class="w-4 h-4 text-primary-400"/><span class="font-bold text-white text-sm">Rede do Cliente</span><span class="text-[10px] text-gray-500 bg-gray-800 border border-gray-700 px-2 py-0.5 rounded-full">Compartilhada entre todas as VMs</span></div>
+        <div class="flex items-center gap-2"><x-heroicon-m-signal class="w-4 h-4 text-primary-400"/><span class="font-bold text-white text-sm">{{ __('app.customer_infra.customer_network') }}</span><span class="text-[10px] text-gray-500 bg-gray-800 border border-gray-700 px-2 py-0.5 rounded-full">{{ __('app.customer_infra.shared_across_vms') }}</span></div>
         <div class="flex items-center gap-1">
-            <button type="button" wire:click="abrirEditarRede" class="flex items-center gap-1 text-xs text-gray-500 hover:text-primary-400 transition-colors px-2 py-1 rounded hover:bg-primary-900/20"><x-heroicon-m-pencil-square class="w-3.5 h-3.5"/>Editar</button>
-            <button type="button" wire:click="abrirExcluirRede" class="flex items-center gap-1 text-xs text-gray-500 hover:text-red-400 transition-colors px-2 py-1 rounded hover:bg-red-900/20"><x-heroicon-m-trash class="w-3.5 h-3.5"/>Excluir</button>
+            <button type="button" wire:click="abrirEditarRede" class="flex items-center gap-1 text-xs text-gray-500 hover:text-primary-400 transition-colors px-2 py-1 rounded hover:bg-primary-900/20"><x-heroicon-m-pencil-square class="w-3.5 h-3.5"/>{{ __('app.edit') }}</button>
+            <button type="button" wire:click="abrirExcluirRede" class="flex items-center gap-1 text-xs text-gray-500 hover:text-red-400 transition-colors px-2 py-1 rounded hover:bg-red-900/20"><x-heroicon-m-trash class="w-3.5 h-3.5"/>{{ __('app.delete') }}</button>
         </div>
     </div>
     <div class="flex items-stretch divide-x divide-gray-800">
-        <div class="flex-1 py-4 flex flex-col items-center gap-1"><x-heroicon-m-globe-alt class="w-5 h-5 text-primary-400 mb-0.5"/><span class="text-sm font-bold text-white">{{ $rede->networkType?->name??'—' }}</span><span class="text-[10px] text-gray-500">Tipo de Rede</span></div>
-        <div class="flex-1 py-4 flex flex-col items-center gap-1"><x-heroicon-m-wifi class="w-5 h-5 text-primary-400 mb-0.5"/><span class="text-sm font-bold text-white">{{ $isLan?'1 Gbps':($rede->bandwidthOption?->name??'—') }}</span><span class="text-[10px] text-gray-500">Banda</span></div>
+        <div class="flex-1 py-4 flex flex-col items-center gap-1"><x-heroicon-m-globe-alt class="w-5 h-5 text-primary-400 mb-0.5"/><span class="text-sm font-bold text-white">{{ $rede->networkType?->name??'—' }}</span><span class="text-[10px] text-gray-500">{{ __('app.customer_infra.network_type') }}</span></div>
+        <div class="flex-1 py-4 flex flex-col items-center gap-1"><x-heroicon-m-wifi class="w-5 h-5 text-primary-400 mb-0.5"/><span class="text-sm font-bold text-white">{{ $isLan?'1 Gbps':($rede->bandwidthOption?->name??'—') }}</span><span class="text-[10px] text-gray-500">{{ __('app.customer_infra.bandwidth') }}</span></div>
         <div class="flex-1 py-4 flex flex-col items-center gap-1"><x-heroicon-m-map-pin class="w-5 h-5 text-primary-400 mb-0.5"/><span class="text-sm font-bold text-white">{{ $isLan?'—':(1+($rede->extra_public_ips??0)) }}</span><span class="text-[10px] text-gray-500">{{ $isLan?'Topologia':'IP(s) Público(s)' }}</span></div>
-        <div class="flex-1 py-4 flex flex-col items-center gap-1"><x-heroicon-m-currency-dollar class="w-5 h-5 text-success-400 mb-0.5"/><span class="text-sm font-bold text-success-400">R$ {{ number_format($netCost,2,',','.') }}</span><span class="text-[10px] text-gray-500">Custo/Mês</span></div>
+        <div class="flex-1 py-4 flex flex-col items-center gap-1"><x-heroicon-m-currency-dollar class="w-5 h-5 text-success-400 mb-0.5"/><span class="text-sm font-bold text-success-400">R$ {{ number_format($netCost,2,',','.') }}</span><span class="text-[10px] text-gray-500">{{ __('app.customer_infra.monthly_cost') }}</span></div>
     </div>
 </div>
 @endif
 
 {{-- VMs --}}
 @if($data['allVms']->isNotEmpty())
-<div class="mb-2 flex items-center gap-2"><x-heroicon-m-server-stack class="w-4 h-4 text-primary-400"/><h3 class="text-xs font-bold uppercase tracking-widest text-gray-400">Máquinas Virtuais ({{ $data['allVms']->count() }})</h3></div>
+<div class="mb-2 flex items-center gap-2"><x-heroicon-m-server-stack class="w-4 h-4 text-primary-400"/><h3 class="text-xs font-bold uppercase tracking-widest text-gray-400">{{ __('app.customer_infra.virtual_machines') }} ({{ $data['allVms']->count() }})</h3></div>
 <div style="display:grid;grid-template-columns:repeat(3,minmax(300px,1fr));gap:0.875rem;margin-bottom:1.25rem;">
     @foreach($data['allVms'] as $vm)
     <div class="rounded-xl border border-gray-700 bg-gray-900 hover:border-gray-600 transition-colors overflow-hidden flex flex-col">
         <div class="px-4 py-3 border-b border-gray-800 flex items-center justify-between">
             <div class="flex items-center gap-2.5 min-w-0">
                 <div class="w-8 h-8 rounded-lg bg-primary-900/30 border border-primary-800 flex items-center justify-center shrink-0"><x-heroicon-m-computer-desktop class="w-4 h-4 text-primary-400"/></div>
-                <div class="min-w-0"><p class="font-bold text-white text-xs leading-tight truncate">{{ $vm->name }}</p><div class="flex items-center gap-1 mt-0.5"><span class="w-1.5 h-1.5 rounded-full {{ $vm->status==='active'?'bg-success-400':'bg-gray-500' }}"></span><span class="text-[10px] {{ $vm->status==='active'?'text-success-400':'text-gray-500' }}">{{ $vm->status==='active'?'Ligado':'Desligado' }}</span></div></div>
+                <div class="min-w-0"><p class="font-bold text-white text-xs leading-tight truncate">{{ $vm->name }}</p><div class="flex items-center gap-1 mt-0.5"><span class="w-1.5 h-1.5 rounded-full {{ $vm->status==='active'?'bg-success-400':'bg-gray-500' }}"></span><span class="text-[10px] {{ $vm->status==='active'?'text-success-400':'text-gray-500' }}">{{ $vm->status==='active'?__('app.active'):__('app.inactive') }}</span></div></div>
             </div>
             <div class="flex items-center gap-0.5 shrink-0">
                 <button type="button" wire:click="abrirEditarVm({{ $vm->id }})" class="p-1.5 rounded-md text-gray-600 hover:text-primary-400 hover:bg-primary-900/20 transition-colors"><x-heroicon-m-pencil-square class="w-3.5 h-3.5"/></button>
@@ -101,7 +101,7 @@
         @if($vm->osDistribution)<div class="px-4 pt-2 pb-1"><p class="text-[10px] text-gray-300 font-medium">{{ $vm->osDistribution->name }}</p></div>@endif
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid #1f2937;border-bottom:1px solid #1f2937;">
             <div class="py-2.5 flex flex-col items-center gap-0.5 border-r border-gray-800"><x-heroicon-m-cpu-chip class="w-3 h-3 text-blue-400 mb-0.5"/><span class="text-sm font-bold text-white leading-none">{{ $vm->cpu_cores }}</span><span class="text-[9px] text-gray-400">vCPUs</span><span class="text-[9px] text-blue-300 font-medium leading-none mt-0.5">R$ {{ number_format($vm->price_cpu,2,',','.') }}</span></div>
-            <div class="py-2.5 flex flex-col items-center gap-0.5 border-r border-gray-800"><x-heroicon-m-circle-stack class="w-3 h-3 text-violet-400 mb-0.5"/><span class="text-sm font-bold text-white leading-none">{{ $vm->ram_gb }}GB</span><span class="text-[9px] text-gray-400">Memória</span><span class="text-[9px] text-violet-300 font-medium leading-none mt-0.5">R$ {{ number_format($vm->price_ram,2,',','.') }}</span></div>
+            <div class="py-2.5 flex flex-col items-center gap-0.5 border-r border-gray-800"><x-heroicon-m-circle-stack class="w-3 h-3 text-violet-400 mb-0.5"/><span class="text-sm font-bold text-white leading-none">{{ $vm->ram_gb }}GB</span><span class="text-[9px] text-gray-400">{{ __('app.customer_infra.total_ram') }}</span><span class="text-[9px] text-violet-300 font-medium leading-none mt-0.5">R$ {{ number_format($vm->price_ram,2,',','.') }}</span></div>
             <div class="py-2.5 flex flex-col items-center gap-0.5"><x-heroicon-m-server class="w-3 h-3 text-amber-400 mb-0.5"/><span class="text-sm font-bold text-white leading-none">{{ $vm->disk_os_gb+$vm->additionalDisks->sum('size_gb') }}GB</span><span class="text-[9px] text-gray-400">Armazenamento</span><span class="text-[9px] text-amber-300 font-medium leading-none mt-0.5">R$ {{ number_format($vm->price_disk_os,2,',','.') }}</span></div>
         </div>
         <div class="px-3 py-2 space-y-1.5 flex-1">
@@ -120,20 +120,20 @@
     @endforeach
     <button type="button" wire:click="abrirEscolha" class="rounded-xl border-2 border-dashed border-gray-700 hover:border-primary-500/60 bg-transparent hover:bg-primary-950/10 flex flex-col items-center justify-center gap-3 py-8 text-gray-600 hover:text-primary-400 transition-all group min-h-[180px]">
         <div class="w-10 h-10 rounded-xl border-2 border-dashed border-current flex items-center justify-center group-hover:bg-primary-900/20 transition-colors"><x-heroicon-m-plus class="w-5 h-5"/></div>
-        <span class="text-xs font-semibold">Adicionar</span>
+        <span class="text-xs font-semibold">{{ __('app.add') }}</span>
     </button>
 </div>
 @elseif(!$data['rede'])
 <div class="rounded-xl border-2 border-dashed border-gray-700 bg-gray-900/50 p-12 flex flex-col items-center gap-4 mb-5">
     <x-heroicon-o-server-stack class="text-gray-600" style="width:3rem;height:3rem;"/>
-    <div class="text-center"><p class="text-gray-400 font-semibold">Nenhuma infraestrutura configurada</p><p class="text-gray-600 text-sm mt-1">Clique em "Adicionar" para começar</p></div>
-    <button type="button" wire:click="abrirEscolha" class="{{ $bp }}"><x-heroicon-m-plus class="w-4 h-4"/>Adicionar</button>
+    <div class="text-center"><p class="text-gray-400 font-semibold">{{ __('app.customers.empty_state_heading') }}</p><p class="text-gray-600 text-sm mt-1">{{ __('app.customers.empty_state_description') }}</p></div>
+    <button type="button" wire:click="abrirEscolha" class="{{ $bp }}"><x-heroicon-m-plus class="w-4 h-4"/>{{ __('app.add') }}</button>
 </div>
 @else
 <div class="rounded-xl border-2 border-dashed border-gray-700 bg-gray-900/50 p-10 flex flex-col items-center gap-3 mb-5">
     <x-heroicon-o-server-stack class="text-gray-600" style="width:2.5rem;height:2.5rem;"/>
     <p class="text-gray-500 text-sm">Rede configurada. Adicione a primeira VM.</p>
-    <button type="button" wire:click="abrirEscolha" class="{{ $bp }}"><x-heroicon-m-plus class="w-4 h-4"/>Adicionar VM</button>
+    <button type="button" wire:click="abrirEscolha" class="{{ $bp }}"><x-heroicon-m-plus class="w-4 h-4"/>{{ __('app.infra.add_vm') }}</button>
 </div>
 @endif
 
@@ -374,7 +374,7 @@
         <div class="px-6 py-4 border-b border-gray-700 flex items-center justify-between"><h2 class="text-base font-bold text-white flex items-center gap-2"><x-heroicon-m-signal class="w-4 h-4 text-primary-400"/>{{ $modalRede ? 'Configurar Rede do Cliente' : 'Editar Rede' }}</h2><button type="button" wire:click="fecharModais" class="text-gray-500 hover:text-white"><x-heroicon-m-x-mark class="w-5 h-5"/></button></div>
         <div class="p-6 space-y-4">
             @if($modalRede)<div class="flex items-start gap-3 p-3 bg-primary-900/20 border border-primary-800 rounded-lg text-sm text-primary-300"><x-heroicon-m-information-circle class="w-4 h-4 shrink-0 mt-0.5"/><span>A rede é compartilhada por todas as VMs. Configure uma vez e adicione quantas VMs quiser.</span></div>@endif
-            <div><label class="{{ $lc }}">Tipo de Rede</label><select wire:model.live="form_network_type_id" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Selecione...</option>@foreach($selects['network_types'] as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach</select></div>
+            <div><label class="{{ $lc }}">{{ __('app.customer_infra.network_type') }}</label><select wire:model.live="form_network_type_id" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Selecione...</option>@foreach($selects['network_types'] as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach</select></div>
             @if($this->showBandwidth())<div><label class="{{ $lc }}">Largura de Banda</label><select wire:model.live="form_bandwidth_option_id" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Selecione...</option>@foreach($selects['bandwidth_options'] as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach</select></div>@endif
             <div><label class="{{ $lc }}">IPs Públicos Adicionais</label><input type="number" wire:model="form_extra_public_ips" min="0" max="20" style="{{ $icStyle }}" class="{{ $ic }}" placeholder="0"/><p class="text-[10px] text-gray-500 mt-1">Além do IP padrão incluído gratuitamente.</p></div>
         </div>
@@ -537,7 +537,7 @@
         <div class="p-6 space-y-4">
             <div class="grid grid-cols-2 gap-4">
                 <div><label class="{{ $lc }}">Tipo de Rede *</label><select wire:model="form_bkp_network" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Selecione...</option>@foreach($selects['network_types'] as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach<option value="vpn_client">VPN Client</option></select></div>
-                <div><label class="{{ $lc }}">Banda</label><select wire:model="form_bkp_bandwidth_id" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Selecione...</option>@foreach($selects['bandwidth_options'] as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach</select></div>
+                <div><label class="{{ $lc }}">{{ __('app.customer_infra.bandwidth') }}</label><select wire:model="form_bkp_bandwidth_id" style="color-scheme:dark;background-color:#1f2937;" class="{{ $sc }}"><option value="">Selecione...</option>@foreach($selects['bandwidth_options'] as $id=>$name)<option value="{{ $id }}">{{ $name }}</option>@endforeach</select></div>
             </div>
             <div>
                 <div class="flex items-center justify-between mb-2"><label class="{{ $lc }}">Máquinas para Backup</label><button type="button" wire:click="adicionarMaquinaBackup" class="text-xs bg-gray-700 hover:bg-gray-600 text-primary-400 px-2 py-1 rounded-lg flex items-center gap-1"><x-heroicon-m-plus class="w-3 h-3"/>Adicionar Máquina</button></div>
@@ -585,7 +585,7 @@
                 <div class="w-9 h-9 rounded-xl bg-emerald-900/40 border border-emerald-800 flex items-center justify-center">
                     <x-heroicon-m-document-text class="w-5 h-5 text-emerald-400"/>
                 </div>
-                <h2 class="text-base font-bold text-white">Gerar Proposta</h2>
+                <h2 class="text-base font-bold text-white">{{ __('app.proposals.title') }}</h2>
             </div>
             <button wire:click="$set('modalProposta',false)" class="text-gray-400 hover:text-white transition-colors">
                 <x-heroicon-m-x-mark class="w-5 h-5"/>

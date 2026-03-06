@@ -114,15 +114,15 @@ class CustomerInfra extends Page
 
     public function getTitle(): string
     {
-        return ($this->record->trade_name ?? $this->record->name) . ' — Infraestrutura';
+        return ($this->record->trade_name ?? $this->record->name) . ' — ' . __('app.customers.infra');
     }
 
     public function getBreadcrumbs(): array
     {
         return [
-            CustomerResource::getUrl()                              => 'Clientes',
+            CustomerResource::getUrl()                              => __('app.customers.title'),
             CustomerDashboard::getUrl(['record' => $this->record])   => $this->record->trade_name ?? $this->record->name,
-            '#'                                                      => 'Infraestrutura',
+            '#'                                                      => __('app.customers.infra'),
         ];
     }
 
@@ -328,6 +328,8 @@ class CustomerInfra extends Page
             'network_configured'  => false,
             'network_type_id'     => null,
             'bandwidth_option_id' => null,
+            'firewall_option_id'  => null,
+            'lan_to_lan_address'  => null,
             'extra_public_ips'    => 0,
             'extra_ip_price'      => 0,
         ]);

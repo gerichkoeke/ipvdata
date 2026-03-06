@@ -1,156 +1,50 @@
 <?php
 
-namespace App\Filament\Partner\Pages\Auth;
+namespace App\Filament\Admin\Pages\Auth;
 
 use App\Services\MfaService;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Auth\EditProfile as BaseEditProfile;
-use Illuminate\Support\HtmlString;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\HtmlString;
 
 class EditProfile extends BaseEditProfile
 {
-    protected static string $view = 'filament.partner.pages.edit-profile';
+    protected static string $view = 'filament.admin.pages.auth.edit-profile';
 
-    public ?array $mfaData  = [];
+    public ?array $mfaData = [];
     public ?string $mfaQrCode = null;
-
-
-    public ?array $data = [];
-
-    public function mount(): void
-    {
-        $user = \App\Models\User::find(
-            filament()->auth()->id() ?? auth()->id()
-        );
-
-        if ($user) {
-            $this->form->fill([
-                'name'     => $user->name,
-                'email'    => $user->email,
-                'phone'    => $user->phone ?? '',
-                'locale'   => $user->active_locale ?? $user->locale ?? 'pt_BR',
-                'currency' => $user->active_currency ?? $user->currency ?? 'BRL',
-            ]);
-        }
-
-        $this->mfaForm->fill([]);
-    }
-
-    public function save(): void
-    {
-        $data = $this->form->getState();
-
-        $user = \App\Models\User::find(
-            filament()->auth()->id() ?? auth()->id()
-        );
-
-        if (!$user) {
-            \Filament\Notifications\Notification::make()
-                ->title(__('app.profile.save_error'))
-                ->danger()
-                ->send();
-            return;
-        }
-
-        $locale   = $data['locale'] ?? ($user->active_locale ?? $user->locale ?? 'pt_BR');
-        $currency = $data['currency'] ?? ($user->active_currency ?? $user->currency ?? 'BRL');
-
-        $user->update(array_filter([
-            'name'     => $data['name']  ?? null,
-            'email'    => $data['email'] ?? null,
-            'phone'    => $data['phone'] ?? null,
-            'locale'   => $locale,
-            'currency' => $currency,
-        ], fn ($v) => $v !== null));
-
-        if ($user->partner) {
-            $user->partner->forceFill([
-                'locale'   => $locale,
-                'currency' => $currency,
-            ])->save();
-        }
-
-        session(['locale' => $locale]);
-        app()->setLocale($locale);
-
-        // Atualizar senha se fornecida
-        if (!empty($data['password'])) {
-            $user->update(['password' => \Illuminate\Support\Facades\Hash::make($data['password'])]);
-        }
-
-        \Filament\Notifications\Notification::make()
-            ->title(__('app.profile.saved'))
-            ->success()
-            ->send();
-    }
 
     public function getTitle(): string|Htmlable
     {
         return __('app.profile.title');
     }
 
-    // Preencher o form com os dados do usuário logado
-    protected function mutateFormDataBeforeFill(array $data): array
-    {
-        // Usar $data que já vem de getUser()->attributesToArray()
-        // chamado pelo parent::mount() via fillForm()
-        return [
-            'name'     => $data['name']  ?? '',
-            'email'    => $data['email'] ?? '',
-            'phone'    => $data['phone'] ?? '',
-            'locale'   => $data['active_locale'] ?? $data['locale'] ?? 'pt_BR',
-            'currency' => $data['active_currency'] ?? $data['currency'] ?? 'BRL',
-        ];
-    }
-
-    // Salvar os dados de volta no usuário
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        return array_filter([
-            'name'     => $data['name']  ?? null,
-            'email'    => $data['email'] ?? null,
-            'phone'    => $data['phone'] ?? null,
-            'locale'   => $data['locale'] ?? null,
-            'currency' => $data['currency'] ?? null,
-        ], fn ($v) => $v !== null);
-    }
-
     public function form(Form $form): Form
     {
         return $form
             ->model($this->getUser())
-            ->statePath('data')
             ->schema([
                 Section::make(__('app.profile.personal_info'))
                     ->icon('heroicon-o-user')
                     ->schema([
                         Grid::make(2)->schema([
-                            TextInput::make('name')
-                                ->label(__('app.profile.name'))
-                                ->required()
-                                ->maxLength(255),
-
-                            TextInput::make('email')
-                                ->label(__('app.profile.email'))
-                                ->email()
-                                ->required()
-                                ->maxLength(255),
+                            $this->getNameFormComponent(),
+                            $this->getEmailFormComponent(),
+                            TextInput::make('phone')
+                                ->label(__('app.profile.phone'))
+                                ->tel()
+                                ->maxLength(20),
                         ]),
-
-                        TextInput::make('phone')
-                            ->label(__('app.profile.phone'))
-                            ->tel()
-                            ->maxLength(20)
-                            ->placeholder('(00) 00000-0000'),
                     ]),
-
 
                 Section::make(__('app.profile.language') . ' & ' . __('app.profile.currency'))
                     ->icon('heroicon-o-language')
@@ -160,8 +54,8 @@ class EditProfile extends BaseEditProfile
                                 ->label(__('app.profile.language'))
                                 ->options([
                                     'pt_BR' => '🇧🇷 Português (BR)',
-                                    'en'    => '🇺🇸 English',
-                                    'es'    => '🇪🇸 Español',
+                                    'en' => '🇺🇸 English',
+                                    'es' => '🇪🇸 Español',
                                 ])
                                 ->native(false)
                                 ->required(),
@@ -194,7 +88,7 @@ class EditProfile extends BaseEditProfile
 
     public function mfaForm(Form $form): Form
     {
-        $user      = auth()->user();
+        $user = auth()->user();
         $isEnabled = $user->mfa_enabled && $user->mfa_confirmed_at;
 
         return $form->schema([
@@ -222,9 +116,7 @@ class EditProfile extends BaseEditProfile
                                 . "<p class='mt-3 text-xs text-gray-500'>" . __('app.profile.mfa_after_scan') . "</p>"
                                 . "</div>"
                             )
-                            : new HtmlString(
-                                '<p class="text-sm text-gray-500 italic">' . __('app.profile.mfa_setup_hint') . '</p>'
-                            )
+                            : new HtmlString('<p class="text-sm text-gray-500 italic">' . __('app.profile.mfa_setup_hint') . '</p>')
                         ),
 
                     TextInput::make('mfa_code')
@@ -243,11 +135,41 @@ class EditProfile extends BaseEditProfile
         return ['form', 'mfaForm'];
     }
 
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $data['locale'] = $data['locale'] ?? 'pt_BR';
+        $data['currency'] = $data['currency'] ?? 'BRL';
+
+        return $data;
+    }
+
+    protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        $record->fill([
+            'name' => $data['name'] ?? $record->name,
+            'email' => $data['email'] ?? $record->email,
+            'phone' => $data['phone'] ?? null,
+            'locale' => $data['locale'] ?? $record->locale ?? 'pt_BR',
+            'currency' => $data['currency'] ?? $record->currency ?? 'BRL',
+        ]);
+
+        if (!empty($data['password'])) {
+            $record->password = Hash::make($data['password']);
+        }
+
+        $record->save();
+
+        app()->setLocale($record->locale ?? 'pt_BR');
+        session(['locale' => $record->locale ?? 'pt_BR']);
+
+        return $record;
+    }
+
     public function setupMfa(): void
     {
-        $user          = auth()->user();
-        $svc           = app(MfaService::class);
-        $secret        = $svc->generateSecret();
+        $user = auth()->user();
+        $svc = app(MfaService::class);
+        $secret = $svc->generateSecret();
         $this->mfaQrCode = $svc->getQrCodeInline($user, $secret);
         session(['mfa_temp_secret' => $secret]);
 
@@ -256,7 +178,7 @@ class EditProfile extends BaseEditProfile
 
     public function confirmMfa(): void
     {
-        $code   = $this->mfaData['mfa_code'] ?? '';
+        $code = $this->mfaData['mfa_code'] ?? '';
         $secret = session('mfa_temp_secret');
 
         if (!$secret) {
@@ -265,6 +187,7 @@ class EditProfile extends BaseEditProfile
         }
 
         $svc = app(MfaService::class);
+
         if ($svc->verifyCode($secret, $code)) {
             $svc->enable(auth()->user(), $secret);
             session()->forget('mfa_temp_secret');

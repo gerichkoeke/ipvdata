@@ -95,6 +95,7 @@ return [
     ],
 
     'customer_infra' => [
+        'environment' => 'Entorno',
         'virtual_datacenter' => 'Centro de Datos Virtual',
         'read_only' => 'Vista de solo lectura',
         'rate' => 'Tasa',
@@ -109,6 +110,7 @@ return [
         'public_ips' => 'IP(s) Pública(s)',
         'monthly_cost' => 'Costo/Mes',
         'virtual_machines' => 'Máquinas Virtuales',
+        'generate_proposal' => 'Generar Propuesta',
         'latest_proposals' => 'Últimas Propuestas',
         'status_approved' => 'Aprobada',
         'status_sent' => 'Enviada',

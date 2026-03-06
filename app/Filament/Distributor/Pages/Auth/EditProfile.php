@@ -89,6 +89,12 @@ class EditProfile extends BaseEditProfile
         }
 
         $record->fill($data)->save();
+
+        if (!empty($locale)) {
+            session(['locale' => $locale]);
+            app()->setLocale($locale);
+        }
+
         return $record;
     }
 }
