@@ -12,7 +12,12 @@ class PartnerClients extends BaseWidget
 {
     protected static ?int $sort = 2;
     protected int | string | array $columnSpan = 'full';
-    protected static ?string $heading = 'Meus Clientes';
+    protected static ?string $heading = null;
+
+    public function getHeading(): string
+    {
+        return __('app.customers.title');
+    }
 
     public function table(Table $table): Table
     {
@@ -25,37 +30,37 @@ class PartnerClients extends BaseWidget
                     ->withCount(['projects'])
                     ->latest()
             )
-            ->emptyStateHeading('Nenhum cliente cadastrado')
-            ->emptyStateDescription('Seus clientes aparecerão aqui.')
+            ->emptyStateHeading(__('app.customers.empty_state_heading'))
+            ->emptyStateDescription(__('app.customers.empty_state_description'))
             ->emptyStateIcon('heroicon-o-users')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Cliente')
+                    ->label(__('app.customers.singular'))
                     ->description(fn($record) => $record->trade_name)
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('document')
-                    ->label('CNPJ/CPF')
+                    ->label(__('app.customers.document'))
                     ->formatStateUsing(fn($record) => $record->document_formatted)
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('email')
-                    ->label('E-mail')
+                    ->label(__('app.email'))
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('projects_count')
-                    ->label('Projetos')
+                    ->label(__('app.projects.title'))
                     ->badge()
                     ->color('info'),
 
                 Tables\Columns\TextColumn::make('city')
-                    ->label('Cidade')
+                    ->label(__('app.customers.city_state'))
                     ->formatStateUsing(fn($record) => $record->city . '/' . $record->state)
                     ->placeholder('-'),
 
                 Tables\Columns\IconColumn::make('is_active')
-                    ->label('Ativo')
+                    ->label(__('app.active'))
                     ->boolean(),
             ])
             ->recordUrl(
