@@ -538,6 +538,40 @@ class CustomerInfra extends Page
         $this->modalEditarRede          = true;
     }
 
+    public function abrirExcluirRede(): void
+    {
+        $projeto = $this->customer->projects()->where('network_configured', true)->first();
+        if (!$projeto) {
+            Notification::make()->title('Nenhuma rede configurada')->warning()->send();
+            return;
+        }
+
+        $this->activeProjectId  = $projeto->id;
+        $this->modalExcluirRede = true;
+    }
+
+    public function confirmarExcluirRede(): void
+    {
+        $projeto = $this->activeProjectId ? \App\Models\Project::with('vms')->find($this->activeProjectId) : null;
+        if (!$projeto) return;
+
+        $projeto->update([
+            'network_configured'  => false,
+            'network_type_id'     => null,
+            'bandwidth_option_id' => null,
+            'extra_public_ips'    => 0,
+            'extra_ip_price'      => 0,
+        ]);
+
+        $this->recalcProject($projeto->id);
+
+        $this->modalExcluirRede = false;
+        $this->activeProjectId  = null;
+
+        Notification::make()->title('Rede removida')->success()->send();
+        $this->redirect(static::getUrl(['record' => $this->customer]));
+    }
+
     public function abrirEditarS3(int $id): void
     {
         $s3 = \App\Models\CustomerS3Contract::find($id);
@@ -577,7 +611,7 @@ class CustomerInfra extends Page
 
     public function fecharModais(): void
     {
-        $this->modalEscolha = $this->modalRede = $this->modalEditarRede = false;
+        $this->modalEscolha = $this->modalRede = $this->modalEditarRede = $this->modalExcluirRede = false;
         $this->modalVm      = $this->modalEditarVm = $this->modalExcluirVm = false;
         $this->modalS3      = $this->modalEditarS3 = $this->modalExcluirS3 = false;
         $this->modalBackup  = $this->modalEditarBackup = $this->modalExcluirBackup = false;
