@@ -32,11 +32,11 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('2.5rem')
             ->userMenuItems([
                 'profile' => MenuItem::make()
-                    ->label('Meu Perfil')
+                    ->label(__('app.profile.title'))
                     ->icon('heroicon-o-user-circle')
                     ->url('/admin-panel/profile'),
                 'logout' => MenuItem::make()
-                    ->label('Sair')
+                    ->label(__('app.auth.logout'))
                     ->icon('heroicon-o-arrow-right-on-rectangle'),
             ])
             ->pages([

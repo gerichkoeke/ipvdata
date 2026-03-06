@@ -114,15 +114,15 @@ class CustomerInfra extends Page
 
     public function getTitle(): string
     {
-        return ($this->record->trade_name ?? $this->record->name) . ' — Infraestrutura';
+        return ($this->record->trade_name ?? $this->record->name) . ' — ' . __('app.customers.infra');
     }
 
     public function getBreadcrumbs(): array
     {
         return [
-            CustomerResource::getUrl()                              => 'Clientes',
+            CustomerResource::getUrl()                              => __('app.customers.title'),
             CustomerDashboard::getUrl(['record' => $this->record])   => $this->record->trade_name ?? $this->record->name,
-            '#'                                                      => 'Infraestrutura',
+            '#'                                                      => __('app.customers.infra'),
         ];
     }
 

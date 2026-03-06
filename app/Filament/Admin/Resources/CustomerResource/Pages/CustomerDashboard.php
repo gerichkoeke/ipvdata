@@ -23,7 +23,7 @@ class CustomerDashboard extends Page
     public function getBreadcrumbs(): array
     {
         return [
-            CustomerResource::getUrl() => 'Clientes',
+            CustomerResource::getUrl() => __('app.customers.title'),
             '#'                        => $this->record->trade_name ?? $this->record->name,
         ];
     }
