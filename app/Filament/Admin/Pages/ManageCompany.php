@@ -21,11 +21,20 @@ class ManageCompany extends Page
     protected static string  $view            = 'filament.admin.pages.manage-company';
 
     public ?array $data = [];
+    protected ?string $existingLogoPath = null;
 
     public function mount(): void
     {
         $company = Company::first();
-        $this->form->fill($company?->toArray() ?? []);
+        $initialData = $company?->toArray() ?? [];
+
+        $this->existingLogoPath = $initialData['logo'] ?? null;
+
+        if (!empty($initialData['logo']) && !Storage::disk('public')->exists($initialData['logo'])) {
+            $initialData['logo'] = null;
+        }
+
+        $this->form->fill($initialData);
     }
 
     public function form(Form $form): Form
@@ -41,6 +50,8 @@ class ManageCompany extends Page
                             ->label('Logo da empresa')
                             ->image()
                             ->imageEditor()
+                            ->disk('public')
+                            ->visibility('public')
                             ->directory('company/logo')
                             ->maxSize(4096)
                             ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/svg+xml', 'image/webp'])
@@ -161,6 +172,10 @@ class ManageCompany extends Page
     {
         $data = $this->form->getState();
 
+        if (empty($data['logo']) && !empty($this->existingLogoPath)) {
+            $data['logo'] = $this->existingLogoPath;
+        }
+
         // Remove o prefixo 'https://' se o usuário digitou completo
         if (isset($data['website']) && str_starts_with($data['website'], 'https://https://')) {
             $data['website'] = str_replace('https://https://', 'https://', $data['website']);
@@ -173,6 +188,8 @@ class ManageCompany extends Page
         } else {
             Company::create($data);
         }
+
+        $this->existingLogoPath = $data['logo'] ?? $this->existingLogoPath;
 
         Notification::make()
             ->title('Dados da empresa salvos com sucesso!')
