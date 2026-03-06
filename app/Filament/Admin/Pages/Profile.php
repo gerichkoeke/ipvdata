@@ -46,22 +46,22 @@ class Profile extends Page
     {
         return $form
             ->schema([
-                Section::make('Informações Pessoais')
+                Section::make(__('app.profile.personal_info'))
                     ->icon('heroicon-o-user')
                     ->schema([
                         Grid::make(2)->schema([
-                            TextInput::make('name')->label('Nome')->required(),
-                            TextInput::make('email')->label('E-mail')->email()->required(),
-                            TextInput::make('phone')->label('Telefone')->tel(),
+                            TextInput::make('name')->label(__('app.profile.name'))->required(),
+                            TextInput::make('email')->label(__('app.profile.email'))->email()->required(),
+                            TextInput::make('phone')->label(__('app.profile.phone'))->tel(),
                         ]),
                     ]),
 
-                Section::make('Idioma e Moeda')
+                Section::make(__('app.profile.language') . ' & ' . __('app.profile.currency'))
                     ->icon('heroicon-o-currency-dollar')
                     ->schema([
                         Grid::make(2)->schema([
                             Select::make('locale')
-                                ->label('Idioma')
+                                ->label(__('app.profile.language'))
                                 ->options([
                                     'pt_BR' => '🇧🇷 Português (BR)',
                                     'en'    => '🇺🇸 English',
@@ -71,7 +71,7 @@ class Profile extends Page
                                 ->required(),
 
                             Select::make('currency')
-                                ->label('Moeda')
+                                ->label(__('app.profile.currency'))
                                 ->options([
                                     'BRL' => '🇧🇷 Real (R$)',
                                     'USD' => '🇺🇸 Dólar (US$)',
@@ -84,18 +84,18 @@ class Profile extends Page
                         ]),
                     ]),
 
-                Section::make('Alterar Senha')
+                Section::make(__('app.profile.change_password'))
                     ->icon('heroicon-o-lock-closed')
                     ->collapsed()
                     ->schema([
                         Grid::make(2)->schema([
                             TextInput::make('current_password')
-                                ->label('Senha atual')->password()->revealable(),
+                                ->label(__('app.profile.current_password'))->password()->revealable(),
                             TextInput::make('new_password')
-                                ->label('Nova senha')->password()->revealable()
+                                ->label(__('app.profile.new_password'))->password()->revealable()
                                 ->minLength(8),
                             TextInput::make('new_password_confirmation')
-                                ->label('Confirmar nova senha')->password()->revealable(),
+                                ->label(__('app.profile.confirm_password'))->password()->revealable(),
                         ]),
                     ]),
             ])
@@ -182,7 +182,7 @@ class Profile extends Page
 
         $user->save();
 
-        Notification::make()->title('Perfil atualizado!')->success()->send();
+        Notification::make()->title(__('app.profile.saved'))->success()->send();
     }
 
     public function setupMfa(): void
