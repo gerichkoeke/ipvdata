@@ -160,7 +160,7 @@
                                             <td class="px-4 py-3 text-right">
                                                 <input
                                                     type="number"
-                                                    wire:model="discounts.{{ $item['type'] }}_{{ $item['id'] }}"
+                                                    wire:model="discounts.{{ $item['type'] === 'network' ? 'network' : $item['type'] . '_' . $item['id'] }}"
                                                     step="0.01"
                                                     min="0"
                                                     max="{{ $item['subtotal'] }}"

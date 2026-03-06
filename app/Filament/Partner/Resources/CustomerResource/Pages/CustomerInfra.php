@@ -146,6 +146,16 @@ class CustomerInfra extends Page
 
         $subtotal = $this->pricingData['summary']['subtotal'];
         $maxDiscount = $subtotal * (self::MAX_DISCOUNT_PERCENT / 100);
+
+        if ($this->globalDiscount > $maxDiscount) {
+            Notification::make()
+                ->danger()
+                ->title('Desconto global excede o limite máximo')
+                ->body("O desconto global não pode ultrapassar " . self::MAX_DISCOUNT_PERCENT . "% do valor do projeto (" . number_format($maxDiscount, 2, ',', '.') . " " . $this->pricingData['summary']['currency'] . ").")
+                ->send();
+            return;
+        }
+
         $currentItemDiscounts = $this->pricingData['summary']['item_discounts'];
         $allowedGlobal = max(0, $maxDiscount - $currentItemDiscounts);
 
@@ -174,6 +184,16 @@ class CustomerInfra extends Page
 
     public function applyItemDiscounts(): void
     {
+        $itemValidationError = $this->validatePerItemDiscountLimit();
+        if ($itemValidationError !== null) {
+            Notification::make()
+                ->danger()
+                ->title('Desconto por item excede o limite máximo')
+                ->body($itemValidationError)
+                ->send();
+            return;
+        }
+
         $subtotal = $this->pricingData['summary']['subtotal'];
         $maxDiscount = $subtotal * (self::MAX_DISCOUNT_PERCENT / 100);
         $totalItemDiscounts = array_sum(array_map('floatval', $this->discounts));
@@ -191,9 +211,9 @@ class CustomerInfra extends Page
         }
 
         // Aplicar desconto na rede
-        if (isset($this->discounts['network'])) {
+        if (isset($this->discounts['network']) || isset($this->discounts['network_network'])) {
             $this->selectedProject->update([
-                'network_discount_amount' => $this->discounts['network'] ?? 0,
+                'network_discount_amount' => $this->discounts['network'] ?? $this->discounts['network_network'] ?? 0,
             ]);
         }
 
@@ -255,6 +275,27 @@ class CustomerInfra extends Page
         $this->selectedProject->refresh();
         $pricingService = new ProjectPricingService();
         $this->pricingData = $pricingService->getDetailedPricing($this->selectedProject);
+    }
+
+    private function validatePerItemDiscountLimit(): ?string
+    {
+        foreach ($this->pricingData['items'] as $item) {
+            $discountKey = $item['type'] === 'network'
+                ? 'network'
+                : $item['type'] . '_' . $item['id'];
+
+            $appliedDiscount = $item['type'] === 'network'
+                ? (float) ($this->discounts[$discountKey] ?? $this->discounts['network_network'] ?? 0)
+                : (float) ($this->discounts[$discountKey] ?? 0);
+            $itemSubtotal = (float) ($item['subtotal'] ?? 0);
+            $maxItemDiscount = $itemSubtotal * (self::MAX_DISCOUNT_PERCENT / 100);
+
+            if ($appliedDiscount > $maxItemDiscount) {
+                return "O item '{$item['name']}' não pode ter desconto maior que " . self::MAX_DISCOUNT_PERCENT . "% (máximo de " . number_format($maxItemDiscount, 2, ',', '.') . ' ' . $this->pricingData['summary']['currency'] . ').';
+            }
+        }
+
+        return null;
     }
 
     public function closePricingModal(): void
