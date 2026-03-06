@@ -53,7 +53,10 @@
 <div class="rounded-xl border border-gray-700 bg-gray-900 overflow-hidden mb-5">
     <div class="px-5 py-3 border-b border-gray-700 bg-gray-800/60 flex items-center justify-between">
         <div class="flex items-center gap-2"><x-heroicon-m-signal class="w-4 h-4 text-primary-400"/><span class="font-bold text-white text-sm">Rede do Cliente</span><span class="text-[10px] text-gray-500 bg-gray-800 border border-gray-700 px-2 py-0.5 rounded-full">Compartilhada entre todas as VMs</span></div>
-        <button type="button" wire:click="abrirEditarRede" class="flex items-center gap-1 text-xs text-gray-500 hover:text-primary-400 transition-colors px-2 py-1 rounded hover:bg-primary-900/20"><x-heroicon-m-pencil-square class="w-3.5 h-3.5"/>Editar</button>
+        <div class="flex items-center gap-1">
+            <button type="button" wire:click="abrirEditarRede" class="flex items-center gap-1 text-xs text-gray-500 hover:text-primary-400 transition-colors px-2 py-1 rounded hover:bg-primary-900/20"><x-heroicon-m-pencil-square class="w-3.5 h-3.5"/>Editar</button>
+            <button type="button" wire:click="abrirExcluirRede" class="flex items-center gap-1 text-xs text-gray-500 hover:text-red-400 transition-colors px-2 py-1 rounded hover:bg-red-900/20"><x-heroicon-m-trash class="w-3.5 h-3.5"/>Excluir</button>
+        </div>
     </div>
     <div class="flex items-stretch divide-x divide-gray-800">
         <div class="flex-1 py-4 flex flex-col items-center gap-1"><x-heroicon-m-globe-alt class="w-5 h-5 text-primary-400 mb-0.5"/><span class="text-sm font-bold text-white">{{ $rede->networkType?->name??'—' }}</span><span class="text-[10px] text-gray-500">Tipo de Rede</span></div>
@@ -544,7 +547,7 @@
 @endif
 
 {{-- Exclusões --}}
-@foreach([['modalExcluirVm','VM','confirmarExcluirVm'],['modalExcluirS3','S3','confirmarExcluirS3'],['modalExcluirBackup','Backup','confirmarExcluirBackup']] as [$mp,$label,$method])
+@foreach([['modalExcluirRede','Rede','confirmarExcluirRede'],['modalExcluirVm','VM','confirmarExcluirVm'],['modalExcluirS3','S3','confirmarExcluirS3'],['modalExcluirBackup','Backup','confirmarExcluirBackup']] as [$mp,$label,$method])
 @if($$mp)
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
     <div class="absolute inset-0" style="background-color:rgba(0,0,0,0.8);backdrop-filter:blur(4px);" wire:click="fecharModais"></div>
