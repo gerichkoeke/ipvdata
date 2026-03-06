@@ -17,7 +17,7 @@ class ListCustomers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->label('Novo cliente'),
+            Actions\CreateAction::make()->label(__('app.customers.new')),
         ];
     }
 
@@ -26,23 +26,23 @@ class ListCustomers extends ListRecords
         $partnerId = auth()->user()?->partner_id;
 
         return [
-            'all' => Tab::make('Todos')
+            'all' => Tab::make(__('app.all'))
                 ->icon('heroicon-m-users')
                 ->badge(Customer::withoutTrashed()->where('partner_id', $partnerId)->count()),
 
-            'active' => Tab::make('Ativos')
+            'active' => Tab::make(__('app.active'))
                 ->icon('heroicon-m-check-circle')
                 ->badge(Customer::withoutTrashed()->where('partner_id', $partnerId)->where('is_active', true)->count())
                 ->badgeColor('success')
                 ->modifyQueryUsing(fn (Builder $q) => $q->where('is_active', true)),
 
-            'inactive' => Tab::make('Inativos')
+            'inactive' => Tab::make(__('app.inactive'))
                 ->icon('heroicon-m-x-circle')
                 ->badge(Customer::withoutTrashed()->where('partner_id', $partnerId)->where('is_active', false)->count())
                 ->badgeColor('warning')
                 ->modifyQueryUsing(fn (Builder $q) => $q->where('is_active', false)),
 
-            'trashed' => Tab::make('Excluídos')
+            'trashed' => Tab::make(__('app.delete'))
                 ->icon('heroicon-m-trash')
                 ->badge(Customer::onlyTrashed()->where('partner_id', $partnerId)->count())
                 ->badgeColor('danger')
