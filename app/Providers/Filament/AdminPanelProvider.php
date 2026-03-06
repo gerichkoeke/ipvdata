@@ -25,6 +25,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin-panel')
             ->login(\App\Filament\Admin\Pages\Auth\Login::class)
+            ->profile(\App\Filament\Admin\Pages\Auth\EditProfile::class, isSimple: false)
             ->colors(['primary' => Color::Amber])
             ->brandName('IPV ERP')
             ->brandLogo(fn () => view('filament.brand.admin-logo'))
@@ -40,7 +41,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->pages([
                 \App\Filament\Admin\Pages\Dashboard::class,
-                \App\Filament\Admin\Pages\Profile::class,
                 \App\Filament\Admin\Pages\ManageCompany::class,
             ])
             ->discoverResources(
