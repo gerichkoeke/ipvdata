@@ -20,9 +20,13 @@ class Project extends Model
         'currency',
         'network_type_id',
         'bandwidth_option_id',
+        'extra_public_ips',
+        'extra_ip_price',
+        'network_configured',
         'network_topology',
         'has_firewall',
         'firewall_option_id',
+        'lan_to_lan_address',
         'lan_type_id',
         'partner_commission_percentage',
         'global_discount_amount',
@@ -32,6 +36,7 @@ class Project extends Model
 
     protected $casts = [
         'has_firewall' => 'boolean',
+        'network_configured' => 'boolean',
         'partner_commission_percentage' => 'decimal:2',
         'global_discount_amount' => 'decimal:2',
         'network_discount_amount' => 'decimal:2',
