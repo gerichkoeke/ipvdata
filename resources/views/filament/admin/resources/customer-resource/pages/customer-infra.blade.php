@@ -547,7 +547,7 @@
 @endif
 
 {{-- Exclusões --}}
-@foreach([['modalExcluirVm','VM','confirmarExcluirVm'],['modalExcluirS3','S3','confirmarExcluirS3'],['modalExcluirBackup','Backup','confirmarExcluirBackup']] as [$mp,$label,$method])
+@foreach([['modalExcluirRede','Rede','confirmarExcluirRede'],['modalExcluirVm','VM','confirmarExcluirVm'],['modalExcluirS3','S3','confirmarExcluirS3'],['modalExcluirBackup','Backup','confirmarExcluirBackup']] as [$mp,$label,$method])
 @if($$mp)
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
     <div class="absolute inset-0" style="background-color:rgba(0,0,0,0.8);backdrop-filter:blur(4px);" wire:click="fecharModais"></div>
