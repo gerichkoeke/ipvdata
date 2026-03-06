@@ -8,9 +8,9 @@ return [
     'middleware_group'  => 'web',
     'persist_middleware_across_redirects' => false,
     'temporary_file_upload' => [
-        'disk'            => null,
+        'disk'            => 'public',
         'rules'           => ['required', 'file', 'max:12288'],
-        'directory'       => null,
+        'directory'       => 'livewire-tmp',
         'middleware'      => 'throttle:60,1',
         'preview_mimes'   => [
             'png','gif','bmp','svg','wav','mp4','mov','avi',
