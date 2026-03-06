@@ -328,6 +328,8 @@ class CustomerInfra extends Page
             'network_configured'  => false,
             'network_type_id'     => null,
             'bandwidth_option_id' => null,
+            'firewall_option_id'  => null,
+            'lan_to_lan_address'  => null,
             'extra_public_ips'    => 0,
             'extra_ip_price'      => 0,
         ]);
