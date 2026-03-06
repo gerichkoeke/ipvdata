@@ -19,9 +19,9 @@ class CreateCustomer extends CreateRecord
     protected function getFormActions(): array
     {
         return [
-            $this->getCreateFormAction()->label('Cadastrar cliente'),
-            $this->getCreateAnotherFormAction()->label('Cadastrar e criar outro'),
-            $this->getCancelFormAction()->label('Cancelar'),
+            $this->getCreateFormAction()->label(__('app.customers.new')),
+            $this->getCreateAnotherFormAction()->label(__('app.add')),
+            $this->getCancelFormAction()->label(__('app.cancel')),
         ];
     }
 
@@ -32,6 +32,6 @@ class CreateCustomer extends CreateRecord
 
     protected function getCreatedNotificationTitle(): ?string
     {
-        return 'Cliente cadastrado com sucesso!';
+        return __('app.customers.saved');
     }
 }

@@ -50,7 +50,10 @@ class Login extends BaseLogin
             ]);
         }
 
-        $chosenLocale = in_array($this->locale, ['pt_BR', 'en', 'es']) ? $this->locale : 'pt_BR';
+        $sessionLocale = session('locale');
+        $chosenLocale = in_array($sessionLocale, ['pt_BR', 'en', 'es'], true)
+            ? $sessionLocale
+            : ($user->active_locale ?? (in_array($this->locale, ['pt_BR', 'en', 'es'], true) ? $this->locale : 'pt_BR'));
 
         // MFA habilitado → challenge
         if ($user->mfa_enabled && $user->mfa_confirmed_at) {
@@ -68,7 +71,11 @@ class Login extends BaseLogin
         session()->regenerate();
 
         session(['locale' => $chosenLocale]);
-        $user->syncLocaleToProfile($chosenLocale);
+
+        if (in_array($sessionLocale, ['pt_BR', 'en', 'es'], true)) {
+            $user->syncLocaleToProfile($chosenLocale);
+        }
+
         app()->setLocale($chosenLocale);
 
         return app(LoginResponse::class);

@@ -163,7 +163,7 @@ class CustomerResource extends Resource
             ->columns([
                 // Coluna principal — sem limite de largura, cresce
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Cliente')
+                    ->label(__('app.customers.singular'))
                     ->description(fn ($record) => $record->trade_name ?? '')
                     ->searchable(['name', 'trade_name'])
                     ->sortable()
@@ -172,21 +172,21 @@ class CustomerResource extends Resource
 
                 // Documento
                 Tables\Columns\TextColumn::make('document_formatted')
-                    ->label('CNPJ/CPF')
+                    ->label(__('app.customers.document'))
                     ->searchable('document')
                     ->copyable()
                     ->placeholder('-'),
 
                 // Contato compacto
                 Tables\Columns\TextColumn::make('email')
-                    ->label('Contato')
+                    ->label(__('app.email'))
                     ->description(fn ($record) => $record->phone ?? '')
                     ->searchable()
                     ->placeholder('-'),
 
                 // Localização
                 Tables\Columns\TextColumn::make('city')
-                    ->label('Cidade/UF')
+                    ->label(__('app.customers.city_state'))
                     ->formatStateUsing(fn ($record) => $record->city && $record->state
                         ? "{$record->city}/{$record->state}" : '-')
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -201,7 +201,7 @@ class CustomerResource extends Resource
 
                 // Status
                 Tables\Columns\IconColumn::make('is_active')
-                    ->label('Ativo')
+                    ->label(__('app.customers.is_active'))
                     ->boolean()
                     ->trueColor('success')
                     ->falseColor('danger')
@@ -209,28 +209,28 @@ class CustomerResource extends Resource
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_active')
-                    ->label('Status')
-                    ->trueLabel('Ativos')->falseLabel('Inativos')->native(false),
+                    ->label(__('app.status'))
+                    ->trueLabel(__('app.active'))->falseLabel(__('app.inactive'))->native(false),
             ])
             ->recordUrl(fn ($record) => static::getUrl('dashboard', ['record' => $record]))
             ->actions([
                 Tables\Actions\Action::make('edit_btn')
-                    ->label('Editar')
-                    ->tooltip('Editar cliente')
+                    ->label(__('app.edit'))
+                    ->tooltip(__('app.customers.edit'))
                     ->icon('heroicon-m-pencil-square')
                     ->color('gray')
                     ->url(fn ($record) => static::getUrl('edit', ['record' => $record])),
                 Tables\Actions\DeleteAction::make()
-                    ->label('')->tooltip('Excluir')
-                    ->modalHeading('Excluir cliente')
-                    ->modalSubmitActionLabel('Sim, excluir'),
+                    ->label('')->tooltip(__('app.delete'))
+                    ->modalHeading(__('app.customers.deleted'))
+                    ->modalSubmitActionLabel(__('app.confirm')),
                 Tables\Actions\RestoreAction::make()
-                    ->label('')->tooltip('Restaurar'),
+                    ->label('')->tooltip(__('app.refresh')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()->label('Excluir selecionados'),
-                    Tables\Actions\RestoreBulkAction::make()->label('Restaurar selecionados'),
+                    Tables\Actions\DeleteBulkAction::make()->label(__('app.delete')),
+                    Tables\Actions\RestoreBulkAction::make()->label(__('app.refresh')),
                 ]),
             ])
             ->defaultSort('created_at', 'desc')

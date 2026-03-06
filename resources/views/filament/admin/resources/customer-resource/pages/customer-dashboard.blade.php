@@ -182,7 +182,7 @@
 <div class="mt-5 rounded-xl border border-gray-700 bg-gray-900 overflow-hidden max-w-3xl">
     <div class="px-5 py-3 border-b border-gray-700 bg-gray-800/60 flex items-center gap-2">
         <x-heroicon-o-document-text class="w-4 h-4 text-warning-400"/>
-        <h3 class="font-semibold text-white text-sm">Últimas Propostas</h3>
+        <h3 class="font-semibold text-white text-sm">{{ __('app.customer_infra.latest_proposals') }}</h3>
     </div>
     @foreach($proposals as $proposal)
     <div class="px-5 py-3 flex items-center justify-between hover:bg-gray-800/40 transition-colors border-b border-gray-800 last:border-0">
@@ -191,7 +191,7 @@
             <p class="text-[11px] text-gray-500">#{{ $proposal->number }} · {{ $proposal->created_at->format('d/m/Y') }}</p>
         </div>
         <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full border ml-4 shrink-0 {{ match($proposal->status) { 'approved' => 'bg-success-950 border-success-700 text-success-400', 'sent' => 'bg-blue-950 border-blue-700 text-blue-400', default => 'bg-gray-800 border-gray-600 text-gray-400' } }}">
-            {{ match($proposal->status) { 'approved' => 'Aprovada', 'sent' => 'Enviada', 'draft' => 'Rascunho', default => $proposal->status } }}
+            {{ match($proposal->status) { 'approved' => __('app.customer_infra.status_approved'), 'sent' => __('app.customer_infra.status_sent'), 'draft' => __('app.customer_infra.status_draft'), default => $proposal->status } }}
         </span>
     </div>
     @endforeach

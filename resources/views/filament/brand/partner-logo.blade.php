@@ -4,7 +4,7 @@
 
 @if($company?->logo)
     <img
-        src="{{ \Illuminate\Support\Facades\Storage::url($company->logo) }}"
+        src="{{ $company->logo_url }}"
         alt="{{ $company->trade_name ?? 'Portal do Parceiro' }}"
         style="height: 2.5rem; object-fit: contain;"
     />

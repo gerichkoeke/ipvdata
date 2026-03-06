@@ -46,22 +46,22 @@ class Profile extends Page
     {
         return $form
             ->schema([
-                Section::make('Informações Pessoais')
+                Section::make(__('app.profile.personal_info'))
                     ->icon('heroicon-o-user')
                     ->schema([
                         Grid::make(2)->schema([
-                            TextInput::make('name')->label('Nome')->required(),
-                            TextInput::make('email')->label('E-mail')->email()->required(),
-                            TextInput::make('phone')->label('Telefone')->tel(),
+                            TextInput::make('name')->label(__('app.profile.name'))->required(),
+                            TextInput::make('email')->label(__('app.profile.email'))->email()->required(),
+                            TextInput::make('phone')->label(__('app.profile.phone'))->tel(),
                         ]),
                     ]),
 
-                Section::make('Idioma e Moeda')
+                Section::make(__('app.profile.language') . ' & ' . __('app.profile.currency'))
                     ->icon('heroicon-o-currency-dollar')
                     ->schema([
                         Grid::make(2)->schema([
                             Select::make('locale')
-                                ->label('Idioma')
+                                ->label(__('app.profile.language'))
                                 ->options([
                                     'pt_BR' => '🇧🇷 Português (BR)',
                                     'en'    => '🇺🇸 English',
@@ -71,7 +71,7 @@ class Profile extends Page
                                 ->required(),
 
                             Select::make('currency')
-                                ->label('Moeda')
+                                ->label(__('app.profile.currency'))
                                 ->options([
                                     'BRL' => '🇧🇷 Real (R$)',
                                     'USD' => '🇺🇸 Dólar (US$)',
@@ -84,18 +84,18 @@ class Profile extends Page
                         ]),
                     ]),
 
-                Section::make('Alterar Senha')
+                Section::make(__('app.profile.change_password'))
                     ->icon('heroicon-o-lock-closed')
                     ->collapsed()
                     ->schema([
                         Grid::make(2)->schema([
                             TextInput::make('current_password')
-                                ->label('Senha atual')->password()->revealable(),
+                                ->label(__('app.profile.current_password'))->password()->revealable(),
                             TextInput::make('new_password')
-                                ->label('Nova senha')->password()->revealable()
+                                ->label(__('app.profile.new_password'))->password()->revealable()
                                 ->minLength(8),
                             TextInput::make('new_password_confirmation')
-                                ->label('Confirmar nova senha')->password()->revealable(),
+                                ->label(__('app.profile.confirm_password'))->password()->revealable(),
                         ]),
                     ]),
             ])
@@ -110,11 +110,11 @@ class Profile extends Page
 
         return $form
             ->schema([
-                Section::make('Autenticação em Dois Fatores (MFA)')
+                Section::make(__('app.profile.mfa_title'))
                     ->icon('heroicon-o-shield-check')
                     ->description($isEnabled
-                        ? '✅ MFA está **ativado** na sua conta.'
-                        : '⚠️ MFA está **desativado**. Recomendamos ativar para maior segurança.')
+                        ? __('app.profile.mfa_description_enabled')
+                        : __('app.profile.mfa_description_disabled'))
                     ->schema($isEnabled ? [
                         Placeholder::make('mfa_status')
                             ->label('')
@@ -122,8 +122,8 @@ class Profile extends Page
                                 <div class="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                                     <div class="text-green-600 dark:text-green-400 text-2xl">🔒</div>
                                     <div>
-                                        <p class="font-semibold text-green-700 dark:text-green-300">MFA Ativo</p>
-                                        <p class="text-sm text-green-600 dark:text-green-400">Sua conta está protegida com autenticação em dois fatores.</p>
+                                        <p class="font-semibold text-green-700 dark:text-green-300">' . __('app.profile.mfa_enabled') . '</p>
+                                        <p class="text-sm text-green-600 dark:text-green-400">' . __('app.profile.mfa_description_enabled') . '</p>
                                     </div>
                                 </div>
                             ')),
@@ -131,23 +131,23 @@ class Profile extends Page
                         Placeholder::make('mfa_setup')
                             ->label('')
                             ->content(fn () => $this->mfaQrCode
-                                ? new HtmlString("
-                                    <div class='text-center'>
-                                        <p class='mb-3 text-sm text-gray-600'>Escaneie o QR Code com o <strong>Google Authenticator</strong> ou <strong>Authy</strong></p>
-                                        <img src='{$this->mfaQrCode}' alt='QR Code MFA' class='mx-auto rounded-lg border p-2 bg-white' style='width:200px;height:200px' />
-                                        <p class='mt-3 text-xs text-gray-500'>Após escanear, digite o código abaixo para confirmar.</p>
-                                    </div>
-                                ")
-                                : new HtmlString('<p class="text-sm text-gray-500">Clique em "Configurar MFA" para gerar o QR Code.</p>')
+                                ? new HtmlString(
+                                    "<div class='text-center'>"
+                                    . "<p class='mb-3 text-sm text-gray-600'>" . __('app.profile.mfa_scan_hint') . "</p>"
+                                    . "<img src='{$this->mfaQrCode}' alt='QR Code MFA' class='mx-auto rounded-lg border p-2 bg-white' style='width:200px;height:200px' />"
+                                    . "<p class='mt-3 text-xs text-gray-500'>" . __('app.profile.mfa_after_scan') . "</p>"
+                                    . "</div>"
+                                )
+                                : new HtmlString('<p class="text-sm text-gray-500">' . __('app.profile.mfa_setup_hint') . '</p>')
                             ),
 
                         TextInput::make('mfa_code')
-                            ->label('Código de verificação')
+                            ->label(__('app.profile.mfa_code_label'))
                             ->placeholder('000000')
                             ->numeric()
                             ->length(6)
                             ->visible(fn () => $this->mfaQrCode !== null)
-                            ->helperText('Digite o código de 6 dígitos gerado pelo app'),
+                            ->helperText(__('app.profile.mfa_code_label')),
                     ]),
             ])
             ->statePath('mfaData');
@@ -174,7 +174,7 @@ class Profile extends Page
 
         if (!empty($data['current_password']) && !empty($data['new_password'])) {
             if (!\Illuminate\Support\Facades\Hash::check($data['current_password'], $user->password)) {
-                $this->addError('profileData.current_password', 'Senha atual incorreta.');
+                $this->addError('profileData.current_password', __('app.profile.save_error'));
                 return;
             }
             $user->password = bcrypt($data['new_password']);
@@ -182,7 +182,7 @@ class Profile extends Page
 
         $user->save();
 
-        Notification::make()->title('Perfil atualizado!')->success()->send();
+        Notification::make()->title(__('app.profile.saved'))->success()->send();
     }
 
     public function setupMfa(): void
@@ -202,7 +202,7 @@ class Profile extends Page
         $secret = session('mfa_temp_secret');
 
         if (!$secret) {
-            Notification::make()->title('Sessão expirada. Clique em Configurar MFA novamente.')->warning()->send();
+            Notification::make()->title(__('app.profile.mfa_session_expired'))->warning()->send();
             return;
         }
 
@@ -214,17 +214,17 @@ class Profile extends Page
             $this->mfaQrCode     = null;
             $this->mfaTempSecret = null;
             session(['mfa_verified' => true]);
-            Notification::make()->title('MFA ativado com sucesso! 🔒')->success()->send();
+            Notification::make()->title(__('app.profile.mfa_enabled_success'))->success()->send();
             $this->redirect(static::getUrl());
         } else {
-            Notification::make()->title('Código inválido. Tente novamente.')->danger()->send();
+            Notification::make()->title(__('app.profile.mfa_invalid_code'))->danger()->send();
         }
     }
 
     public function disableMfa(): void
     {
         app(MfaService::class)->disable(auth()->user());
-        Notification::make()->title('MFA desativado.')->warning()->send();
+        Notification::make()->title(__('app.profile.mfa_disabled_success'))->warning()->send();
         $this->redirect(static::getUrl());
     }
 }

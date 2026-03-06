@@ -13,22 +13,22 @@
     <div class="flex items-center gap-3">
         <a href="{{ \App\Filament\Distributor\Resources\CustomerResource\Pages\CustomerDashboard::getUrl(['record'=>$this->record]) }}"
            class="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors">
-            <x-heroicon-m-chevron-left class="w-4 h-4"/>Dashboard
+            <x-heroicon-m-chevron-left class="w-4 h-4"/>{{ __('app.nav.dashboard') }}
         </a>
         <span class="text-gray-700">/</span>
         <span class="text-sm font-bold text-white flex items-center gap-2">
-            <x-heroicon-o-server-stack class="w-4 h-4 text-primary-400"/>Centro de Dados Virtual
+            <x-heroicon-o-server-stack class="w-4 h-4 text-primary-400"/>{{ __('app.customer_infra.virtual_datacenter') }}
         </span>
     </div>
     {{-- Distribuidor: somente leitura, sem botões de ação --}}
     <div class="flex items-center gap-3">
         <span class="text-xs text-gray-500 italic flex items-center gap-1">
-            <x-heroicon-m-eye class="w-4 h-4"/> Visualização somente leitura
+            <x-heroicon-m-eye class="w-4 h-4"/> {{ __('app.customer_infra.read_only') }}
         </span>
         {{-- Simulação de Moeda --}}
         <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-700 bg-gray-800/60">
             <x-heroicon-m-currency-dollar class="w-3.5 h-3.5 text-gray-400 shrink-0"/>
-            <span class="text-[10px] text-gray-400 uppercase tracking-wide">Moeda</span>
+            <span class="text-[10px] text-gray-400 uppercase tracking-wide">{{ __('app.profile.currency') }}</span>
             <select wire:model.live="sim_currency"
                 class="bg-gray-900 border border-gray-700 text-white text-xs rounded px-1.5 py-0.5 focus:outline-none">
                 <option value="BRL">BRL (R$)</option>
@@ -41,7 +41,7 @@
             <span class="text-[10px] text-gray-400">1 {{ $sim_currency }} =</span>
             <input type="number" wire:model.live="sim_exchange_rate" min="0.01" step="0.01"
                 class="w-20 bg-gray-900 border border-gray-700 text-white text-xs rounded px-1.5 py-0.5 focus:outline-none"
-                placeholder="Taxa"/>
+                placeholder="{{ __('app.customer_infra.rate') }}"/>
             <span class="text-[10px] text-gray-400">BRL</span>
             @endif
         </div>
@@ -51,10 +51,10 @@
 {{-- Stats --}}
 <div style="display:flex;gap:0.75rem;" class="mb-5">
     @foreach([
-        ['VMs Ativas',   $data['vms_ativas'],                                              'heroicon-o-server-stack', 'text-primary-400'],
+        [__('app.customer_infra.active_vms'),   $data['vms_ativas'],                                              'heroicon-o-server-stack', 'text-primary-400'],
         ['vCPUs',        $data['vcpu_total'],                                              'heroicon-o-cpu-chip',     'text-gray-300'],
-        ['RAM Total',    $data['ram_total'].' GB',                                         'heroicon-o-circle-stack', 'text-gray-300'],
-        ['Receita/Mês',  $sym.' '.number_format($data['mrr_total'] / $rate, 2, ',', '.'),  'heroicon-o-currency-dollar','text-success-400'],
+        [__('app.customer_infra.total_ram'),    $data['ram_total'].' GB',                                         'heroicon-o-circle-stack', 'text-gray-300'],
+        [__('app.customer_infra.monthly_revenue'),  $sym.' '.number_format($data['mrr_total'] / $rate, 2, ',', '.'),  'heroicon-o-currency-dollar','text-success-400'],
     ] as $s)
     <div class="rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 flex items-center gap-3">
         <div class="w-9 h-9 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center shrink-0">
@@ -81,9 +81,9 @@
     <div class="px-5 py-3 border-b border-gray-700 bg-gray-800/60 flex items-center justify-between">
         <div class="flex items-center gap-2">
             <x-heroicon-m-signal class="w-4 h-4 text-primary-400"/>
-            <span class="font-bold text-white text-sm">Rede do Cliente</span>
+            <span class="font-bold text-white text-sm">{{ __('app.customer_infra.customer_network') }}</span>
             <span class="text-[10px] text-gray-500 bg-gray-800 border border-gray-700 px-2 py-0.5 rounded-full">
-                Compartilhada entre todas as VMs
+                {{ __('app.customer_infra.shared_across_vms') }}
             </span>
         </div>
     </div>
@@ -91,22 +91,22 @@
         <div class="flex-1 py-4 flex flex-col items-center gap-1">
             <x-heroicon-m-globe-alt class="w-5 h-5 text-primary-400 mb-0.5"/>
             <span class="text-sm font-bold text-white">{{ $rede->networkType?->name ?? '—' }}</span>
-            <span class="text-[10px] text-gray-500">Tipo de Rede</span>
+            <span class="text-[10px] text-gray-500">{{ __('app.customer_infra.network_type') }}</span>
         </div>
         <div class="flex-1 py-4 flex flex-col items-center gap-1">
             <x-heroicon-m-wifi class="w-5 h-5 text-primary-400 mb-0.5"/>
             <span class="text-sm font-bold text-white">{{ $isLan ? '1 Gbps' : ($rede->bandwidthOption?->name ?? '—') }}</span>
-            <span class="text-[10px] text-gray-500">Banda</span>
+            <span class="text-[10px] text-gray-500">{{ __('app.customer_infra.bandwidth') }}</span>
         </div>
         <div class="flex-1 py-4 flex flex-col items-center gap-1">
             <x-heroicon-m-map-pin class="w-5 h-5 text-primary-400 mb-0.5"/>
             <span class="text-sm font-bold text-white">{{ $isLan ? '—' : (1 + ($rede->extra_public_ips ?? 0)) }}</span>
-            <span class="text-[10px] text-gray-500">{{ $isLan ? 'Topologia' : 'IP(s) Público(s)' }}</span>
+            <span class="text-[10px] text-gray-500">{{ $isLan ? __('app.customer_infra.topology') : __('app.customer_infra.public_ips') }}</span>
         </div>
         <div class="flex-1 py-4 flex flex-col items-center gap-1">
             <x-heroicon-m-currency-dollar class="w-5 h-5 text-success-400 mb-0.5"/>
             <span class="text-sm font-bold text-success-400">{{ $sym }} {{ number_format($netCost / $rate, 2, ',', '.') }}</span>
-            <span class="text-[10px] text-gray-500">Custo/Mês</span>
+            <span class="text-[10px] text-gray-500">{{ __('app.customer_infra.monthly_cost') }}</span>
         </div>
     </div>
 </div>
@@ -117,7 +117,7 @@
 <div class="mb-2 flex items-center gap-2">
     <x-heroicon-m-server-stack class="w-4 h-4 text-primary-400"/>
     <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400">
-        Máquinas Virtuais ({{ $data['allVms']->count() }})
+        {{ __('app.customer_infra.virtual_machines') }} ({{ $data['allVms']->count() }})
     </h3>
 </div>
 <div style="display:grid;grid-template-columns:repeat(3,minmax(300px,1fr));gap:0.875rem;margin-bottom:1.25rem;">
