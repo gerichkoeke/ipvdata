@@ -50,7 +50,7 @@ class EditProfile extends BaseEditProfile
 
         if (!$user) {
             \Filament\Notifications\Notification::make()
-                ->title('Erro ao salvar.')
+                ->title(__('app.profile.save_error'))
                 ->danger()
                 ->send();
             return;
@@ -68,14 +68,14 @@ class EditProfile extends BaseEditProfile
         }
 
         \Filament\Notifications\Notification::make()
-            ->title('Perfil atualizado com sucesso! ✅')
+            ->title(__('app.profile.saved'))
             ->success()
             ->send();
     }
 
     public function getTitle(): string|Htmlable
     {
-        return 'Meu Perfil';
+        return __('app.profile.title');
     }
 
     // Preencher o form com os dados do usuário logado
@@ -106,30 +106,30 @@ class EditProfile extends BaseEditProfile
             ->model($this->getUser())
             ->statePath('data')
             ->schema([
-                Section::make('Informações Pessoais')
+                Section::make(__('app.profile.personal_info'))
                     ->icon('heroicon-o-user')
                     ->schema([
                         Grid::make(2)->schema([
                             TextInput::make('name')
-                                ->label('Nome completo')
+                                ->label(__('app.profile.name'))
                                 ->required()
                                 ->maxLength(255),
 
                             TextInput::make('email')
-                                ->label('E-mail')
+                                ->label(__('app.profile.email'))
                                 ->email()
                                 ->required()
                                 ->maxLength(255),
                         ]),
 
                         TextInput::make('phone')
-                            ->label('Telefone')
+                            ->label(__('app.profile.phone'))
                             ->tel()
                             ->maxLength(20)
                             ->placeholder('(00) 00000-0000'),
                     ]),
 
-                Section::make('Alterar Senha')
+                Section::make(__('app.profile.change_password'))
                     ->icon('heroicon-o-lock-closed')
                     ->collapsed()
                     ->schema([
@@ -147,46 +147,37 @@ class EditProfile extends BaseEditProfile
         $isEnabled = $user->mfa_enabled && $user->mfa_confirmed_at;
 
         return $form->schema([
-            Section::make('Autenticação em Dois Fatores')
+            Section::make(__('app.profile.mfa_title'))
                 ->icon('heroicon-o-shield-check')
                 ->description($isEnabled
-                    ? '🔒 MFA ativo — sua conta está protegida.'
-                    : '⚠️ MFA desativado — recomendamos ativar.')
+                    ? __('app.profile.mfa_description_enabled')
+                    : __('app.profile.mfa_description_disabled'))
                 ->schema($isEnabled ? [
                     Placeholder::make('mfa_status')
                         ->label('')
-                        ->content(new HtmlString('
-                            <div class="p-3 bg-green-900/20 rounded-lg border border-green-800 text-green-300 text-sm">
-                                ✅ MFA está <strong>ativo</strong> na sua conta.
-                            </div>
-                        ')),
+                        ->content(new HtmlString(
+                            '<div class="p-3 bg-green-900/20 rounded-lg border border-green-800 text-green-300 text-sm">'
+                            . __('app.profile.mfa_active_html') .
+                            '</div>'
+                        )),
                 ] : [
                     Placeholder::make('mfa_qr')
                         ->label('')
                         ->content(fn () => $this->mfaQrCode
-                            ? new HtmlString("
-                                <div class='text-center py-2'>
-                                    <p class='text-sm text-gray-400 mb-3'>
-                                        Escaneie com o <strong>Google Authenticator</strong> ou <strong>Authy</strong>
-                                    </p>
-                                    <img src='{$this->mfaQrCode}'
-                                         class='mx-auto rounded-lg border-2 border-indigo-500 p-2 bg-white'
-                                         style='width:190px;height:190px'
-                                         alt='QR Code MFA' />
-                                    <p class='mt-3 text-xs text-gray-500'>
-                                        Depois de escanear, digite o código abaixo para confirmar
-                                    </p>
-                                </div>
-                            ")
-                            : new HtmlString('
-                                <p class="text-sm text-gray-500 italic">
-                                    Clique em "Configurar MFA" para gerar o QR Code.
-                                </p>
-                            ')
+                            ? new HtmlString(
+                                "<div class='text-center py-2'>"
+                                . "<p class='text-sm text-gray-400 mb-3'>" . __('app.profile.mfa_scan_hint') . "</p>"
+                                . "<img src='{$this->mfaQrCode}' class='mx-auto rounded-lg border-2 border-indigo-500 p-2 bg-white' style='width:190px;height:190px' alt='QR Code MFA' />"
+                                . "<p class='mt-3 text-xs text-gray-500'>" . __('app.profile.mfa_after_scan') . "</p>"
+                                . "</div>"
+                            )
+                            : new HtmlString(
+                                '<p class="text-sm text-gray-500 italic">' . __('app.profile.mfa_setup_hint') . '</p>'
+                            )
                         ),
 
                     TextInput::make('mfa_code')
-                        ->label('Código de verificação (6 dígitos)')
+                        ->label(__('app.profile.mfa_code_label'))
                         ->placeholder('000000')
                         ->numeric()
                         ->minLength(6)
@@ -209,7 +200,7 @@ class EditProfile extends BaseEditProfile
         $this->mfaQrCode = $svc->getQrCodeInline($user, $secret);
         session(['mfa_temp_secret' => $secret]);
 
-        Notification::make()->title('QR Code gerado! Escaneie com o app.')->info()->send();
+        Notification::make()->title(__('app.profile.mfa_qr_generated'))->info()->send();
     }
 
     public function confirmMfa(): void
@@ -218,7 +209,7 @@ class EditProfile extends BaseEditProfile
         $secret = session('mfa_temp_secret');
 
         if (!$secret) {
-            Notification::make()->title('Sessão expirada. Clique em Configurar MFA.')->warning()->send();
+            Notification::make()->title(__('app.profile.mfa_session_expired'))->warning()->send();
             return;
         }
 
@@ -227,17 +218,17 @@ class EditProfile extends BaseEditProfile
             $svc->enable(auth()->user(), $secret);
             session()->forget('mfa_temp_secret');
             $this->mfaQrCode = null;
-            Notification::make()->title('MFA ativado com sucesso! 🔒')->success()->send();
+            Notification::make()->title(__('app.profile.mfa_enabled_success'))->success()->send();
             $this->redirect(static::getUrl());
         } else {
-            Notification::make()->title('Código inválido. Tente novamente.')->danger()->send();
+            Notification::make()->title(__('app.profile.mfa_invalid_code'))->danger()->send();
         }
     }
 
     public function disableMfa(): void
     {
         app(MfaService::class)->disable(auth()->user());
-        Notification::make()->title('MFA desativado.')->warning()->send();
+        Notification::make()->title(__('app.profile.mfa_disabled_success'))->warning()->send();
         $this->redirect(static::getUrl());
     }
 }

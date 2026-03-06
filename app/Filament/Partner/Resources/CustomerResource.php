@@ -20,10 +20,22 @@ class CustomerResource extends Resource
 {
     protected static ?string $model            = Customer::class;
     protected static ?string $navigationIcon   = 'heroicon-o-users';
-    protected static ?string $navigationLabel  = 'Meus Clientes';
-    protected static ?string $modelLabel       = 'Cliente';
-    protected static ?string $pluralModelLabel = 'Clientes';
     protected static ?int    $navigationSort   = 1;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('app.customers.title');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('app.customers.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('app.customers.title');
+    }
 
     public static function getEloquentQuery(): Builder
     {
