@@ -22,10 +22,10 @@
                 <x-filament::button
                     wire:click="disableMfa"
                     color="danger"
-                    wire:confirm="Desativar MFA? Sua conta ficará menos segura."
+                    wire:confirm="{{ __('app.profile.mfa_disable_confirm') }}"
                     class="w-full justify-center"
                 >
-                    🔓 Desativar MFA
+                    {{ __('app.profile.mfa_disable_button') }}
                 </x-filament::button>
             @elseif($mfaQrCode)
                 <x-filament::button
@@ -33,7 +33,7 @@
                     color="success"
                     class="w-full justify-center"
                 >
-                    ✅ Confirmar e Ativar
+                    {{ __('app.profile.mfa_confirm_button') }}
                 </x-filament::button>
             @else
                 <x-filament::button
@@ -41,7 +41,7 @@
                     color="warning"
                     class="w-full justify-center"
                 >
-                    🔐 Configurar MFA
+                    {{ __('app.profile.mfa_setup_button') }}
                 </x-filament::button>
             @endif
         </div>
