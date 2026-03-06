@@ -69,9 +69,7 @@ class Login extends BaseLogin
         session()->regenerate();
 
         session(['locale' => $chosenLocale]);
-        if ($chosenLocale !== $user->locale) {
-            $user->update(['locale' => $chosenLocale]);
-        }
+        $user->syncLocaleToProfile($chosenLocale);
         app()->setLocale($chosenLocale);
 
         return app(LoginResponse::class);

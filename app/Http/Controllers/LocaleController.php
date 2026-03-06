@@ -14,8 +14,7 @@ class LocaleController extends Controller
         $request->session()->put('locale', $locale);
         if (Auth::check()) {
             $user = Auth::user();
-            $user->locale = $locale;
-            $user->save();
+            $user->syncLocaleToProfile($locale);
         }
         return redirect($request->input('redirect', url()->previous()));
     }
