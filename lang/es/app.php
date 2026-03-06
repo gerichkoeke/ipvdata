@@ -182,6 +182,8 @@ return [
         'mfa_setup_button' => '🔐 Configurar MFA',
         'mfa_enabled' => 'Autenticación en dos pasos activa',
         'mfa_disabled' => 'Autenticación en dos pasos inactiva',
+        'preferences_description' => 'Afecta cómo se muestran los valores en toda la plataforma para tus socios.',
+        'currency_helper' => 'Moneda predeterminada para nuevos socios creados por ti.',
     ],
     'languages' => ['pt_BR' => 'Português (Brasil)', 'en' => 'English', 'es' => 'Español'],
     'currencies' => [

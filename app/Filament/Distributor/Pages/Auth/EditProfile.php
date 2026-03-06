@@ -26,7 +26,7 @@ class EditProfile extends BaseEditProfile
                     ]),
 
                 Forms\Components\Section::make(__('app.profile.currency') . ' & ' . __('app.profile.language'))
-                    ->description('Afeta a exibição de valores em toda a plataforma para seus parceiros')
+                    ->description(__('app.profile.preferences_description'))
                     ->icon('heroicon-o-currency-dollar')
                     ->schema([
                         Forms\Components\Grid::make(2)->schema([
@@ -39,7 +39,7 @@ class EditProfile extends BaseEditProfile
                                 ])
                                 ->native(false)
                                 ->required()
-                                ->helperText('Moeda padrão para novos parceiros cadastrados por você.')
+                                ->helperText(__('app.profile.currency_helper'))
                                 ->afterStateHydrated(function (Forms\Set $set) {
                                     $dist = auth()->user()->distributor;
                                     if ($dist) $set('distributor.currency', $dist->currency);
@@ -89,6 +89,12 @@ class EditProfile extends BaseEditProfile
         }
 
         $record->fill($data)->save();
+
+        if (!empty($locale)) {
+            session(['locale' => $locale]);
+            app()->setLocale($locale);
+        }
+
         return $record;
     }
 }
