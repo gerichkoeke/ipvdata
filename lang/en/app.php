@@ -13,6 +13,7 @@ return [
     'view' => 'View', 'close' => 'Close', 'send' => 'Send',
     'copy' => 'Copy', 'download' => 'Download', 'upload' => 'Upload file',
     'new' => 'New', 'add' => 'Add', 'remove' => 'Remove',
+    'all' => 'All',
     'clear' => 'Clear', 'apply' => 'Apply', 'reset' => 'Reset',
     'refresh' => 'Refresh', 'success' => 'Success', 'error' => 'Error',
     'warning' => 'Warning', 'info' => 'Information',

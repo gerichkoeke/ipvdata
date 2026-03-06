@@ -110,11 +110,11 @@ class Profile extends Page
 
         return $form
             ->schema([
-                Section::make('Autenticação em Dois Fatores (MFA)')
+                Section::make(__('app.profile.mfa_title'))
                     ->icon('heroicon-o-shield-check')
                     ->description($isEnabled
-                        ? '✅ MFA está **ativado** na sua conta.'
-                        : '⚠️ MFA está **desativado**. Recomendamos ativar para maior segurança.')
+                        ? __('app.profile.mfa_description_enabled')
+                        : __('app.profile.mfa_description_disabled'))
                     ->schema($isEnabled ? [
                         Placeholder::make('mfa_status')
                             ->label('')
@@ -122,8 +122,8 @@ class Profile extends Page
                                 <div class="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                                     <div class="text-green-600 dark:text-green-400 text-2xl">🔒</div>
                                     <div>
-                                        <p class="font-semibold text-green-700 dark:text-green-300">MFA Ativo</p>
-                                        <p class="text-sm text-green-600 dark:text-green-400">Sua conta está protegida com autenticação em dois fatores.</p>
+                                        <p class="font-semibold text-green-700 dark:text-green-300">' . __('app.profile.mfa_enabled') . '</p>
+                                        <p class="text-sm text-green-600 dark:text-green-400">' . __('app.profile.mfa_description_enabled') . '</p>
                                     </div>
                                 </div>
                             ')),
@@ -131,23 +131,23 @@ class Profile extends Page
                         Placeholder::make('mfa_setup')
                             ->label('')
                             ->content(fn () => $this->mfaQrCode
-                                ? new HtmlString("
-                                    <div class='text-center'>
-                                        <p class='mb-3 text-sm text-gray-600'>Escaneie o QR Code com o <strong>Google Authenticator</strong> ou <strong>Authy</strong></p>
-                                        <img src='{$this->mfaQrCode}' alt='QR Code MFA' class='mx-auto rounded-lg border p-2 bg-white' style='width:200px;height:200px' />
-                                        <p class='mt-3 text-xs text-gray-500'>Após escanear, digite o código abaixo para confirmar.</p>
-                                    </div>
-                                ")
-                                : new HtmlString('<p class="text-sm text-gray-500">Clique em "Configurar MFA" para gerar o QR Code.</p>')
+                                ? new HtmlString(
+                                    "<div class='text-center'>"
+                                    . "<p class='mb-3 text-sm text-gray-600'>" . __('app.profile.mfa_scan_hint') . "</p>"
+                                    . "<img src='{$this->mfaQrCode}' alt='QR Code MFA' class='mx-auto rounded-lg border p-2 bg-white' style='width:200px;height:200px' />"
+                                    . "<p class='mt-3 text-xs text-gray-500'>" . __('app.profile.mfa_after_scan') . "</p>"
+                                    . "</div>"
+                                )
+                                : new HtmlString('<p class="text-sm text-gray-500">' . __('app.profile.mfa_setup_hint') . '</p>')
                             ),
 
                         TextInput::make('mfa_code')
-                            ->label('Código de verificação')
+                            ->label(__('app.profile.mfa_code_label'))
                             ->placeholder('000000')
                             ->numeric()
                             ->length(6)
                             ->visible(fn () => $this->mfaQrCode !== null)
-                            ->helperText('Digite o código de 6 dígitos gerado pelo app'),
+                            ->helperText(__('app.profile.mfa_code_label')),
                     ]),
             ])
             ->statePath('mfaData');
@@ -174,7 +174,7 @@ class Profile extends Page
 
         if (!empty($data['current_password']) && !empty($data['new_password'])) {
             if (!\Illuminate\Support\Facades\Hash::check($data['current_password'], $user->password)) {
-                $this->addError('profileData.current_password', 'Senha atual incorreta.');
+                $this->addError('profileData.current_password', __('app.profile.save_error'));
                 return;
             }
             $user->password = bcrypt($data['new_password']);
@@ -202,7 +202,7 @@ class Profile extends Page
         $secret = session('mfa_temp_secret');
 
         if (!$secret) {
-            Notification::make()->title('Sessão expirada. Clique em Configurar MFA novamente.')->warning()->send();
+            Notification::make()->title(__('app.profile.mfa_session_expired'))->warning()->send();
             return;
         }
 
@@ -214,17 +214,17 @@ class Profile extends Page
             $this->mfaQrCode     = null;
             $this->mfaTempSecret = null;
             session(['mfa_verified' => true]);
-            Notification::make()->title('MFA ativado com sucesso! 🔒')->success()->send();
+            Notification::make()->title(__('app.profile.mfa_enabled_success'))->success()->send();
             $this->redirect(static::getUrl());
         } else {
-            Notification::make()->title('Código inválido. Tente novamente.')->danger()->send();
+            Notification::make()->title(__('app.profile.mfa_invalid_code'))->danger()->send();
         }
     }
 
     public function disableMfa(): void
     {
         app(MfaService::class)->disable(auth()->user());
-        Notification::make()->title('MFA desativado.')->warning()->send();
+        Notification::make()->title(__('app.profile.mfa_disabled_success'))->warning()->send();
         $this->redirect(static::getUrl());
     }
 }

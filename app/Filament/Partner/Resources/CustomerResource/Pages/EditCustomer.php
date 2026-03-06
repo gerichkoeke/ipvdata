@@ -13,18 +13,18 @@ class EditCustomer extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->label('Excluir')
-                ->modalHeading('Excluir cliente')
-                ->modalSubmitActionLabel('Sim, excluir'),
-            Actions\RestoreAction::make()->label('Restaurar'),
+            Actions\DeleteAction::make()->label(__('app.delete'))
+                ->modalHeading(__('app.customers.deleted'))
+                ->modalSubmitActionLabel(__('app.confirm')),
+            Actions\RestoreAction::make()->label(__('app.refresh')),
         ];
     }
 
     protected function getFormActions(): array
     {
         return [
-            $this->getSaveFormAction()->label('Salvar alterações'),
-            $this->getCancelFormAction()->label('Cancelar'),
+            $this->getSaveFormAction()->label(__('app.save')),
+            $this->getCancelFormAction()->label(__('app.cancel')),
         ];
     }
 
@@ -35,6 +35,6 @@ class EditCustomer extends EditRecord
 
     protected function getSavedNotificationTitle(): ?string
     {
-        return 'Cliente atualizado com sucesso!';
+        return __('app.customers.saved');
     }
 }

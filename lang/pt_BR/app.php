@@ -13,6 +13,7 @@ return [
     'view' => 'Visualizar', 'close' => 'Fechar', 'send' => 'Enviar',
     'copy' => 'Copiar', 'download' => 'Baixar', 'upload' => 'Enviar arquivo',
     'new' => 'Novo', 'add' => 'Adicionar', 'remove' => 'Remover',
+    'all' => 'Todos',
     'clear' => 'Limpar', 'apply' => 'Aplicar', 'reset' => 'Redefinir',
     'refresh' => 'Atualizar', 'success' => 'Sucesso', 'error' => 'Erro',
     'warning' => 'Atenção', 'info' => 'Informação',
