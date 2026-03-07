@@ -12,7 +12,7 @@
         <div class="pr-6 flex items-center gap-3">
             <x-heroicon-o-cloud class="w-4 h-4 text-gray-400 shrink-0"/>
             <div>
-                <p class="text-[9px] uppercase tracking-widest text-gray-500 font-semibold leading-none mb-0.5">Ambiente</p>
+                <p class="text-[9px] uppercase tracking-widest text-gray-500 font-semibold leading-none mb-0.5">{{ __('app.customer_infra.environment') }}</p>
                 <p class="text-xs text-white font-bold leading-none">{{ $d['tem_infra'] ? '1 VDC' : '0 VDC' }}</p>
             </div>
         </div>
@@ -21,7 +21,7 @@
             <div class="flex items-center gap-2">
                 <x-heroicon-o-server-stack class="w-4 h-4 text-primary-400 shrink-0"/>
                 <div>
-                    <p class="text-[9px] uppercase tracking-widest text-gray-500 font-semibold leading-none mb-0.5">VMs</p>
+                    <p class="text-[9px] uppercase tracking-widest text-gray-500 font-semibold leading-none mb-0.5">{{ __('app.customer_infra.active_vms') }}</p>
                     <p class="text-xs text-white font-bold leading-none">{{ $d['vms_ativas'] }}</p>
                 </div>
             </div>
@@ -56,14 +56,14 @@
             <div class="flex items-center gap-2">
                 <x-heroicon-o-circle-stack class="w-4 h-4 text-gray-400 shrink-0"/>
                 <div>
-                    <p class="text-[9px] uppercase tracking-widest text-gray-500 font-semibold leading-none mb-0.5">Memória</p>
+                    <p class="text-[9px] uppercase tracking-widest text-gray-500 font-semibold leading-none mb-0.5">{{ __('app.customer_infra.total_ram') }}</p>
                     <p class="text-xs text-white font-bold leading-none">{{ $d['ram_total'] }} <span class="text-gray-500 font-normal">GB</span></p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
                 <x-heroicon-o-server class="w-4 h-4 text-gray-400 shrink-0"/>
                 <div>
-                    <p class="text-[9px] uppercase tracking-widest text-gray-500 font-semibold leading-none mb-0.5">Storage</p>
+                    <p class="text-[9px] uppercase tracking-widest text-gray-500 font-semibold leading-none mb-0.5">{{ __('app.customer_infra.storage_total') }}</p>
                     <p class="text-xs text-white font-bold leading-none">{{ $d['disk_total'] }} <span class="text-gray-500 font-normal">GB</span></p>
                 </div>
             </div>
@@ -80,7 +80,7 @@
     </div>
 </div>
 
-<p class="text-[10px] font-bold uppercase tracking-widest text-primary-400 mb-3">CENTRO DE DADOS VIRTUAL</p>
+<p class="text-[10px] font-bold uppercase tracking-widest text-primary-400 mb-3">{{ strtoupper(__('app.customer_infra.virtual_datacenter')) }}</p>
 
 {{-- Card VDC --}}
 <a href="{{ $this->getInfraUrl() }}" class="block rounded-xl border border-gray-700 bg-gray-900 hover:border-primary-500/70 hover:bg-gray-800/50 transition-all group max-w-3xl">
@@ -127,7 +127,7 @@
             <div class="flex-1 px-4 py-3 flex items-center gap-3">
                 <x-heroicon-o-circle-stack class="w-4 h-4 text-gray-400 shrink-0"/>
                 <div>
-                    <p class="text-[9px] text-gray-500 uppercase tracking-wide leading-none mb-0.5">Memória</p>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-wide leading-none mb-0.5">{{ __('app.customer_infra.total_ram') }}</p>
                     <p class="text-base font-bold text-white leading-none">{{ $d['ram_total'] }} <span class="text-xs font-normal text-gray-400">GB</span></p>
                     <p class="text-[9px] text-gray-600 mt-0.5">RAM alocada</p>
                 </div>
@@ -182,7 +182,7 @@
 <div class="mt-5 rounded-xl border border-gray-700 bg-gray-900 overflow-hidden max-w-3xl">
     <div class="px-5 py-3 border-b border-gray-700 bg-gray-800/60 flex items-center gap-2">
         <x-heroicon-o-document-text class="w-4 h-4 text-warning-400"/>
-        <h3 class="font-semibold text-white text-sm">Últimas Propostas</h3>
+        <h3 class="font-semibold text-white text-sm">{{ __('app.customer_infra.latest_proposals') }}</h3>
     </div>
     @foreach($proposals as $proposal)
     <div class="px-5 py-3 flex items-center justify-between hover:bg-gray-800/40 transition-colors border-b border-gray-800 last:border-0">

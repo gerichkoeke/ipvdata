@@ -95,11 +95,13 @@ return [
     ],
 
     'customer_infra' => [
+        'environment' => 'Ambiente',
         'virtual_datacenter' => 'Centro de Dados Virtual',
         'read_only' => 'Visualização somente leitura',
         'rate' => 'Taxa',
         'active_vms' => 'VMs Ativas',
         'total_ram' => 'RAM Total',
+        'storage_total' => 'Storage Total',
         'monthly_revenue' => 'Receita/Mês',
         'customer_network' => 'Rede do Cliente',
         'shared_across_vms' => 'Compartilhada entre todas as VMs',
@@ -109,6 +111,7 @@ return [
         'public_ips' => 'IP(s) Público(s)',
         'monthly_cost' => 'Custo/Mês',
         'virtual_machines' => 'Máquinas Virtuais',
+        'generate_proposal' => 'Gerar Proposta',
         'latest_proposals' => 'Últimas Propostas',
         'status_approved' => 'Aprovada',
         'status_sent' => 'Enviada',

@@ -95,11 +95,13 @@ return [
     ],
 
     'customer_infra' => [
+        'environment' => 'Environment',
         'virtual_datacenter' => 'Virtual Datacenter',
         'read_only' => 'Read-only view',
         'rate' => 'Rate',
         'active_vms' => 'Active VMs',
         'total_ram' => 'Total RAM',
+        'storage_total' => 'Total Storage',
         'monthly_revenue' => 'Monthly Revenue',
         'customer_network' => 'Customer Network',
         'shared_across_vms' => 'Shared across all VMs',
@@ -109,6 +111,7 @@ return [
         'public_ips' => 'Public IP(s)',
         'monthly_cost' => 'Monthly Cost',
         'virtual_machines' => 'Virtual Machines',
+        'generate_proposal' => 'Generate Proposal',
         'latest_proposals' => 'Latest Proposals',
         'status_approved' => 'Approved',
         'status_sent' => 'Sent',

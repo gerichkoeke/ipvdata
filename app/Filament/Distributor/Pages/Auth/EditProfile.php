@@ -75,6 +75,7 @@ class EditProfile extends BaseEditProfile
     protected function handleRecordUpdate(\Illuminate\Database\Eloquent\Model $record, array $data): \Illuminate\Database\Eloquent\Model
     {
         // Salvar moeda/locale no distribuidor
+        $locale = null;
         $dist = $record->distributor;
         if ($dist) {
             $currency = $data['distributor']['currency'] ?? null;
@@ -89,6 +90,13 @@ class EditProfile extends BaseEditProfile
         }
 
         $record->fill($data)->save();
+
+        if (!empty($locale)) {
+            $record->syncLocaleToProfile($locale);
+            session(['locale' => $locale]);
+            app()->setLocale($locale);
+        }
+
         return $record;
     }
 }
