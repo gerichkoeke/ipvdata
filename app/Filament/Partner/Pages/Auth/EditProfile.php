@@ -5,6 +5,7 @@ namespace App\Filament\Partner\Pages\Auth;
 use App\Services\MfaService;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Form;
@@ -34,6 +35,8 @@ class EditProfile extends BaseEditProfile
                 'name'  => $user->name,
                 'email' => $user->email,
                 'phone' => $user->phone ?? '',
+                'locale' => $user->locale ?? 'pt_BR',
+                'currency' => $user->currency ?? 'BRL',
             ]);
         }
 
@@ -60,6 +63,8 @@ class EditProfile extends BaseEditProfile
             'name'  => $data['name']  ?? null,
             'email' => $data['email'] ?? null,
             'phone' => $data['phone'] ?? null,
+            'locale' => $data['locale'] ?? 'pt_BR',
+            'currency' => $data['currency'] ?? 'BRL',
         ], fn ($v) => $v !== null));
 
         // Atualizar senha se fornecida
@@ -87,6 +92,8 @@ class EditProfile extends BaseEditProfile
             'name'  => $data['name']  ?? '',
             'email' => $data['email'] ?? '',
             'phone' => $data['phone'] ?? '',
+            'locale' => $data['locale'] ?? 'pt_BR',
+            'currency' => $data['currency'] ?? 'BRL',
         ];
     }
 
@@ -97,6 +104,8 @@ class EditProfile extends BaseEditProfile
             'name'  => $data['name']  ?? null,
             'email' => $data['email'] ?? null,
             'phone' => $data['phone'] ?? null,
+            'locale' => $data['locale'] ?? 'pt_BR',
+            'currency' => $data['currency'] ?? 'BRL',
         ], fn ($v) => $v !== null);
     }
 
@@ -127,6 +136,30 @@ class EditProfile extends BaseEditProfile
                             ->tel()
                             ->maxLength(20)
                             ->placeholder('(00) 00000-0000'),
+
+                        Grid::make(2)->schema([
+                            Select::make('locale')
+                                ->label('Idioma')
+                                ->options([
+                                    'pt_BR' => '🇧🇷 Português (Brasil)',
+                                    'es' => '🇪🇸 Español',
+                                    'en' => '🇺🇸 English',
+                                ])
+                                ->default('pt_BR')
+                                ->required()
+                                ->native(false),
+
+                            Select::make('currency')
+                                ->label('Moeda')
+                                ->options([
+                                    'BRL' => '🇧🇷 Real (R$)',
+                                    'USD' => '🇺🇸 Dólar (US$)',
+                                    'PYG' => '🇵🇾 Guarani (₲)',
+                                ])
+                                ->default('BRL')
+                                ->required()
+                                ->native(false),
+                        ]),
                     ]),
 
                 Section::make('Alterar Senha')

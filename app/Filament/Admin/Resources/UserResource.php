@@ -108,6 +108,17 @@ class UserResource extends Resource
                             ->default('pt_BR')
                             ->required()
                             ->native(false),
+
+                        Forms\Components\Select::make('currency')
+                            ->label('Moeda')
+                            ->options([
+                                'BRL' => '🇧🇷 Real (R$)',
+                                'USD' => '🇺🇸 Dólar (US$)',
+                                'PYG' => '🇵🇾 Guarani (₲)',
+                            ])
+                            ->default('BRL')
+                            ->required()
+                            ->native(false),
                     ]),
                 ]),
 
@@ -198,6 +209,11 @@ class UserResource extends Resource
                     ->badge()
                     ->color('gray')
                     ->separator(','),
+
+                Tables\Columns\TextColumn::make('currency')
+                    ->label('Moeda')
+                    ->badge()
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('partner.name')
                     ->label('Parceiro')

@@ -7,8 +7,8 @@ use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -36,6 +36,8 @@ class Profile extends Page
             'name'  => $user->name,
             'email' => $user->email,
             'phone' => $user->phone,
+            'locale' => $user->locale ?? 'pt_BR',
+            'currency' => $user->currency ?? 'BRL',
         ];
     }
 
@@ -50,6 +52,26 @@ class Profile extends Page
                             TextInput::make('name')->label('Nome')->required(),
                             TextInput::make('email')->label('E-mail')->email()->required(),
                             TextInput::make('phone')->label('Telefone')->tel(),
+                            Select::make('locale')
+                                ->label('Idioma')
+                                ->options([
+                                    'pt_BR' => '🇧🇷 Português (Brasil)',
+                                    'es' => '🇪🇸 Español',
+                                    'en' => '🇺🇸 English',
+                                ])
+                                ->default('pt_BR')
+                                ->required()
+                                ->native(false),
+                            Select::make('currency')
+                                ->label('Moeda')
+                                ->options([
+                                    'BRL' => '🇧🇷 Real (R$)',
+                                    'USD' => '🇺🇸 Dólar (US$)',
+                                    'PYG' => '🇵🇾 Guarani (₲)',
+                                ])
+                                ->default('BRL')
+                                ->required()
+                                ->native(false),
                         ]),
                     ]),
 
@@ -135,6 +157,8 @@ class Profile extends Page
         $user->name  = $data['name'];
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? null;
+        $user->locale = $data['locale'] ?? 'pt_BR';
+        $user->currency = $data['currency'] ?? 'BRL';
 
         if (!empty($data['current_password']) && !empty($data['new_password'])) {
             if (!\Illuminate\Support\Facades\Hash::check($data['current_password'], $user->password)) {

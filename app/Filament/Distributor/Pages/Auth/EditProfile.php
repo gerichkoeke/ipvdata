@@ -5,8 +5,6 @@ namespace App\Filament\Distributor\Pages\Auth;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Pages\Auth\EditProfile as BaseEditProfile;
-use Filament\Notifications\Notification;
-use App\Models\Distributor;
 
 class EditProfile extends BaseEditProfile
 {
@@ -25,7 +23,36 @@ class EditProfile extends BaseEditProfile
                             ->maxLength(20),
                     ]),
 
-                Forms\Components\Section::make('Moeda e Idioma')
+                Forms\Components\Section::make('Preferências do Usuário')
+                    ->description('Define sua moeda e idioma pessoais no sistema')
+                    ->icon('heroicon-o-language')
+                    ->schema([
+                        Forms\Components\Grid::make(2)->schema([
+                            Forms\Components\Select::make('locale')
+                                ->label('Idioma')
+                                ->options([
+                                    'pt_BR' => '🇧🇷 Português (Brasil)',
+                                    'en'    => '🇺🇸 English',
+                                    'es'    => '🇪🇸 Español',
+                                ])
+                                ->default('pt_BR')
+                                ->required()
+                                ->native(false),
+
+                            Forms\Components\Select::make('currency')
+                                ->label('Moeda')
+                                ->options([
+                                    'BRL' => '🇧🇷 Real (R$)',
+                                    'USD' => '🇺🇸 Dólar (US$)',
+                                    'PYG' => '🇵🇾 Guarani (₲)',
+                                ])
+                                ->default('BRL')
+                                ->required()
+                                ->native(false),
+                        ]),
+                    ]),
+
+                Forms\Components\Section::make('Moeda e Idioma da Distribuidora')
                     ->description('Afeta a exibição de valores em toda a plataforma para seus parceiros')
                     ->icon('heroicon-o-currency-dollar')
                     ->schema([
