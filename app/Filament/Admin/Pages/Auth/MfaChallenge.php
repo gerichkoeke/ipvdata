@@ -35,19 +35,19 @@ class MfaChallenge extends Page
 
     public function getTitle(): string|Htmlable
     {
-        return 'Verificação em dois fatores';
+        return __('app.auth.mfa_challenge_title');
     }
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Autenticação em dois fatores')
-                    ->description('Abra o Google Authenticator ou Authy e digite o código de 6 dígitos.')
+                Section::make(__('app.auth.mfa_challenge_section'))
+                    ->description(__('app.auth.mfa_challenge_description'))
                     ->icon('heroicon-o-shield-check')
                     ->schema([
                         TextInput::make('code')
-                            ->label('Código de verificação')
+                            ->label(__('app.auth.mfa_code'))
                             ->placeholder('000000')
                             ->numeric()
                             ->minLength(6)
@@ -68,14 +68,14 @@ class MfaChallenge extends Page
         $mfaService = app(MfaService::class);
 
         if (!$user) {
-            $this->addError('data.code', 'Sessão expirada. Faça login novamente.');
+            $this->addError('data.code', __('app.auth.mfa_session_expired'));
             return;
         }
 
         $secret = $mfaService->getDecryptedSecret($user);
 
         if (!$secret) {
-            $this->addError('data.code', 'Erro na configuração do MFA.');
+            $this->addError('data.code', __('app.auth.mfa_config_error'));
             return;
         }
 
@@ -86,7 +86,7 @@ class MfaChallenge extends Page
             session()->regenerate();
             $this->redirect(filament()->getHomeUrl());
         } else {
-            $this->addError('data.code', 'Código inválido. Tente novamente.');
+            $this->addError('data.code', __('app.auth.mfa_invalid'));
         }
     }
 
@@ -94,7 +94,7 @@ class MfaChallenge extends Page
     {
         return [
             Action::make('verify')
-                ->label('Verificar código')
+                ->label(__('app.auth.mfa_verify'))
                 ->submit('verify')
                 ->color('primary'),
         ];

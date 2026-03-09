@@ -30,11 +30,11 @@ class DistributorPanelProvider extends PanelProvider
             ->topNavigation()
             ->userMenuItems([
                 'profile' => MenuItem::make()
-                    ->label(__('app.profile.title'))
+                    ->label(fn (): string => __('app.profile.title'))
                     ->icon('heroicon-o-user-circle')
                     ->url(fn (): string => request()->getSchemeAndHttpHost() . '/distributor/profile'),
                 'logout' => MenuItem::make()
-                    ->label(__('app.auth.logout'))
+                    ->label(fn (): string => __('app.auth.logout'))
                     ->icon('heroicon-o-arrow-right-on-rectangle'),
             ])
             ->pages([

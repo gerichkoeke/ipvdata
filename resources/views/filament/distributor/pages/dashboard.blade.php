@@ -56,7 +56,7 @@ $dashboardI18n = __('app.dashboard.distributor');
             <tr class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                 <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ $dashboardI18n['partner'] }}</th>
                 <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ $dashboardI18n['customers'] }}</th>
-                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">MRR</th>
+                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ __('app.dashboard.partner.mrr') }}</th>
                 <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ $dashboardI18n['commission'] }}</th>
                 <th class="text-center px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ __('app.status') }}</th>
             </tr>
@@ -97,7 +97,7 @@ $dashboardI18n = __('app.dashboard.distributor');
             data: {
                 labels: topPartners.map(p => p.name),
                 datasets: [{
-                    label: 'MRR',
+                    label: @js(__('app.dashboard.partner.mrr')),
                     data: topPartners.map(p => p.mrr),
                     backgroundColor: 'rgba(59,130,246,0.7)',
                     borderColor: '#3b82f6',
@@ -123,7 +123,7 @@ $dashboardI18n = __('app.dashboard.distributor');
             data: {
                 labels: clientData.map(c => c.label),
                 datasets: [{
-                    label: 'Clientes Ativos',
+                    label: @js(__('app.dashboard.partner.active_customers')),
                     data: clientData.map(c => c.value),
                     borderColor: '#6366f1',
                     backgroundColor: 'rgba(99,102,241,0.1)',

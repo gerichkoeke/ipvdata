@@ -15,7 +15,7 @@
                 {{ $company->trade_name ?? $company->name }}
             </h3>
             @if($company->cnpj)
-            <p class="text-sm text-gray-500">CNPJ: {{ $company->cnpj }}</p>
+            <p class="text-sm text-gray-500">{{ __('app.company.form.tax_id') }}: {{ $company->cnpj }}</p>
             @endif
             @if($company->city && $company->state)
             <p class="text-sm text-gray-500">{{ $company->city }} / {{ $company->state }}</p>
@@ -23,7 +23,7 @@
         </div>
         <div class="ml-auto">
             <x-filament::badge :color="$company->is_active ? 'success' : 'danger'">
-                {{ $company->is_active ? 'Ativa' : 'Inativa' }}
+                {{ $company->is_active ? __('app.active') : __('app.inactive') }}
             </x-filament::badge>
         </div>
     </div>
@@ -34,7 +34,7 @@
 
         <div class="mt-6 flex justify-end">
             <x-filament::button type="submit" icon="heroicon-m-check" size="lg">
-                Salvar dados da empresa
+                {{ __('app.company.form.save') }}
             </x-filament::button>
         </div>
     </form>
