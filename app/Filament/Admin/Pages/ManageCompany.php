@@ -14,11 +14,26 @@ use Illuminate\Support\Facades\Storage;
 class ManageCompany extends Page
 {
     protected static ?string $navigationIcon  = 'heroicon-o-building-office-2';
-    protected static ?string $navigationGroup = 'Configurações';
-    protected static ?string $navigationLabel = 'Empresa';
-    protected static ?string $title           = 'Dados da Empresa';
+    protected static ?string $navigationGroup = null;
+    protected static ?string $navigationLabel = null;
+    protected static ?string $title           = null;
     protected static ?int    $navigationSort  = 5;
     protected static string  $view            = 'filament.admin.pages.manage-company';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.settings.title');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('app.settings.company');
+    }
+
+    public function getTitle(): string
+    {
+        return __('app.settings.company');
+    }
 
     public ?array $data = [];
     protected ?string $existingLogoPath = null;
@@ -42,12 +57,12 @@ class ManageCompany extends Page
         return $form
             ->schema([
 
-                Section::make('Identidade da Empresa')
-                    ->description('Informações principais da IPVDATA')
+                Section::make(__('app.company.form.identity_section'))
+                    ->description(__('app.company.form.identity_description'))
                     ->icon('heroicon-o-building-office-2')
                     ->schema([
                         Forms\Components\FileUpload::make('logo')
-                            ->label('Logo da empresa')
+                            ->label(__('app.company.form.logo'))
                             ->image()
                             ->imageEditor()
                             ->disk('public')
@@ -55,62 +70,62 @@ class ManageCompany extends Page
                             ->directory('company/logo')
                             ->maxSize(4096)
                             ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/svg+xml', 'image/webp'])
-                            ->helperText('PNG, JPG, SVG ou WEBP. Máx 4MB.')
+                            ->helperText(__('app.company.form.logo_helper'))
                             ->columnSpanFull(),
 
                         Grid::make(2)->schema([
                             Forms\Components\TextInput::make('name')
-                                ->label('Razão social')
+                                ->label(__('app.company.form.legal_name'))
                                 ->required()
                                 ->maxLength(255),
 
                             Forms\Components\TextInput::make('trade_name')
-                                ->label('Nome fantasia')
+                                ->label(__('app.company.form.trade_name'))
                                 ->maxLength(255),
 
                             Forms\Components\TextInput::make('cnpj')
-                                ->label('CNPJ')
+                                ->label(__('app.company.form.tax_id'))
                                 ->mask('99.999.999/9999-99')
                                 ->maxLength(18),
 
                             Forms\Components\Toggle::make('is_active')
-                                ->label('Empresa ativa')
+                                ->label(__('app.company.form.active'))
                                 ->default(true)
                                 ->inline(false),
                         ]),
                     ]),
 
-                Section::make('Contato')
-                    ->description('Informações de contato da empresa')
+                Section::make(__('app.company.form.contact'))
+                    ->description(__('app.company.form.contact_description'))
                     ->icon('heroicon-o-phone')
                     ->schema([
                         Grid::make(3)->schema([
                             Forms\Components\TextInput::make('email')
-                                ->label('E-mail')
+                                ->label(__('app.email'))
                                 ->email()
                                 ->maxLength(255),
 
                             Forms\Components\TextInput::make('phone')
-                                ->label('Telefone')
+                                ->label(__('app.phone'))
                                 ->tel()
                                 ->mask('(99) 99999-9999')
                                 ->maxLength(20),
 
                             Forms\Components\TextInput::make('website')
-                                ->label('Website')
+                                ->label(__('app.company.form.website'))
                                 ->url()
                                 ->prefix('https://')
                                 ->maxLength(255),
                         ]),
                     ]),
 
-                Section::make('Endereço')
-                    ->description('Localização da empresa')
+                Section::make(__('app.company.form.address_section'))
+                    ->description(__('app.company.form.address_description'))
                     ->icon('heroicon-o-map-pin')
                     ->schema([
                         Grid::make(3)->schema([
                             Forms\Components\TextInput::make('zipcode')
-                                ->label('CEP')
+                                ->label(__('app.company.form.zipcode'))
                                 ->mask('99999-999')
                                 ->maxLength(10)
                                 ->live(onBlur: true)
@@ -131,11 +146,11 @@ class ManageCompany extends Page
                                 }),
 
                             Forms\Components\TextInput::make('city')
-                                ->label('Cidade')
+                                ->label(__('app.company.form.city'))
                                 ->maxLength(255),
 
                             Forms\Components\Select::make('state')
-                                ->label('Estado (UF)')
+                                ->label(__('app.company.form.state'))
                                 ->options([
                                     'AC' => 'AC — Acre',        'AL' => 'AL — Alagoas',
                                     'AP' => 'AP — Amapá',       'AM' => 'AM — Amazonas',
@@ -159,7 +174,7 @@ class ManageCompany extends Page
                                 ->native(false),
 
                             Forms\Components\TextInput::make('address')
-                                ->label('Endereço completo')
+                                ->label(__('app.company.form.full_address'))
                                 ->maxLength(255)
                                 ->columnSpanFull(),
                         ]),
@@ -192,7 +207,7 @@ class ManageCompany extends Page
         $this->existingLogoPath = $data['logo'] ?? $this->existingLogoPath;
 
         Notification::make()
-            ->title('Dados da empresa salvos com sucesso!')
+            ->title(__('app.company.form.saved'))
             ->success()
             ->send();
     }
@@ -201,7 +216,7 @@ class ManageCompany extends Page
     {
         return [
             \Filament\Actions\Action::make('save')
-                ->label('Salvar dados da empresa')
+                ->label(__('app.company.form.save'))
                 ->icon('heroicon-m-check')
                 ->submit('save'),
         ];

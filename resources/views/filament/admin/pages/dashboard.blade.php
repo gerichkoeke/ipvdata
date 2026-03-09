@@ -1,23 +1,26 @@
 <x-filament-panels::page>
-@php $d = $this->getDashboardData(); @endphp
+@php
+    $d = $this->getDashboardData();
+    $dashboardAdmin = __('app.dashboard.admin');
+@endphp
 
 {{-- KPI Cards --}}
 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
     <div class="col-span-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
-        <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">MRR Total</p>
+        <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">{{ $dashboardAdmin['mrr_total'] }}</p>
         <p class="text-2xl font-bold text-emerald-400">R$ {{ number_format($d['mrr_total'],2,',','.') }}</p>
         <div class="flex gap-3 mt-2 text-[10px] text-gray-500">
-            <span>VMs: R$ {{ number_format($d['mrr_vms'],2,',','.') }}</span>
+            <span>{{ __('app.dashboard.partner.vms') }}: R$ {{ number_format($d['mrr_vms'],2,',','.') }}</span>
             <span>S3: R$ {{ number_format($d['mrr_s3'],2,',','.') }}</span>
-            <span>Backup: R$ {{ number_format($d['mrr_backup'],2,',','.') }}</span>
+            <span>{{ __('app.dashboard.partner.backup') }}: R$ {{ number_format($d['mrr_backup'],2,',','.') }}</span>
         </div>
     </div>
     @foreach([
-        ['Parceiros Ativos', $d['parceiros_ativos'], 'text-blue-400'],
-        ['Clientes Ativos', $d['clientes_ativos'], 'text-indigo-400'],
-        ['VMs Ativas', $d['vms_ativas'], 'text-primary-400'],
-        ['Distribuidores', $d['distribuidores_ativos'], 'text-purple-400'],
-        ['Propostas Aprovadas', $d['propostas_aprovadas'], 'text-emerald-400'],
+        [$dashboardAdmin['active_partners'], $d['parceiros_ativos'], 'text-blue-400'],
+        [$dashboardAdmin['active_customers'], $d['clientes_ativos'], 'text-indigo-400'],
+        [$dashboardAdmin['active_vms'], $d['vms_ativas'], 'text-primary-400'],
+        [$dashboardAdmin['distributors'], $d['distribuidores_ativos'], 'text-purple-400'],
+        [$dashboardAdmin['approved_proposals'], $d['propostas_aprovadas'], 'text-emerald-400'],
     ] as [$label, $value, $color])
     <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
         <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">{{ $label }}</p>
@@ -29,13 +32,13 @@
 {{-- Gráficos --}}
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
     <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
-        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4">Evolução MRR — últimos 6 meses</h3>
+        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4">{{ $dashboardAdmin['mrr_evolution_6_months'] }}</h3>
         <div style="position:relative;height:260px;">
             <canvas id="adminMrrChart"></canvas>
         </div>
     </div>
     <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
-        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4">Distribuição de Receita</h3>
+        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4">{{ __('app.dashboard.partner.revenue_distribution') }}</h3>
         <div style="position:relative;height:280px;">
             <canvas id="adminRevenueChart"></canvas>
         </div>
@@ -47,14 +50,14 @@
     {{-- Top Parceiros --}}
     <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden">
         <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-            <h3 class="text-sm font-bold text-gray-900 dark:text-white">Top 5 Parceiros por MRR</h3>
+            <h3 class="text-sm font-bold text-gray-900 dark:text-white">{{ __('app.dashboard.partner.top_customers_mrr') }}</h3>
         </div>
         <table class="w-full text-sm">
             <thead>
                 <tr class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                    <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Parceiro</th>
-                    <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Clientes</th>
-                    <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">MRR</th>
+                    <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ __('app.dashboard.distributor.partner') }}</th>
+                    <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ __('app.dashboard.distributor.customers') }}</th>
+                    <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ __('app.dashboard.partner.mrr') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,7 +68,7 @@
                     <td class="px-4 py-2 text-emerald-400 font-bold text-right">R$ {{ number_format($p->mrr ?? 0,2,',','.') }}</td>
                 </tr>
                 @empty
-                <tr><td colspan="3" class="px-4 py-3 text-gray-500 text-center text-xs">Nenhum parceiro com projetos ativos</td></tr>
+                <tr><td colspan="3" class="px-4 py-3 text-gray-500 text-center text-xs">{{ $dashboardAdmin['no_active_partners'] }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -74,15 +77,15 @@
     {{-- Últimas Propostas --}}
     <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden">
         <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-            <h3 class="text-sm font-bold text-gray-900 dark:text-white">Últimas 5 Propostas</h3>
+            <h3 class="text-sm font-bold text-gray-900 dark:text-white">{{ $dashboardAdmin['latest_proposals'] }}</h3>
         </div>
         <table class="w-full text-sm">
             <thead>
                 <tr class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                    <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Número</th>
-                    <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Cliente</th>
-                    <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Total</th>
-                    <th class="text-center px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                    <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ $dashboardAdmin['number'] }}</th>
+                    <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ __('app.customers.singular') }}</th>
+                    <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ __('app.total') }}</th>
+                    <th class="text-center px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ __('app.status') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -102,7 +105,7 @@
                     <td class="px-4 py-2 text-center"><span class="text-xs {{ $statusColor }}">{{ ucfirst($prop->status) }}</span></td>
                 </tr>
                 @empty
-                <tr><td colspan="4" class="px-4 py-3 text-gray-500 text-center text-xs">Nenhuma proposta</td></tr>
+                <tr><td colspan="4" class="px-4 py-3 text-gray-500 text-center text-xs">{{ $dashboardAdmin['no_proposals'] }}</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -112,16 +115,16 @@
 {{-- VMs Recentes --}}
 <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden mb-6">
     <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-        <h3 class="text-sm font-bold text-gray-900 dark:text-white">VMs Recentes (últimas 5)</h3>
+        <h3 class="text-sm font-bold text-gray-900 dark:text-white" >{{ $dashboardAdmin['recent_vms'] }}</h3>
     </div>
     <table class="w-full text-sm">
         <thead>
             <tr class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">VM</th>
-                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">OS</th>
-                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Cliente</th>
-                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Parceiro</th>
-                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Valor/mês</th>
+                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase" >{{ $dashboardAdmin['vm'] }}</th>
+                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase" >{{ $dashboardAdmin['os'] }}</th>
+                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ __('app.customers.singular') }}</th>
+                <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">{{ __('app.dashboard.distributor.partner') }}</th>
+                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase" >{{ $dashboardAdmin['monthly_value'] }}</th>
             </tr>
         </thead>
         <tbody>
@@ -134,7 +137,7 @@
                 <td class="px-4 py-2 text-emerald-400 font-bold text-right text-xs">R$ {{ number_format($vm->price_total_monthly ?? 0,2,',','.') }}</td>
             </tr>
             @empty
-            <tr><td colspan="5" class="px-4 py-3 text-gray-500 text-center text-xs">Nenhuma VM registrada</td></tr>
+            <tr><td colspan="5" class="px-4 py-3 text-gray-500 text-center text-xs">{{ $dashboardAdmin['no_vms'] }}</td></tr>
             @endforelse
         </tbody>
     </table>
@@ -155,7 +158,7 @@
             data: {
                 labels: mrrData.map(m => m.label),
                 datasets: [{
-                    label: 'MRR (R$)',
+                    label: @js(__('app.dashboard.partner.mrr')),
                     data: mrrData.map(m => m.value),
                     borderColor: '#10b981',
                     backgroundColor: 'rgba(16,185,129,0.1)',
@@ -183,7 +186,7 @@
         new Chart(revCtx, {
             type: 'doughnut',
             data: {
-                labels: ['VMs', 'S3', 'Backup'],
+                labels: [@js(__('app.dashboard.partner.vms')), 'S3', @js(__('app.dashboard.partner.backup'))],
                 datasets: [{
                     data: [{{ $d['mrr_vms'] }}, {{ $d['mrr_s3'] }}, {{ $d['mrr_backup'] }}],
                     backgroundColor: ['rgba(99,102,241,0.8)', 'rgba(16,185,129,0.8)', 'rgba(245,158,11,0.8)'],
