@@ -32,11 +32,19 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('2.5rem')
             ->userMenuItems([
                 'profile' => MenuItem::make()
+<<<<<<< HEAD
                     ->label(__('app.profile.title'))
                     ->icon('heroicon-o-user-circle')
                     ->url('/admin-panel/profile'),
                 'logout' => MenuItem::make()
                     ->label(__('app.auth.logout'))
+=======
+                    ->label(fn (): string => __('app.profile.title'))
+                    ->icon('heroicon-o-user-circle')
+                    ->url('/admin-panel/profile'),
+                'logout' => MenuItem::make()
+                    ->label(fn (): string => __('app.auth.logout'))
+>>>>>>> 28f227e (Fix mixed locale labels and partner dashboard currency display)
                     ->icon('heroicon-o-arrow-right-on-rectangle'),
             ])
             ->pages([

@@ -61,6 +61,7 @@ class Dashboard extends Page
             'propostas_aprovadas' => Proposal::where('partner_id', $partnerId)->where('status', 'approved')->whereMonth('created_at', now()->month)->count(),
             's3_contratos'      => CustomerS3Contract::whereIn('customer_id', $customerIds)->count(),
             'partner'           => $partner,
+            'currency_symbol'   => $user?->currency_symbol ?? 'R$',
             'top_customers'     => $topCustomers,
             'clientes_list'     => Customer::where('partner_id', $partnerId)
                 ->withSum(['projects as mrr' => fn($q) => $q->where('status', 'active')], 'monthly_value')

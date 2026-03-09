@@ -5,11 +5,11 @@
 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
     <div class="col-span-2 rounded-xl border border-gray-700 bg-gray-900 p-4">
         <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">{{ __('app.dashboard.partner.mrr_total') }}</p>
-        <p class="text-2xl font-bold text-emerald-400">R$ {{ number_format($d['mrr_total'],2,',','.') }}</p>
+        <p class="text-2xl font-bold text-emerald-400">{{ $d['currency_symbol'] }} {{ number_format($d['mrr_total'],2,',','.') }}</p>
         <div class="flex gap-3 mt-2 text-[10px] text-gray-500">
-            <span>{{ __('app.dashboard.partner.vms') }}: R$ {{ number_format($d['mrr_vms'],2,',','.') }}</span>
-            <span>S3: R$ {{ number_format($d['mrr_s3'],2,',','.') }}</span>
-            <span>{{ __('app.dashboard.partner.backup') }}: R$ {{ number_format($d['mrr_backup'],2,',','.') }}</span>
+            <span>{{ __('app.dashboard.partner.vms') }}: {{ $d['currency_symbol'] }} {{ number_format($d['mrr_vms'],2,',','.') }}</span>
+            <span>S3: {{ $d['currency_symbol'] }} {{ number_format($d['mrr_s3'],2,',','.') }}</span>
+            <span>{{ __('app.dashboard.partner.backup') }}: {{ $d['currency_symbol'] }} {{ number_format($d['mrr_backup'],2,',','.') }}</span>
         </div>
     </div>
     @foreach([
@@ -51,7 +51,7 @@
             <tr class="bg-gray-800 border-b border-gray-700">
                 <th class="text-left px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">{{ __('app.customers.singular') }}</th>
                 <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">{{ __('app.dashboard.partner.vms') }}</th>
-                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">MRR</th>
+                <th class="text-right px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">{{ __('app.dashboard.partner.mrr') }}</th>
                 <th class="text-center px-4 py-2 text-[10px] font-bold text-gray-400 uppercase">{{ __('app.status') }}</th>
             </tr>
         </thead>
@@ -60,7 +60,7 @@
             <tr class="border-b border-gray-700/50 hover:bg-gray-800/30">
                 <td class="px-4 py-2 text-white font-medium">{{ $c->trade_name ?? $c->name }}</td>
                 <td class="px-4 py-2 text-gray-400 text-right">{{ $c->vms_count ?? 0 }}</td>
-                <td class="px-4 py-2 text-emerald-400 font-bold text-right">R$ {{ number_format($c->mrr ?? 0,2,',','.') }}</td>
+                <td class="px-4 py-2 text-emerald-400 font-bold text-right">{{ $d['currency_symbol'] }} {{ number_format($c->mrr ?? 0,2,',','.') }}</td>
                 <td class="px-4 py-2 text-center">
                     <span class="text-xs {{ $c->is_active ? 'text-emerald-400' : 'text-red-400' }}">
                         {{ $c->is_active ? __('app.active') : __('app.inactive') }}
